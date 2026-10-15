@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS 变量（自定义属性）</title>
+    <style>
+        :root {
+            --wang_primary: #58a6ff;
+            --wang_secondary: #a371f7;
+            --wang_bg: #0d1117;
+            --wang_text: #eee;
+            --wang_radius: 12px;
+            --wang_spacing: 20px;
+            --wang_font-size: 1.1rem;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background: var(--wang_bg);
+            color: var(--wang_text);
+            padding: 40px 20px;
+        }
+
+        .wang_container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .wang_header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .wang_header h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--wang_primary), var(--wang_secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .wang_header p {
+            color: #8b949e;
+            margin-top: 10px;
+        }
+
+        .wang_card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: var(--wang_radius);
+            padding: calc(var(--wang-spacing) * 1.5);
+            margin-bottom: var(--wang-spacing);
+        }
+
+        .wang_card h2 {
+            color: var(--wang_primary);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .wang_card p {
+            color: #8b949e;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .wang_code-block {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            overflow-x: auto;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #c9d1d9;
+        }
+
+        .wang_code-block .wang_keyword { color: #ff7b72; }
+        .wang_code-block .wang_property { color: #79c0ff; }
+        .wang_code-block .wang_value { color: #a5d6ff; }
+        .wang_code-block .wang_comment { color: #8b949e; }
+        .wang_code-block .wang_selector { color: #d2a8ff; }
+
+        .wang_btn {
+            display: inline-block;
+            padding: 10px 24px;
+            margin: 5px;
+            border-radius: var(--wang_radius);
+            font-size: var(--wang-font-size);
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .wang_btn-primary {
+            background: var(--wang_primary);
+            color: #fff;
+        }
+
+        .wang_btn-secondary {
+            background: var(--wang_secondary);
+            color: #fff;
+        }
+
+        .wang_btn-outline {
+            background: transparent;
+            border: 2px solid var(--wang_primary);
+            color: var(--wang_primary);
+        }
+
+        .wang_btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3);
+        }
+
+        .wang_theme-demo {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: var(--wang_radius);
+            padding: calc(var(--wang-spacing) * 1.5);
+            margin-bottom: var(--wang_spacing);
+        }
+
+        .wang_theme-demo h3 {
+            color: var(--wang_primary);
+            margin-bottom: 15px;
+        }
+
+        .wang_theme-box {
+            width: 100%;
+            height: 80px;
+            border-radius: var(--wang_radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            transition: all 0.5s ease;
+        }
+
+        .wang_theme-light {
+            --wang_bg: #f6f8fa;
+            --wang_text: #24292f;
+            --wang_primary: #0969da;
+            --wang_secondary: #8250df;
+        }
+
+        .wang_theme-light .wang_theme-box {
+            background: var(--wang_primary);
+            color: #fff;
+        }
+
+        .wang_theme-dark {
+            --wang_bg: #0d1117;
+            --wang_text: #eee;
+            --wang_primary: #58a6ff;
+            --wang_secondary: #a371f7;
+        }
+
+        .wang_theme-dark .wang_theme-box {
+            background: var(--wang_secondary);
+            color: #fff;
+        }
+
+        .wang_theme-warm {
+            --wang_bg: #1a1a2e;
+            --wang_text: #eee;
+            --wang_primary: #e94560;
+            --wang_secondary: #ff9f45;
+        }
+
+        .wang_theme-warm .wang_theme-box {
+            background: var(--wang_primary);
+            color: #fff;
+        }
+
+        .wang_scope-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--wang_spacing);
+            margin-top: 15px;
+        }
+
+        .wang_scope-item {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: var(--wang_radius);
+            padding: var(--wang_spacing);
+        }
+
+        .wang_scope-item h4 {
+            color: var(--wang_primary);
+            margin-bottom: 10px;
+        }
+
+        .wang_scope-item p {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wang_container">
+        <div class="wang_header">
+            <h1>CSS 变量（自定义属性）</h1>
+            <p>使用 :root 定义全局变量，通过 var() 引用，实现主题切换与代码复用</p>
+        </div>
+
+        <div class="wang_card">
+            <h2>基本用法</h2>
+            <p>CSS 变量以 -- 开头定义，通过 var() 函数引用。在 :root 中定义可全局使用。</p>
+            <div class="wang_code-block">
+                <span class="wang_comment">/* 定义变量 */</span>
+                <span class="wang_selector">:root</span> {
+                    <span class="wang_property">--wang_primary</span>: <span class="wang-value">#58a6ff</span>;
+                    <span class="wang_property">--wang_radius</span>: <span class="wang-value">12px</span>;
+                }
+
+                <span class="wang-comment">/* 使用变量 */</span>
+                <span class="wang_selector">.wang_card</span> {
+                    <span class="wang-property">border-radius</span>: <span class="wang-keyword">var</span>(<span class="wang-property">--wang_radius</span>);
+                    <span class="wang-property">background</span>: <span class="wang-keyword">var</span>(<span class="wang-property">--wang_primary</span>);
+                }
+            </div>
+        </div>
+
+        <div class="wang_card">
+            <h2>按钮组件</h2>
+            <p>以下按钮均使用 CSS 变量控制颜色、圆角和字号：</p>
+            <button class="wang_btn wang_btn-primary">主要按钮</button>
+            <button class="wang_btn wang_btn-secondary">次要按钮</button>
+            <button class="wang_btn wang_btn-outline">边框按钮</button>
+        </div>
+
+        <div class="wang_theme-demo">
+            <h2>主题切换演示</h2>
+            <p>通过修改变量值实现不同主题，同一套代码多种风格：</p>
+
+            <h3 style="margin-top: 20px;">默认主题</h3>
+            <div class="wang_theme-dark">
+                <div class="wang_theme-box">Dark Theme - var(--wang_primary) 当前值</div>
+            </div>
+
+            <h3 style="margin-top: 20px;">浅色主题</h3>
+            <div class="wang_theme-light">
+                <div class="wang_theme-box">Light Theme - 变量值已覆盖</div>
+            </div>
+
+            <h3 style="margin-top: 20px;">暖色主题</h3>
+            <div class="wang_theme-warm">
+                <div class="wang_theme-box">Warm Theme - 完全不同的配色</div>
+            </div>
+        </div>
+
+        <div class="wang_card">
+            <h2>作用域演示</h2>
+            <p>CSS 变量遵循级联规则，局部定义会覆盖全局定义：</p>
+            <div class="wang_scope-demo">
+                <div class="wang_scope-item">
+                    <h4>全局变量</h4>
+                    <p>在 :root 中定义</p>
+                    <p>整个页面可用</p>
+                    <p style="color: var(--wang_primary);">var(--wang_primary)</p>
+                </div>
+                <div class="wang_scope-item">
+                    <h4>局部覆盖</h4>
+                    <p>在 .wang_theme-light 中重新定义</p>
+                    <p>仅该元素及子元素生效</p>
+                    <p style="color: #0969da;">#0969da (覆盖后)</p>
+                </div>
+                <div class="wang_scope-item">
+                    <h4>动态修改</h4>
+                    <p>可通过 JavaScript 动态修改</p>
+                    <p>实现运行时主题切换</p>
+                    <p style="color: var(--wang_secondary);">var(--wang_secondary)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
