@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS 3D 立体菜单与透视效果</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background: #0d1117;
+            color: #eee;
+            overflow-x: hidden;
+        }
+
+        .wang_header {
+            text-align: center;
+            padding: 50px 20px 30px;
+        }
+
+        .wang_header h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #58a6ff, #a371f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .wang_header p {
+            color: #8b949e;
+            margin-top: 10px;
+        }
+
+        .wang_section {
+            max-width: 1000px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .wang_section h2 {
+            color: #58a6ff;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-left: 4px solid #58a6ff;
+            padding-left: 12px;
+        }
+
+        .wang_menu_container {
+            perspective: 1000px;
+            display: flex;
+            justify-content: center;
+            padding: 40px 0;
+        }
+
+        .wang_menu {
+            display: flex;
+            gap: 20px;
+            transform-style: preserve-3d;
+            transform: rotateX(15deg) rotateY(-10deg);
+            transition: transform 0.5s ease;
+        }
+
+        .wang_menu:hover {
+            transform: rotateX(5deg) rotateY(0deg);
+        }
+
+        .wang_menu_item {
+            width: 160px;
+            height: 200px;
+            background: linear-gradient(145deg, #161b22, #21262d);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .wang_menu_item:hover {
+            transform: translateZ(40px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(88, 166, 255, 0.3);
+            border-color: #58a6ff;
+        }
+
+        .wang_menu_icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            transform: translateZ(30px);
+        }
+
+        .wang_menu_label {
+            font-size: 1rem;
+            color: #c9d1d9;
+            transform: translateZ(20px);
+        }
+
+        .wang_perspective_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            perspective: 800px;
+        }
+
+        .wang_perspective_card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 25px;
+            transform-style: preserve-3d;
+            transition: transform 0.4s ease;
+        }
+
+        .wang_perspective_card:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+
+        .wang_perspective_card h3 {
+            color: #a371f7;
+            margin-bottom: 10px;
+        }
+
+        .wang_perspective_card p {
+            color: #8b949e;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .wang_perspective_demo {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            padding: 30px 0;
+        }
+
+        .wang_tilt_box {
+            width: 180px;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .wang_tilt_x {
+            background: linear-gradient(135deg, #238636, #2ea043);
+        }
+
+        .wang_tilt_y {
+            background: linear-gradient(135deg, #1f6feb, #388bfd);
+        }
+
+        .wang_tilt_z {
+            background: linear-gradient(135deg, #8957e5, #a371f7);
+        }
+
+        .wang_tilt_xy {
+            background: linear-gradient(135deg, #d29922, #e3b341);
+        }
+
+        .wang_tilt_box:hover {
+            transform: rotateX(20deg) rotateY(20deg) translateZ(20px);
+        }
+
+        .wang_layer_scene {
+            perspective: 600px;
+            display: flex;
+            justify-content: center;
+            padding: 40px 0;
+        }
+
+        .wang_layer_stack {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            transform-style: preserve-3d;
+            animation: wang_rotate_layers 12s linear infinite;
+        }
+
+        .wang_layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .wang_layer_1 { background: rgba(88, 166, 255, 0.3); transform: translateZ(0px); }
+        .wang_layer_2 { background: rgba(163, 113, 247, 0.3); transform: translateZ(40px); }
+        .wang_layer_3 { background: rgba(46, 160, 67, 0.3); transform: translateZ(80px); }
+        .wang_layer_4 { background: rgba(210, 153, 34, 0.3); transform: translateZ(120px); }
+        .wang_layer_5 { background: rgba(248, 81, 73, 0.3); transform: translateZ(160px); }
+
+        @keyframes wang_rotate_layers {
+            0%   { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        .wang_table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .wang_table th,
+        .wang_table td {
+            border: 1px solid #30363d;
+            padding: 12px 16px;
+            text-align: left;
+        }
+
+        .wang_table th {
+            background: #21262d;
+            color: #58a6ff;
+        }
+
+        .wang_table code {
+            background: #21262d;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            color: #e3b341;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wang_header">
+        <h1>CSS 3D 立体菜单与透视效果</h1>
+        <p>使用 perspective、transform-style: preserve-3d 和 rotateX/Y/Z 构建 3D 界面</p>
+    </div>
+
+    <div class="wang_section">
+        <h2>3D 立体菜单</h2>
+        <div class="wang_menu_container">
+            <div class="wang_menu">
+                <div class="wang_menu_item">
+                    <div class="wang_menu_icon">🏠</div>
+                    <div class="wang_menu_label">首页</div>
+                </div>
+                <div class="wang_menu_item">
+                    <div class="wang_menu_icon">📁</div>
+                    <div class="wang_menu_label">项目</div>
+                </div>
+                <div class="wang_menu_item">
+                    <div class="wang_menu_icon">🎨</div>
+                    <div class="wang_menu-label">设计</div>
+                </div>
+                <div class="wang_menu_item">
+                    <div class="wang_menu_icon">⚙️</div>
+                    <div class="wang_menu-label">设置</div>
+                </div>
+                <div class="wang_menu_item">
+                    <div class="wang_menu-icon">👤</div>
+                    <div class="wang_menu-label">我的</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wang_section">
+        <h2>3D 透视卡片</h2>
+        <div class="wang_perspective_grid">
+            <div class="wang_perspective_card">
+                <h3>perspective</h3>
+                <p>定义观察者与 z=0 平面的距离，值越小透视变形越强烈，产生近大远小的视觉效果。</p>
+            </div>
+            <div class="wang_perspective_card">
+                <h3>preserve-3d</h3>
+                <p>使子元素在 3D 空间中定位，而非扁平化到父元素的平面上，实现真正的 3D 层级关系。</p>
+            </div>
+            <div class="wang_perspective_card">
+                <h3>translateZ</h3>
+                <p>沿 Z 轴移动元素。正值向观察者靠近产生放大效果，负值远离观察者产生缩小效果。</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="wang_section">
+        <h2>3D 倾斜效果</h2>
+        <div class="wang_perspective_demo">
+            <div class="wang_tilt_box wang_tilt_x">rotateX</div>
+            <div class="wang_tilt_box wang_tilt_y">rotateY</div>
+            <div class="wang_tilt_box wang_tilt_z">rotateZ</div>
+            <div class="wang_tilt_box wang_tilt_xy">X + Y</div>
+        </div>
+    </div>
+
+    <div class="wang_section">
+        <h2>3D 图层堆叠</h2>
+        <div class="wang_layer_scene">
+            <div class="wang_layer_stack">
+                <div class="wang_layer wang_layer_1">Layer 1</div>
+                <div class="wang_layer wang_layer_2">Layer 2</div>
+                <div class="wang_layer wang_layer_3">Layer 3</div>
+                <div class="wang_layer wang_layer_4">Layer 4</div>
+                <div class="wang_layer wang_layer_5">Layer 5</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wang_section">
+        <h2>核心属性</h2>
+        <table class="wang_table">
+            <thead>
+                <tr>
+                    <th>属性</th>
+                    <th>说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>perspective: 1000px</code></td>
+                    <td>设置透视距离，观察者到 z=0 平面的距离</td>
+                </tr>
+                <tr>
+                    <td><code>transform-style: preserve-3d</code></td>
+                    <td>子元素保持 3D 空间定位</td>
+                </tr>
+                <tr>
+                    <td><code>rotateX(angle)</code></td>
+                    <td>绕 X 轴旋转（上下翻转）</td>
+                </tr>
+                <tr>
+                    <td><code>rotateY(angle)</code></td>
+                    <td>绕 Y 轴旋转（左右翻转）</td>
+                </tr>
+                <tr>
+                    <td><code>rotateZ(angle)</code></td>
+                    <td>绕 Z 轴旋转（平面旋转）</td>
+                </tr>
+                <tr>
+                    <td><code>translateZ(distance)</code></td>
+                    <td>沿 Z 轴平移，正值靠近观察者</td>
+                </tr>
+                <tr>
+                    <td><code>backface-visibility: hidden</code></td>
+                    <td>元素旋转到背面时不可见</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CSS Animation 幻灯片</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			display: flex;
+			min-height: 100vh;
+			margin: 0;
+			align-items: center;
+			justify-content: center;
+			background: #edf1ef;
+		}
+
+		.wang_slideshow {
+			width: min(88vw, 820px);
+			box-shadow: 0 18px 48px rgba(20, 34, 30, 0.18);
+		}
+
+		.wang_slide_window {
+			width: 100%;
+			aspect-ratio: 16 / 9;
+			border: 5px solid #101514;
+			border-radius: 14px;
+			overflow: hidden;
+			background: #17211f;
+		}
+
+		.wang_slide_track {
+			display: flex;
+			width: 400%;
+			height: 100%;
+			animation: slide 9s linear infinite;
+		}
+
+		.wang_slide_track img {
+			flex: 0 0 25%;
+			width: 25%;
+			min-width: 0;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		figcaption {
+			padding: 18px 24px;
+			background: #101514;
+			color: #fff;
+			font-size: 24px;
+			text-align: center;
+		}
+
+		@keyframes slide {
+			0%, 27% {
+				transform: translateX(0);
+			}
+			33.333%, 60% {
+				transform: translateX(-25%);
+			}
+			66.666%, 93% {
+				transform: translateX(-50%);
+			}
+			100% {
+				transform: translateX(-75%);
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.wang_slide_track {
+				animation-duration: 9s;
+			}
+		}
+	</style>
+</head>
+<body>
+	<figure class="wang_slideshow">
+		<div class="wang_slide_window">
+			<div class="wang_slide_track">
+				<img src="./img/1.jpg" alt="海上航行的船只">
+				<img src="./img/2.jpg" alt="港口的起重机">
+				<img src="./img/3.jpg" alt="海面上空的飞机">
+				<img src="./img/1.jpg" alt="" aria-hidden="true">
+			</div>
+		</div>
+		<figcaption>王秀宁</figcaption>
+	</figure>
+</body>
+</html>

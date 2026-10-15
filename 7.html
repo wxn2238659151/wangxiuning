@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>629 王秀宁</title>
+     <link rel="stylesheet" href="css.css">
+    <style>
+    .wang_text{
+            color: violet!important;
+            /*hank,优先级大于内嵌css*/
+        }
+    #wang_box p{
+        color: silver;
+    }
+    .wang_box p{
+            color: purple;
+        }
+     #wang_text{
+            color: yellow;
+        }
+         
+      .wang_text{
+            color: blue;
+        }
+        .wang_box{
+            color: yellow;
+            font-size: 40px;
+        }
+        p{
+            color: red;
+            font-size: 60px;
+
+        }
+    </style>
+    /*优先级 id>class>tag>*/
+    /* body #wang_box #wang_text.wang_text*/
+   
+</head>
+<body>
+    <h2>层叠与继承</h2>
+    <div id="wang_box" class="wang_box">
+        <p id="wang_text" class="wang_text">629 王秀宁</p>
+        <p>css选择器的优先级</p>
+    </div>
+    
+</body>
+</html>

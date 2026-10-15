@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .wang_flex{
+            display: flex;
+            /*容器，他的子元素在一行显示，默认自动压缩*/
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap:20px;
+            padding:20px;
+        }
+        .wang_flex li{
+            /*项目，容器的子元素*/
+            width: 220px;
+            height: 220px;
+            border: 1px solid #333;
+            list-style: none;
+            display: flex;
+            padding:10px;
+        }
+        
+        li:nth-child(1){
+            justify-content: center;
+            align-items: center;
+        }
+        .wang_box1{
+            width: 70px;
+            height: 70px;
+            background-color: #ffab02; 
+        }
+
+       
+        li:nth-child(2){
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap:10px;
+        }
+        .wang_box2{
+            width: 70px;
+            height: 70px;
+            background-color: #02c4ff; 
+        }
+
+       
+        li:nth-child(3){
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .wang_box3{
+            width: 70px;
+            height: 70px;
+            background-color: #fffb02; 
+        }
+
+         
+        li:nth-child(4){
+            flex-direction: column;
+            gap:10px;
+        }
+        .wang_box4-wrap{
+            display:flex;
+            gap:10px;
+            flex:1;
+        }
+        .wang_box4-top{
+            flex:1;
+            background-color: #ff02f2; 
+        }
+        .wang_box4{
+            flex:1;
+            background-color: #0fff02; 
+        }
+    </style>
+</head>
+<body>
+    <h2>王秀宁的flex</h2>
+    <ul class="wang_flex">
+        <li>
+            <div class="wang_box1"></div>
+        </li>
+        <li>
+            <div class="wang_box2"></div>
+            <div class="wang_box2"></div>
+        </li>
+        <li>
+            <div class="wang_box3"></div>
+            <div class="wang_box3"></div>
+            <div class="wang_box3"></div>
+            <div class="wang_box3"></div>
+        </li>
+        <li>
+            <div class="wang_box4-top"></div>
+            <div class="wang_box4-wrap">
+                <div class="wang_box4"></div>
+                <div class="wang_box4"></div>
+            </div>
+        </li>
+    </ul>
+    
+</body>
+</html>

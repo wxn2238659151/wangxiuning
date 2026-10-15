@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端长度单位</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background: #f4f6fb;
+            color: #333;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #5148bf;
+        }
+
+        .wang_section {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 25px 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+        }
+
+        .wang_section h2 {
+            color: #a26bd8;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0ecff;
+            padding-bottom: 8px;
+        }
+
+        .wang_demo_row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .wang_box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+            border-radius: 6px;
+        }
+
+        .wang_box.wang_px {
+            width: 100px;
+            height: 60px;
+            background: #5148bf;
+        }
+
+        .wang_box.wang_em {
+            width: 6em;
+            height: 3.75em;
+            background: #a26bd8;
+            font-size: 16px;
+        }
+
+        .wang_box.wang_rem {
+            width: 6rem;
+            height: 3.75rem;
+            background: #7b61c9;
+        }
+
+        .wang_box.wang_percent {
+            width: 50%;
+            height: 60px;
+            background: #e06ba7;
+            min-width: 200px;
+        }
+
+        .wang_parent {
+            width: 100%;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .wang_box.wang_vw {
+            width: 15vw;
+            height: 60px;
+            background: #4fb8a5;
+            min-width: 120px;
+        }
+
+        .wang_box.wang_vh {
+            width: 120px;
+            height: 10vh;
+            background: #e8a04c;
+            min-height: 60px;
+        }
+
+        code {
+            background: #f0ecff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            color: #5148bf;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #f0ecff;
+        }
+
+        .wang_em_context {
+            font-size: 20px;
+        }
+
+        .wang_em_context .wang_child_em {
+            width: 5em;
+            height: 3em;
+            background: #a26bd8;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Web 前端长度单位</h1>
+
+    <div class="wang_section">
+        <h2>绝对单位</h2>
+        <p><code>px</code>（像素）：最常用的绝对单位，1px 对应屏幕上的一个物理像素点。</p>
+        <div class="wang_demo_row">
+            <div class="wang_box wang_px">100px × 60px</div>
+        </div>
+    </div>
+
+    <div class="wang_section">
+        <h2>相对单位 — 相对于字体大小</h2>
+        <p><code>em</code>：相对于<strong>当前元素</strong>的字体大小。</p>
+        <div class="wang_demo_row wang_em_context">
+            <div class="wang_box wang_em">6em × 3.75em</div>
+        </div>
+        <p><code>rem</code>：相对于<strong>根元素（html）</strong>的字体大小，默认 16px。</p>
+        <div class="wang_demo_row">
+            <div class="wang_box wang_rem">6rem × 3.75rem</div>
+        </div>
+    </div>
+
+    <div class="wang_section">
+        <h2>相对单位 — 相对于父元素 / 视口</h2>
+        <p><code>%</code>：相对于父元素对应属性的百分比。</p>
+        <div class="wang_demo_row wang_parent">
+            <div class="wang_box wang_percent">宽度 50%</div>
+        </div>
+        <p><code>vw</code> / <code>vh</code>：相对于视口宽度 / 高度的 1%。</p>
+        <div class="wang_demo_row">
+            <div class="wang_box wang_vw">15vw</div>
+            <div class="wang_box wang_vh">10vh</div>
+        </div>
+    </div>
+
+    <div class="wang_section">
+        <h2>单位对比总结</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>单位</th>
+                    <th>参考基准</th>
+                    <th>常见用途</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>px</code></td>
+                    <td>物理像素</td>
+                    <td>边框、阴影、固定尺寸元素</td>
+                </tr>
+                <tr>
+                    <td><code>em</code></td>
+                    <td>当前元素 font-size</td>
+                    <td>按钮内边距、行内间距</td>
+                </tr>
+                <tr>
+                    <td><code>rem</code></td>
+                    <td>根元素 font-size</td>
+                    <td>全局字号、间距、媒体查询断点</td>
+                </tr>
+                <tr>
+                    <td><code>%</code></td>
+                    <td>父元素对应属性</td>
+                    <td>流式布局、响应式宽度</td>
+                </tr>
+                <tr>
+                    <td><code>vw / vh</code></td>
+                    <td>视口宽 / 高</td>
+                    <td>全屏区块、大标题、Hero 区域</td>
+                </tr>
+                <tr>
+                    <td><code>vmin / vmax</code></td>
+                    <td>视口较小 / 较大边</td>
+                    <td>保持比例的元素</td>
+                </tr>
+                <tr>
+                    <td><code>ch</code></td>
+                    <td>"0" 字符宽度</td>
+                    <td>限制文本行宽</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="wang_section">
+        <h2>实践建议</h2>
+        <ul style="padding-left: 20px; line-height: 2;">
+            <li>字体大小优先使用 <code>rem</code>，便于用户调整浏览器字号。</li>
+            <li>布局宽度使用 <code>%</code> 或 <code>vw</code>，配合媒体查询实现响应式。</li>
+            <li><code>em</code> 适合组件内部的比例关系（如按钮 padding 随字号缩放）。</li>
+            <li><code>px</code> 用于边框、阴影等不需要缩放的场景。</li>
+        </ul>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>媒体查询与视口变化</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		html {
+			font-size: 22px;
+		}
+
+		body {
+			margin: 0;
+		}
+
+		.wang_box {
+			display: flex;
+			width: 100%;
+			min-height: 100vh;
+			min-height: 100dvh;
+			align-items: center;
+			justify-content: center;
+			background-color: #245f9d;
+			color: #fff;
+			transition: background-color 300ms ease;
+		}
+
+		.wang_name {
+			margin: 0;
+			font-size: 4rem;
+			font-weight: 700;
+		}
+
+		@media (max-width: 1200px) {
+			html {
+				font-size: 18px;
+			}
+
+			.wang_box {
+				background-color: #a84632;
+			}
+		}
+
+		@media (max-width: 900px) {
+			html {
+				font-size: 16px;
+			}
+
+			.wang_box {
+				background-color: #176b5b;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main class="wang_box">
+		<h1 class="wang_name">王秀宁</h1>
+	</main>
+</body>
+</html>

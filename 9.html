@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>css3</title>
+    <style>
+        .wang_main{
+            display: flex;
+            flex-wrap: wrap;
+            margin: 10px;
+        }
+        .wang_box{
+            width: 150px;
+            height: 150px;
+            border: 1px solid #ccc;
+            margin: 10px;
+            display: flex;
+            /* 水平垂直居中 */
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            transition: all 0.5s;
+            box-sizing: border-box;
+            /*width包含内边距和边框宽度*/
+            color: #333;
+        }
+        .wang_box:first-child:hover{
+            background: red;
+            color: white;
+            font-size: 140px;
+        }
+        .wang_box:nth-child(2):hover{
+            border-radius: 50%;
+            border-width: 10px;
+        }
+        .wang_box:nth-child(3):hover{
+            box-shadow: 10px 10px 10px red;
+        }
+        .wang_box:nth-child(4):hover{
+            text-shadow: 100px 10px 10px red;
+        }
+        .wang_box:nth-child(5):hover{
+            /*线性渐变*/
+            background: linear-gradient(to right, red, rgb(255, 81, 0));
+        }
+        .wang_box:nth-child(5)+.wang_box/* +是后面一个兄弟，~是后面的所有兄弟*/{
+            /*径向渐变*/
+            background: radial-gradient(circle, rgb(220, 207, 195), rgb(77, 75, 74));/*radial-gradient是镜像结构*/
+        }
+        .wang_box:nth-child(7):hover{
+           transform: scale(1.5);/*放大,小于1缩小，大于1放大*/
+        }
+        .wang_box:nth-child(8):hover{
+            transform: translate(-150px)/*移动方向*/
+
+        }
+        .wang_box:nth-child(9):hover{
+            transform: rotateX(-180deg);/*rotateX是翻转*/
+        }
+        .wang_box:nth-child(10):hover{
+            transform: skew(20deg) translate(50px);/*skew是倾斜*/
+        }
+        .wang_box:nth-last-child(2):hover::before{
+            content:"*";
+            color: #f40303;
+        }
+        .wang_box:nth-last-child(1):hover::after{
+            content: '王秀宁';
+            display: inline-flex;
+            background-color: rgb(241, 148, 241);
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            justify-content: center;
+            align-items: center;
+        }
+        .wang_box:nth-child(2n+1):hover{
+            border: 3px solid red;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="wang_main">
+        <div class="wang_box">1</div>
+        <div class="wang_box">2</div>
+        <div class="wang_box">3</div>
+        <div class="wang_box">4</div>
+        <div class="wang_box">5</div>
+        <div class="wang_box">6</div>
+        <div class="wang_box">7</div>
+        <div class="wang_box">8</div>
+        <div class="wang_box">9</div>
+        <div class="wang_box">10</div>
+        <div class="wang_box">11</div>
+        <div class="wang_box">12</div>
+    </div>
+</body>
+</html>

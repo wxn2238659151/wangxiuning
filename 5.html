@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>629 王秀宁</title>
+    <style>
+        h2,h3,p{
+            padding: 0;
+            margin: 0;
+        }/*群组选择器*/
+        #wang_box{
+            padding: 20px;
+            margin: 20px;
+            border: 1px solid #e31d1d;
+            font-size: 12px;
+        }
+        #wang_box h3{
+            font-size: 16px;
+            /*行高*/
+            line-height: 33px;
+            /*文字居中*/
+            text-align: center;
+            color: #034;
+            letter-spacing: 3px;
+        }
+        #wang_box>p{
+           color: #034;
+           text-indent: 2em;
+           line-height: 150%;
+        }
+        #wang_box a{
+            color: #c00;
+           text-decoration: none;
+        }
+        .wang_stuID,.wang_name,.wang_class{
+            color: rgb(54, 54, 215);
+            font-weight: bold;
+        }
+        /* ====== 拓展2：h2黑底白字 ====== */
+        h2{
+            background-color: #000;
+            color: #fff;
+        }
+        /* ====== 拓展3：知识点的值蓝底白字 ====== */
+        .wang_knowledge{
+            background-color: blue;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h2>css群组选择器和后代选择器</h2>
+    <div id="wang_box">
+        <h3>css进阶</h3>
+        <p>学号：<span class='wang_stuID'>629</span>，姓名：<span class='wang_name'>王秀宁</span>，班级：<span class='wang_class'>计算机24006</span>，《高级网页设计》设计的学习难度：中等，
+            本实例的知识点：<span class='wang_knowledge'>css群组选择器和后代选择器</span>
+            <a href="#">[更多]</a>
+        </p>
+    </div>
+
+</body>
+</html>
