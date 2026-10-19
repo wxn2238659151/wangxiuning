@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucide SVG 图标</title>
+    <script src="./cdn/lucide/lucide.min.js"></script>
+    <style>
+        :root {
+            --wang_primary: #58a6ff;
+            --wang_secondary: #a371f7;
+            --wang_bg: #0d1117;
+            --wang_card: #161b22;
+            --wang_text: #eee;
+            --wang_radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background: var(--wang_bg);
+            color: var(--wang_text);
+            padding: 40px 20px;
+        }
+
+        .wang_container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .wang_header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .wang_header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .wang_header p {
+            color: #8b949e;
+        }
+
+        .wang_section {
+            margin-bottom: 32px;
+        }
+
+        .wang_section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #30363d;
+            color: var(--wang_primary);
+        }
+
+        .wang-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+        }
+
+        .wang-card {
+            background: var(--wang_card);
+            border: 1px solid #30363d;
+            border-radius: var(--wang_radius);
+            padding: 20px 12px;
+            text-align: center;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .wang-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--wang_primary);
+        }
+
+        .wang-card .wang-icon {
+            width: 36px;
+            height: 36px;
+            display: block;
+            margin: 0 auto 10px;
+        }
+
+        .wang-card span {
+            font-size: 0.85rem;
+            color: #8b949e;
+        }
+
+        .wang-color-primary { color: var(--wang_primary); }
+        .wang-color-secondary { color: var(--wang_secondary); }
+        .wang-color-green { color: #3fb950; }
+        .wang-color-orange { color: #d29922; }
+        .wang-color-red { color: #f85149; }
+    </style>
+</head>
+<body>
+    <div class="wang_container">
+        <div class="wang_header">
+            <h1>Lucide SVG 图标</h1>
+            <p>通过 JavaScript 动态生成 SVG 矢量图标，轻量、可定制</p>
+        </div>
+
+        <div class="wang_section">
+            <h2>界面图标</h2>
+            <div class="wang-grid">
+                <div class="wang-card"><i data-lucide="home" class="wang-icon wang-color-primary"></i><span>home</span></div>
+                <div class="wang-card"><i data-lucide="user" class="wang-icon wang-color-secondary"></i><span>user</span></div>
+                <div class="wang-card"><i data-lucide="settings" class="wang-icon wang-color-primary"></i><span>settings</span></div>
+                <div class="wang-card"><i data-lucide="search" class="wang-icon wang-color-green"></i><span>search</span></div>
+                <div class="wang-card"><i data-lucide="bell" class="wang-icon wang-color-orange"></i><span>bell</span></div>
+                <div class="wang-card"><i data-lucide="mail" class="wang-icon wang-color-secondary"></i><span>mail</span></div>
+                <div class="wang-card"><i data-lucide="heart" class="wang-icon wang-color-red"></i><span>heart</span></div>
+                <div class="wang-card"><i data-lucide="star" class="wang-icon wang-color-orange"></i><span>star</span></div>
+                <div class="wang-card"><i data-lucide="camera" class="wang-icon wang-color-primary"></i><span>camera</span></div>
+                <div class="wang-card"><i data-lucide="music" class="wang-icon wang-color-secondary"></i><span>music</span></div>
+                <div class="wang-card"><i data-lucide="book" class="wang-icon wang-color-green"></i><span>book</span></div>
+                <div class="wang-card"><i data-lucide="cloud" class="wang-icon wang-color-primary"></i><span>cloud</span></div>
+            </div>
+        </div>
+
+        <div class="wang_section">
+            <h2>箭头与导航</h2>
+            <div class="wang-grid">
+                <div class="wang-card"><i data-lucide="arrow-left" class="wang-icon wang-color-primary"></i><span>arrow-left</span></div>
+                <div class="wang-card"><i data-lucide="arrow-right" class="wang-icon wang-color-primary"></i><span>arrow-right</span></div>
+                <div class="wang-card"><i data-lucide="chevron-up" class="wang-icon wang-color-secondary"></i><span>chevron-up</span></div>
+                <div class="wang-card"><i data-lucide="chevron-down" class="wang-icon wang-color-secondary"></i><span>chevron-down</span></div>
+                <div class="wang-card"><i data-lucide="menu" class="wang-icon wang-color-green"></i><span>menu</span></div>
+                <div class="wang-card"><i data-lucide="x" class="wang-icon wang-color-red"></i><span>x</span></div>
+            </div>
+        </div>
+
+        <div class="wang-section">
+            <h2>文件与操作</h2>
+            <div class="wang-grid">
+                <div class="wang-card"><i data-lucide="file" class="wang-icon wang-color-primary"></i><span>file</span></div>
+                <div class="wang-card"><i data-lucide="folder" class="wang-icon wang-color-orange"></i><span>folder</span></div>
+                <div class="wang-card"><i data-lucide="trash-2" class="wang-icon wang-color-red"></i><span>trash-2</span></div>
+                <div class="wang-card"><i data-lucide="download" class="wang-icon wang-color-green"></i><span>download</span></div>
+                <div class="wang-card"><i data-lucide="upload" class="wang-icon wang-color-secondary"></i><span>upload</span></div>
+                <div class="wang-card"><i data-lucide="edit" class="wang-icon wang-color-primary"></i><span>edit</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

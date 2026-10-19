@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Awesome 字体图标</title>
+    <link rel="stylesheet" href="./cdn/fontawesome/all.min.css">
+    <style>
+        :root {
+            --wang_primary: #58a6ff;
+            --wang_secondary: #a371f7;
+            --wang_bg: #0d1117;
+            --wang_card: #161b22;
+            --wang_text: #eee;
+            --wang_radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background: var(--wang_bg);
+            color: var(--wang_text);
+            padding: 40px 20px;
+        }
+
+        .wang_container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .wang_header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .wang_header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .wang_header p {
+            color: #8b949e;
+        }
+
+        .wang_section {
+            margin-bottom: 32px;
+        }
+
+        .wang_section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #30363d;
+            color: var(--wang_primary);
+        }
+
+        .wang_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+        }
+
+        .wang_card {
+            background: var(--wang_card);
+            border: 1px solid #30363d;
+            border-radius: var(--wang_radius);
+            padding: 20px 12px;
+            text-align: center;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .wang_card:hover {
+            transform: translateY(-4px);
+            border-color: var(--wang_primary);
+        }
+
+        .wang_card i {
+            font-size: 2.2rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .wang-card span {
+            font-size: 0.85rem;
+            color: #8b949e;
+        }
+
+        .wang_color-primary { color: var(--wang_primary); }
+        .wang-color-secondary { color: var(--wang_secondary); }
+        .wang-color-green { color: #3fb950; }
+        .wang-color-orange { color: #d29922; }
+        .wang-color-red { color: #f85149; }
+    </style>
+</head>
+<body>
+    <div class="wang_container">
+        <div class="wang_header">
+            <h1>Font Awesome 字体图标</h1>
+            <p>通过 CSS + 字体文件（woff2）渲染图标，使用简单，可缩放变色</p>
+        </div>
+
+        <div class="wang_section">
+            <h2>实心图标（fa-solid）</h2>
+            <div class="wang_grid">
+                <div class="wang-card"><i class="fa-solid fa-house wang-color-primary"></i><span>fa-house</span></div>
+                <div class="wang-card"><i class="fa-solid fa-user wang-color-secondary"></i><span>fa-user</span></div>
+                <div class="wang-card"><i class="fa-solid fa-heart wang-color-red"></i><span>fa-heart</span></div>
+                <div class="wang-card"><i class="fa-solid fa-star wang-color-orange"></i><span>fa-star</span></div>
+                <div class="wang-card"><i class="fa-solid fa-gear wang-color-primary"></i><span>fa-gear</span></div>
+                <div class="wang-card"><i class="fa-solid fa-magnifying-glass wang-color-green"></i><span>fa-magnifying-glass</span></div>
+                <div class="wang-card"><i class="fa-solid fa-envelope wang-color-secondary"></i><span>fa-envelope</span></div>
+                <div class="wang-card"><i class="fa-solid fa-bell wang-color-orange"></i><span>fa-bell</span></div>
+                <div class="wang-card"><i class="fa-solid fa-camera wang-color-primary"></i><span>fa-camera</span></div>
+                <div class="wang-card"><i class="fa-solid fa-music wang-color-secondary"></i><span>fa-music</span></div>
+                <div class="wang-card"><i class="fa-solid fa-book wang-color-green"></i><span>fa-book</span></div>
+                <div class="wang-card"><i class="fa-solid fa-cloud wang-color-primary"></i><span>fa-cloud</span></div>
+            </div>
+        </div>
+
+        <div class="wang_section">
+            <h2>常规图标（fa-regular）</h2>
+            <div class="wang-grid">
+                <div class="wang-card"><i class="fa-regular fa-user wang-color-primary"></i><span>fa-user</span></div>
+                <div class="wang-card"><i class="fa-regular fa-heart wang-color-red"></i><span>fa-heart</span></div>
+                <div class="wang-card"><i class="fa-regular fa-star wang-color-orange"></i><span>fa-star</span></div>
+                <div class="wang-card"><i class="fa-regular fa-bell wang-color-secondary"></i><span>fa-bell</span></div>
+                <div class="wang-card"><i class="fa-regular fa-envelope wang-color-green"></i><span>fa-envelope</span></div>
+                <div class="wang-card"><i class="fa-regular fa-folder wang-color-primary"></i><span>fa-folder</span></div>
+            </div>
+        </div>
+
+        <div class="wang_section">
+            <h2>品牌图标（fa-brands）</h2>
+            <div class="wang-grid">
+                <div class="wang-card"><i class="fa-brands fa-github wang-color-primary"></i><span>GitHub</span></div>
+                <div class="wang-card"><i class="fa-brands fa-weixin wang-color-green"></i><span>微信</span></div>
+                <div class="wang-card"><i class="fa-brands fa-weibo wang-color-red"></i><span>微博</span></div>
+                <div class="wang-card"><i class="fa-brands fa-qq wang-color-primary"></i><span>QQ</span></div>
+                <div class="wang-card"><i class="fa-brands fa-chrome wang-color-orange"></i><span>Chrome</span></div>
+                <div class="wang-card"><i class="fa-brands fa-firefox wang-color-secondary"></i><span>Firefox</span></div>
+                <div class="wang-card"><i class="fa-brands fa-apple wang-color-primary"></i><span>Apple</span></div>
+                <div class="wang-card"><i class="fa-brands fa-android wang-color-green"></i><span>Android</span></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
