@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-10-22，功能名称：《高级网页设计》课堂实践首页导航 -->
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -37,7 +38,7 @@
       opacity: .9;
     }
 
-    .wang_badge {
+    .wxn_badge {
       display: inline-block;
       padding: 8px 18px;
       border: 1px solid rgba(255,255,255,.6);
@@ -50,8 +51,8 @@
       margin: -45px auto 60px;
     }
 
-    .wang_intro,
-    .wang_prompt {
+    .wxn_intro,
+    .wxn_prompt {
       padding: 28px;
       margin-bottom: 26px;
       border-radius: 24px;
@@ -59,13 +60,13 @@
       box-shadow: 0 18px 45px rgba(68,55,140,.14);
     }
 
-    .wang_intro {
+    .wxn_intro {
       color: #747188;
       text-align: center;
       line-height: 2;
     }
 
-    .wang_title-row {
+    .wxn_title-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -73,11 +74,11 @@
       margin: 25px 0 18px;
     }
 
-    .wang_title-row h2 {
+    .wxn_title-row h2 {
       font-size: 25px;
     }
 
-    #wang_search {
+    #wxn_search {
       width: 260px;
       max-width: 100%;
       padding: 12px 18px;
@@ -87,18 +88,18 @@
       font-size: 14px;
     }
 
-    #wang_search:focus {
+    #wxn_search:focus {
       border-color: #6257d9;
       box-shadow: 0 0 0 4px rgba(98,87,217,.12);
     }
 
-    .wang_page-list {
+    .wxn_page-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 20px;
     }
 
-    .wang_page-card {
+    .wxn_page-card {
       display: flex;
       flex-direction: column;
       min-height: 175px;
@@ -112,14 +113,14 @@
       transition: .25s ease;
     }
 
-    .wang_page-card:hover {
+    .wxn_page-card:hover {
       color: #fff;
       transform: translateY(-7px);
       background: linear-gradient(135deg, #6257d9, #9b8cff);
       box-shadow: 0 18px 30px rgba(98,87,217,.28);
     }
 
-    .wang_icon {
+    .wxn_icon {
       display: grid;
       width: 48px;
       height: 48px;
@@ -131,31 +132,31 @@
       font-size: 22px;
     }
 
-    .wang_page-card:hover .wang_icon {
+    .wxn_page-card:hover .wxn_icon {
       background: rgba(255,255,255,.2);
     }
 
-    .wang_page-card h3 {
+    .wxn_page-card h3 {
       margin-bottom: 12px;
       font-size: 19px;
     }
 
-    .wang_page-card span {
+    .wxn_page-card span {
       margin-top: auto;
       color: #858198;
       font-size: 13px;
     }
 
-    .wang_page-card:hover span {
+    .wxn_page-card:hover span {
       color: rgba(255,255,255,.85);
     }
 
-    .wang_prompt h2 {
+    .wxn_prompt h2 {
       margin-bottom: 14px;
       font-size: 20px;
     }
 
-    .wang_prompt p {
+    .wxn_prompt p {
       padding: 16px;
       color: #5c5872;
       line-height: 1.8;
@@ -171,7 +172,7 @@
       font-size: 14px;
     }
 
-    .wang_empty {
+    .wxn_empty {
       grid-column: 1 / -1;
       padding: 35px;
       color: #747188;
@@ -179,12 +180,12 @@
     }
 
     @media (max-width: 600px) {
-      .wang_title-row {
+      .wxn_title-row {
         align-items: flex-start;
         flex-direction: column;
       }
 
-      #wang_search {
+      #wxn_search {
         width: 100%;
       }
     }
@@ -192,27 +193,27 @@
 </head>
 <body>
   <header>
-    <div class="wang_badge">CLASS PRACTICE</div>
+    <div class="wxn_badge">CLASS PRACTICE</div>
     <h1>高级网页设计</h1>
     <p>王秀宁课堂实践作品集</p>
   </header>
 
   <main>
-    <section class="wang_intro">
+    <section class="wxn_intro">
       <p>
         欢迎来到王秀宁《高级网页设计》课堂实践导航页。<br>
         以下为本目录中的网页作品，点击卡片将在新窗口打开对应页面。
       </p>
     </section>
 
-    <div class="wang_title-row">
+    <div class="wxn_title-row">
       <h2>网页作品导航</h2>
-      <input id="wang_search" type="search" placeholder="搜索作品名称或文件名">
+      <input id="wxn_search" type="search" placeholder="搜索作品名称或文件名">
     </div>
 
-    <section class="wang_page-list" id="wang_pageList"></section>
+    <section class="wxn_page-list" id="wxn_pageList"></section>
 
-    <section class="wang_prompt">
+    <section class="wxn_prompt">
       <h2>本页面提示词</h2>
       <p>
         创建一个新页面，包括本目录下的所有网页的超链接，使用原生代码，不使用cdn，新页面名称为index.html，主题为王秀宁的《高级网页设计》课堂实践，美化页面，页面中包括本提示词，把作品名改成每个文件h2中的内容，每个网页超链接要target="_blank"
@@ -221,11 +222,11 @@
   </main>
 
   <footer>
-    © <span id="wang_year"></span> 王秀宁《高级网页设计》课堂实践
+    © <span id="wxn_year"></span> 王秀宁《高级网页设计》课堂实践
   </footer>
 
   <script>
-    const wang_pages = [
+    const wxn_pages = [
       {
         file: "./1.html",
         title: "629 王秀宁",
@@ -327,16 +328,6 @@
         icon: "✦"
       },
       {
-        file: "./13-1.html",
-        title: "CSS 变量（自定义属性）",
-        icon: "◌"
-      },
-      {
-        file: "./14-1.html",
-        title: "Font Awesome 字体图标",
-        icon: "✦"
-      },
-      {
         file: "./14-2.html",
         title: "Lucide SVG 图标",
         icon: "◈"
@@ -350,41 +341,51 @@
         file: "./14-4.html",
         title: "SVG图标底部导航",
         icon: "◧"
+      },
+      {
+        file: "./15-1.html",
+        title: "JavaScript 输出与交互",
+        icon: "✧"
+      },
+      {
+        file: "./15-2.html",
+        title: "JS 第六种基础类型 Symbol",
+        icon: "★"
       }
     ];
 
-    const wang_pageList = document.getElementById("wang_pageList");
-    const wang_search = document.getElementById("wang_search");
+    const wxn_pageList = document.getElementById("wxn_pageList");
+    const wxn_search = document.getElementById("wxn_search");
 
-    function wang_renderPages(wang_keyword = "") {
-      const wang_filteredPages = wang_pages.filter(wang_page =>
-        wang_page.title.toLowerCase().includes(wang_keyword.toLowerCase()) ||
-        wang_page.file.toLowerCase().includes(wang_keyword.toLowerCase())
+    function wxn_renderPages(wxn_keyword = "") {
+      const wxn_filteredPages = wxn_pages.filter(wxn_page =>
+        wxn_page.title.toLowerCase().includes(wxn_keyword.toLowerCase()) ||
+        wxn_page.file.toLowerCase().includes(wxn_keyword.toLowerCase())
       );
 
-      if (!wang_filteredPages.length) {
-        wang_pageList.innerHTML = '<div class="wang_empty">没有找到匹配的网页作品</div>';
+      if (!wxn_filteredPages.length) {
+        wxn_pageList.innerHTML = '<div class="wxn_empty">没有找到匹配的网页作品</div>';
         return;
       }
 
-      wang_pageList.innerHTML = wang_filteredPages.map(wang_page => `
-        <a class="wang_page-card"
-           href="${wang_page.file}"
+      wxn_pageList.innerHTML = wxn_filteredPages.map(wxn_page => `
+        <a class="wxn_page-card"
+           href="${wxn_page.file}"
            target="_blank"
            rel="noopener noreferrer">
-          <div class="wang_icon">${wang_page.icon}</div>
-          <h3>${wang_page.title}</h3>
-          <span>${wang_page.file}　↗</span>
+          <div class="wxn_icon">${wxn_page.icon}</div>
+          <h3>${wxn_page.title}</h3>
+          <span>${wxn_page.file}　↗</span>
         </a>
       `).join("");
     }
 
-    wang_search.addEventListener("input", wang_event => {
-      wang_renderPages(wang_event.target.value);
+    wxn_search.addEventListener("input", wxn_event => {
+      wxn_renderPages(wxn_event.target.value);
     });
 
-    document.getElementById("wang_year").textContent = new Date().getFullYear();
-    wang_renderPages();
+    document.getElementById("wxn_year").textContent = new Date().getFullYear();
+    wxn_renderPages();
   </script>
 </body>
 </html>

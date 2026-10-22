@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-10-22，功能名称：JavaScript 第六种基础数据类型 Symbol 演示 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS 第六种基础类型：Symbol</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f3ff, #fff);
+            color: #2d2a4a;
+            padding: 30px 20px 60px;
+            line-height: 1.7;
+        }
+        .wxn_container {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+        .wxn_title {
+            font-size: 30px;
+            text-align: center;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #6257d9, #9b8cff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .wxn_subtitle {
+            text-align: center;
+            color: #858198;
+            margin-bottom: 28px;
+        }
+        .wxn_card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 22px 26px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(98,87,217,.09);
+        }
+        .wxn_card h3 {
+            font-size: 19px;
+            color: #6257d9;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #dcd7f7;
+        }
+        .wxn_types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .wxn_types div {
+            padding: 8px 14px;
+            background: #f7f6ff;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .wxn_types div.wxn_current {
+            background: linear-gradient(135deg, #6257d9, #9b8cff);
+            color: #fff;
+            font-weight: bold;
+        }
+        pre.wxn_code {
+            background: #25233a;
+            color: #dcd7f7;
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            margin: 10px 0;
+        }
+        .wxn_output {
+            background: #fdfcff;
+            border-left: 4px solid #6257d9;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+        .wxn_output b { color: #6257d9; }
+    </style>
+</head>
+<body>
+    <div class="wxn_container">
+        <h1 class="wxn_title">JavaScript 第七种（第六种基础）类型：Symbol</h1>
+        <p class="wxn_subtitle">王秀宁 · ES6 引入的新基础数据类型</p>
+
+        <!-- 全部 7 种基础类型 -->
+        <div class="wxn_card">
+            <h3>一、JavaScript 的 7 种基础数据类型</h3>
+            <div class="wxn_types" id="wxn_typeList"></div>
+        </div>
+
+        <!-- Symbol 是什么 -->
+        <div class="wxn_card">
+            <h3>二、Symbol 是什么？</h3>
+            <p>Symbol 是一种<strong>唯一的、不可变的</strong>标识符，常用于给对象添加不会冲突的属性键。<br>
+               它是继 Boolean / Null / Undefined / Number / String 之后的<strong>第六种基础类型</strong>（ES6），
+               之后 ES2020 又新增了 BigInt 作为第七种。</p>
+        </div>
+
+        <!-- 演示 1：创建与唯一性 -->
+        <div class="wxn_card">
+            <h3>三、演示 1：创建 Symbol 与唯一性</h3>
+            <pre class="wxn_code">const wxn_s1 = Symbol();
+const wxn_s2 = Symbol();
+const wxn_s3 = Symbol("我的描述");
+
+console.log(typeof wxn_s1);     // "symbol"
+console.log(wxn_s1 === wxn_s2); // false —— 每个 Symbol 都唯一
+console.log(wxn_s3.description); // "我的描述"</pre>
+            <div class="wxn_output" id="wxn_out1"></div>
+        </div>
+
+        <!-- 演示 2：全局注册表 -->
+        <div class="wxn_card">
+            <h3>四、演示 2：全局 Symbol 注册表（Symbol.for / Symbol.keyFor）</h3>
+            <pre class="wxn_code">const wxn_a = Symbol.for("wxn_key"); // 不存在就创建，存在就返回已有的
+const wxn_b = Symbol.for("wxn_key");
+console.log(wxn_a === wxn_b);          // true —— 同一个 key 对应同一个 Symbol
+
+console.log(Symbol.keyFor(wxn_a));      // "wxn_key"
+console.log(Symbol.keyFor(Symbol()));   // undefined —— 未注册的查不到</pre>
+            <div class="wxn_output" id="wxn_out2"></div>
+        </div>
+
+        <!-- 演示 3：作为对象键 -->
+        <div class="wxn_card">
+            <h3>五、演示 3：Symbol 作为对象属性键</h3>
+            <pre class="wxn_code">const wxn_obj = { name: "测试" };
+const wxn_secret = Symbol("secret");
+wxn_obj[wxn_secret] = "我不会被 for...in 枚举";
+
+console.log(Object.keys(wxn_obj));          // ["name"] —— Symbol 键不可枚举
+console.log(Object.getOwnPropertySymbols(wxn_obj)); // [Symbol(secret)]</pre>
+            <div class="wxn_output" id="wxn_out3"></div>
+        </div>
+
+        <!-- 演示 4：well-known Symbol -->
+        <div class="wxn_card">
+            <h3>六、演示 4：内置 Well-known Symbol（Symbol.iterator）</h3>
+            <pre class="wxn_code">const wxn_arr = [10, 20, 30];
+const wxn_iter = wxn_arr[Symbol.iterator]();
+console.log(wxn_iter.next()); // {value: 10, done: false}
+console.log(wxn_iter.next()); // {value: 20, done: false}
+console.log(wxn_iter.next()); // {value: 30, done: false}
+console.log(wxn_iter.next()); // {value: undefined, done: true}</pre>
+            <div class="wxn_output" id="wxn_out4"></div>
+        </div>
+
+        <!-- 小结 -->
+        <div class="wxn_card">
+            <h3>七、小结</h3>
+            <p>✅ <code>Symbol()</code> 创建唯一值，每次调用都不相同<br>
+               ✅ <code>Symbol("描述")</code> 的描述仅用于调试，不影响唯一性<br>
+               ✅ <code>Symbol.for("key")</code> 跨文件共享同一个 Symbol<br>
+               ✅ Symbol 键不会被 <code>for...in</code> / <code>Object.keys</code> 枚举<br>
+               ✅ 常用于：对象私有属性、常量枚举、自定义迭代器</p>
+        </div>
+    </div>
+
+    <script>
+        // 类型列表
+        const wxn_allTypes = [
+            { name: "String",  desc: "字符串" },
+            { name: "Number",  desc: "数字" },
+            { name: "Boolean", desc: "布尔值" },
+            { name: "Null",    desc: "空值" },
+            { name: "Undefined", desc: "未定义" },
+            { name: "Symbol ★",  desc: "符号（第六种）" },
+            { name: "BigInt",   desc: "大整数" }
+        ];
+        const wxn_typeList = document.getElementById("wxn_typeList");
+        wxn_allTypes.forEach(function(wxn_t) {
+            const wxn_div = document.createElement("div");
+            if (wxn_t.name.indexOf("Symbol") !== -1) {
+                wxn_div.className = "wxn_current";
+            }
+            wxn_div.innerHTML = "<b>" + wxn_t.name + "</b> — " + wxn_t.desc;
+            wxn_typeList.appendChild(wxn_div);
+        });
+
+        // 收集 console.log 输出
+        const wxn_logs = {};
+        const wxn_oldLog = console.log;
+        console.log = function() {
+            const wxn_key = arguments[0];
+            const wxn_val = arguments[1];
+            if (typeof wxn_key === "string" && wxn_key.indexOf("OUT") === 0) {
+                if (!wxn_logs[wxn_key]) wxn_logs[wxn_key] = [];
+                wxn_logs[wxn_key].push(wxn_val);
+            }
+            wxn_oldLog.apply(console, arguments);
+        };
+
+        // ========== 演示 1 ==========
+        (function() {
+            const wxn_s1 = Symbol();
+            const wxn_s2 = Symbol();
+            const wxn_s3 = Symbol("我的描述");
+
+            const wxn_lines = [];
+            wxn_lines.push('typeof Symbol()          → <b>' + typeof wxn_s1 + '</b>');
+            wxn_lines.push('Symbol() === Symbol()    → <b>' + (wxn_s1 === wxn_s2) + '</b> （每次都唯一）');
+            wxn_lines.push('Symbol("描述").description → <b>' + wxn_s3.description + '</b>');
+            document.getElementById("wxn_out1").innerHTML = wxn_lines.join("\n");
+        })();
+
+        // ========== 演示 2 ==========
+        (function() {
+            const wxn_a = Symbol.for("wxn_key");
+            const wxn_b = Symbol.for("wxn_key");
+            const wxn_unregistered = Symbol("temp");
+
+            const wxn_lines = [];
+            wxn_lines.push('Symbol.for("wxn_key") === Symbol.for("wxn_key") → <b>' + (wxn_a === wxn_b) + '</b>');
+            wxn_lines.push('Symbol.keyFor(已注册)   → <b>' + Symbol.keyFor(wxn_a) + '</b>');
+            wxn_lines.push('Symbol.keyFor(未注册)   → <b>' + Symbol.keyFor(wxn_unregistered) + '</b>');
+            document.getElementById("wxn_out2").innerHTML = wxn_lines.join("\n");
+        })();
+
+        // ========== 演示 3 ==========
+        (function() {
+            const wxn_obj = { name: "测试" };
+            const wxn_secret = Symbol("secret");
+            wxn_obj[wxn_secret] = "我不会被 for...in 枚举";
+
+            const wxn_lines = [];
+            wxn_lines.push('Object.keys(obj)            → <b>' + JSON.stringify(Object.keys(wxn_obj)) + '</b>');
+            wxn_lines.push('Object.getOwnPropertySymbols(obj).length → <b>' + Object.getOwnPropertySymbols(wxn_obj).length + '</b>');
+            wxn_lines.push('obj[Symbol("secret")] 的值 → <b>' + wxn_obj[wxn_secret] + '</b>');
+            document.getElementById("wxn_out3").innerHTML = wxn_lines.join("\n");
+        })();
+
+        // ========== 演示 4 ==========
+        (function() {
+            const wxn_arr = [10, 20, 30];
+            const wxn_iter = wxn_arr[Symbol.iterator]();
+            const wxn_lines = [];
+            let wxn_step;
+            while ((wxn_step = wxn_iter.next()).done === false) {
+                wxn_lines.push('.next() → <b>value: ' + wxn_step.value + ', done: ' + wxn_step.done + '</b>');
+            }
+            wxn_lines.push('.next() → <b>value: ' + wxn_step.value + ', done: ' + wxn_step.done + '</b> （迭代结束）');
+            document.getElementById("wxn_out4").innerHTML = wxn_lines.join("\n");
+        })();
+    </script>
+</body>
+</html>
