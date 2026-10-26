@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-10-26，功能名称：大连旅游景点介绍（山海大连） -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -9,11 +10,9 @@
   选题：旅游景点介绍（大连）
   学号：629 姓名：王秀宁
 
-  说明（提交前请修改）：
-  1. 请将上方“学号”“姓名”填入你的真实信息。
-  2. 本页全部类名以 “ly” 为前缀（ly 为姓名缩写占位），
-     提交前可将 “ly” 全局替换为你的姓名缩写，例如“张三”→“zs”。
-  3. 布局全部采用 flex / grid，未使用 float 与表格，符合实验要求。
+  说明：
+  1. 本页全部类名、id 名统一以 "wxn_" 为前缀（wxn = 王秀宁）。
+  2. 布局全部采用 flex / grid，未使用 float 与表格，符合实验要求。
 -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230e5a6d'/%3E%3Ctext x='32' y='43' font-size='30' text-anchor='middle' fill='%23ffffff'%3E%E6%B5%B7%3C/text%3E%3C/svg%3E">
 <style>
@@ -42,168 +41,168 @@ a{ color:inherit; text-decoration:none; }
 ul{ list-style:none; }
 
 /* 公共容器：宽度自适应，窄屏留边，宽屏居中限宽 */
-.ly-container{ width:100%; max-width:1120px; margin:0 auto; padding:0 20px; }
+.wxn_container{ width:100%; max-width:1120px; margin:0 auto; padding:0 20px; }
 
 /* 公共标题区（眉标 + 大标题） */
-.ly-sec-head{ margin-bottom:26px; }
-.ly-eyebrow{ display:inline-block; font-size:14px; letter-spacing:2px; color:var(--accent); }
-.ly-sec-title{ font-size:30px; font-weight:800; margin-top:6px; }
-.ly-sec-desc{ color:var(--muted); font-size:16px; margin-top:10px; max-width:640px; }
+.wxn_sec-head{ margin-bottom:26px; }
+.wxn_eyebrow{ display:inline-block; font-size:14px; letter-spacing:2px; color:var(--accent); }
+.wxn_sec-title{ font-size:30px; font-weight:800; margin-top:6px; }
+.wxn_sec-desc{ color:var(--muted); font-size:16px; margin-top:10px; max-width:640px; }
 
 /* ===================== 网页元素一：导航导航栏（flex 布局） ===================== */
-.ly-nav{
+.wxn_nav{
   position:sticky; top:0; z-index:20;
   background:rgba(14,90,109,.96);
   backdrop-filter:blur(6px);
   box-shadow:0 2px 12px rgba(14,90,109,.25);
 }
-.ly-nav-inner{
+.wxn_nav-inner{
   display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
   gap:8px 16px; padding:14px 20px;
 }
-.ly-logo{ display:flex; align-items:center; gap:10px; font-weight:800; color:#fff; font-size:20px; }
-.ly-logo-mark{
+.wxn_logo{ display:flex; align-items:center; gap:10px; font-weight:800; color:#fff; font-size:20px; }
+.wxn_logo-mark{
   width:34px; height:34px; border-radius:50%;
   background:linear-gradient(135deg,var(--accent),#4ecdc4);
   display:flex; align-items:center; justify-content:center; color:#fff; font-size:17px;
 }
-.ly-nav-links{ display:flex; flex-wrap:wrap; gap:4px 6px; }
-.ly-nav-links a{
+.wxn_nav-links{ display:flex; flex-wrap:wrap; gap:4px 6px; }
+.wxn_nav-links a{
   color:#dff1f5; font-size:15px; padding:6px 14px; border-radius:999px;
   transition:background .2s,color .2s;
 }
-.ly-nav-links a:hover{ background:rgba(255,255,255,.16); color:#fff; }
+.wxn_nav-links a:hover{ background:rgba(255,255,255,.16); color:#fff; }
 
 /* ===================== Hero 标题带（辅助，非考核元素） ===================== */
-.ly-hero{
+.wxn_hero{
   background:linear-gradient(160deg,var(--brand) 0%,#12395a 55%,#0b3b4f 100%);
   color:#fff; padding:74px 0 64px;
 }
-.ly-hero-title{ font-size:40px; font-weight:800; letter-spacing:2px; }
-.ly-hero-sub{ margin-top:14px; font-size:17px; color:#cfe7ef; max-width:720px; }
-.ly-hero-tag{ display:inline-block; margin-top:22px; background:var(--accent); color:#fff; padding:8px 18px; border-radius:999px; font-size:14px; }
+.wxn_hero-title{ font-size:40px; font-weight:800; letter-spacing:2px; }
+.wxn_hero-sub{ margin-top:14px; font-size:17px; color:#cfe7ef; max-width:720px; }
+.wxn_hero-tag{ display:inline-block; margin-top:22px; background:var(--accent); color:#fff; padding:8px 18px; border-radius:999px; font-size:14px; }
 
 /* ===================== 网页元素二：上图下文（景区精选卡片，grid 布局） ===================== */
-.ly-scenic{ padding:64px 0 20px; }
+.wxn_scenic{ padding:64px 0 20px; }
 /* 窄屏默认 1 列，≥768px 三列，列数显式指定 */
-.ly-card-grid{ display:grid; grid-template-columns:1fr; gap:24px; }
-@media (min-width:768px){ .ly-card-grid{ grid-template-columns:repeat(3,1fr); } }
+.wxn_card-grid{ display:grid; grid-template-columns:1fr; gap:24px; }
+@media (min-width:768px){ .wxn_card-grid{ grid-template-columns:repeat(3,1fr); } }
 
-.ly-card{
+.wxn_card{
   background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
   overflow:hidden; min-width:0; box-shadow:0 1px 2px rgba(18,57,74,.05);
   transition:transform .2s, box-shadow .2s;
 }
-.ly-card:hover{ transform:translateY(-3px); box-shadow:0 10px 24px rgba(18,57,74,.12); }
+.wxn_card:hover{ transform:translateY(-3px); box-shadow:0 10px 24px rgba(18,57,74,.12); }
 /* 上图：固定比例裁切 */
-.ly-card-media{ aspect-ratio:16/10; overflow:hidden; }
-.ly-card-media img{ width:100%; height:100%; object-fit:cover; object-position:center; }
+.wxn_card-media{ aspect-ratio:16/10; overflow:hidden; }
+.wxn_card-media img{ width:100%; height:100%; object-fit:cover; object-position:center; }
 /* 下文 */
-.ly-card-body{ padding:16px 18px 20px; }
-.ly-card-title{ font-size:19px; font-weight:700; }
-.ly-card-loc{ display:inline-block; margin-top:8px; font-size:13px; color:var(--accent); background:#e6f4f6; padding:3px 10px; border-radius:999px; }
-.ly-card-desc{ margin-top:10px; font-size:15px; color:var(--muted); }
+.wxn_card-body{ padding:16px 18px 20px; }
+.wxn_card-title{ font-size:19px; font-weight:700; }
+.wxn_card-loc{ display:inline-block; margin-top:8px; font-size:13px; color:var(--accent); background:#e6f4f6; padding:3px 10px; border-radius:999px; }
+.wxn_card-desc{ margin-top:10px; font-size:15px; color:var(--muted); }
 
 /* ===================== 网页元素三：左图右文（景点详解，flex 布局，可左右交替） ===================== */
-.ly-detail{ padding:56px 0 24px; }
-.ly-detail-list{ display:flex; flex-direction:column; gap:40px; }
+.wxn_detail{ padding:56px 0 24px; }
+.wxn_detail-list{ display:flex; flex-direction:column; gap:40px; }
 /* 一行 = 图 + 文，两栏；窄屏纵向堆叠 */
-.ly-detail-row{ display:flex; flex-direction:column; gap:20px; align-items:center; min-width:0; }
+.wxn_detail-row{ display:flex; flex-direction:column; gap:20px; align-items:center; min-width:0; }
 @media (min-width:768px){
-  .ly-detail-row{ flex-direction:row; gap:40px; }
-  .ly-detail-row .ly-detail-media{ flex:1 1 46%; min-width:0; }
-  .ly-detail-row .ly-detail-info{ flex:1 1 54%; min-width:0; }
+  .wxn_detail-row{ flex-direction:row; gap:40px; }
+  .wxn_detail-row .wxn_detail-media{ flex:1 1 46%; min-width:0; }
+  .wxn_detail-row .wxn_detail-info{ flex:1 1 54%; min-width:0; }
   /* 右图左文：通过修饰类实现图文交替 */
-  .ly-detail-row.ly-reverse .ly-detail-media{ order:2; }
-  .ly-detail-row.ly-reverse .ly-detail-info{ order:1; }
+  .wxn_detail-row.wxn_reverse .wxn_detail-media{ order:2; }
+  .wxn_detail-row.wxn_reverse .wxn_detail-info{ order:1; }
 }
-.ly-detail-media{ width:100%; aspect-ratio:16/10; border-radius:var(--radius); overflow:hidden; min-width:0; }
-.ly-detail-media img{ width:100%; height:100%; object-fit:cover; object-position:center; }
-.ly-detail-name{ display:flex; align-items:center; gap:12px; font-size:24px; font-weight:800; }
-.ly-detail-name::before{ content:""; width:10px; height:24px; border-radius:6px; background:linear-gradient(180deg,var(--accent),var(--brand)); }
-.ly-detail-loc{ display:inline-block; margin:10px 0 4px; font-size:14px; color:var(--accent); }
-.ly-detail-text{ font-size:16px; color:var(--muted); }
-.ly-detail-features{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
-.ly-detail-features li{ font-size:13px; color:var(--ink); background:var(--paper); border:1px solid var(--line); padding:6px 12px; border-radius:999px; }
+.wxn_detail-media{ width:100%; aspect-ratio:16/10; border-radius:var(--radius); overflow:hidden; min-width:0; }
+.wxn_detail-media img{ width:100%; height:100%; object-fit:cover; object-position:center; }
+.wxn_detail-name{ display:flex; align-items:center; gap:12px; font-size:24px; font-weight:800; }
+.wxn_detail-name::before{ content:""; width:10px; height:24px; border-radius:6px; background:linear-gradient(180deg,var(--accent),var(--brand)); }
+.wxn_detail-loc{ display:inline-block; margin:10px 0 4px; font-size:14px; color:var(--accent); }
+.wxn_detail-text{ font-size:16px; color:var(--muted); }
+.wxn_detail-features{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.wxn_detail-features li{ font-size:13px; color:var(--ink); background:var(--paper); border:1px solid var(--line); padding:6px 12px; border-radius:999px; }
 
 /* ===================== 页脚 ===================== */
-.ly-footer{
+.wxn_footer{
   margin-top:56px; background:#0f3a4d; color:#b8d6e2; padding:40px 0 34px;
 }
-.ly-footer-inner{ display:flex; flex-direction:column; gap:12px; align-items:center; text-align:center; }
-.ly-footer-name{ font-size:17px; color:#fff; font-weight:700; }
-.ly-footer small{ font-size:13px; color:#8fb6c4; }
+.wxn_footer-inner{ display:flex; flex-direction:column; gap:12px; align-items:center; text-align:center; }
+.wxn_footer-name{ font-size:17px; color:#fff; font-weight:700; }
+.wxn_footer small{ font-size:13px; color:#8fb6c4; }
 </style>
 </head>
 <body>
 
 <!-- ===================== 网页元素一：导航导航栏 ===================== -->
-<header class="ly-nav">
-  <nav class="ly-nav-inner ly-container">
-    <div class="ly-logo">
-      <span class="ly-logo-mark">海</span>
+<header class="wxn_nav">
+  <nav class="wxn_nav-inner wxn_container">
+    <div class="wxn_logo">
+      <span class="wxn_logo-mark">海</span>
       <span>山海大连 · 旅游景点介绍</span>
     </div>
-    <ul class="ly-nav-links">
-      <li><a href="#jingqu">景区精选</a></li>
-      <li><a href="#tuijian">深度推荐</a></li>
-      <li><a href="#guan-yu">关于本站</a></li>
+    <ul class="wxn_nav-links">
+      <li><a href="#wxn_jingqu">景区精选</a></li>
+      <li><a href="#wxn_tuijian">深度推荐</a></li>
+      <li><a href="#wxn_guan_yu">关于本站</a></li>
     </ul>
   </nav>
 </header>
 
 <!-- Hero 标题带（辅助，非考核元素） -->
-<section class="ly-hero">
-  <div class="ly-container">
-    <h1 class="ly-hero-title">大连 · 旅游景点介绍</h1>
-    <p class="ly-hero-sub">一座山海相依的海滨城市——蓝天、碧海、沙滩与百年史迹在这里交汇。本页精选大连四大代表性景区，带您走进北方明珠的自然与人文。</p>
-    <span class="ly-hero-tag">欢迎来到大连</span>
+<section class="wxn_hero">
+  <div class="wxn_container">
+    <h1 class="wxn_hero-title">大连 · 旅游景点介绍</h1>
+    <p class="wxn_hero-sub">一座山海相依的海滨城市——蓝天、碧海、沙滩与百年史迹在这里交汇。本页精选大连四大代表性景区，带您走进北方明珠的自然与人文。</p>
+    <span class="wxn_hero-tag">欢迎来到大连</span>
   </div>
 </section>
 
 <!-- ===================== 网页元素二：上图下文（景区精选卡片） ===================== -->
-<section class="ly-scenic" id="jingqu">
-  <div class="ly-container">
-    <div class="ly-sec-head">
-      <span class="ly-eyebrow">精选景区 · 上图下文卡片</span>
-      <h2 class="ly-sec-title">四大代表性景区</h2>
-      <p class="ly-sec-desc">以下每张卡片均为"上图下文"式网页元素：上方为景区实拍图，下方为名称、区位标签与简介。</p>
+<section class="wxn_scenic" id="wxn_jingqu">
+  <div class="wxn_container">
+    <div class="wxn_sec-head">
+      <span class="wxn_eyebrow">精选景区 · 上图下文卡片</span>
+      <h2 class="wxn_sec-title">四大代表性景区</h2>
+      <p class="wxn_sec-desc">以下每张卡片均为"上图下文"式网页元素：上方为景区实拍图，下方为名称、区位标签与简介。</p>
     </div>
 
-    <div class="ly-card-grid">
+    <div class="wxn_card-grid">
       <!-- 卡片 1：老虎滩海洋公园 -->
-      <article class="ly-card">
-        <div class="ly-card-media">
+      <article class="wxn_card">
+        <div class="wxn_card-media">
           <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/JV13bF3d9ojeLJxeXgccyKixnzd" alt="大连老虎滩海洋公园航拍">
         </div>
-        <div class="ly-card-body">
-          <h3 class="ly-card-title">老虎滩海洋公园</h3>
-          <span class="ly-card-loc">大连 · 中山区</span>
-          <p class="ly-card-desc">坐落在南部海滨的现代化海洋主题公园，集极地馆、珊瑚馆、欢乐剧场于一体，拥有全长600米的跨海空中索道。</p>
+        <div class="wxn_card-body">
+          <h3 class="wxn_card-title">老虎滩海洋公园</h3>
+          <span class="wxn_card-loc">大连 · 中山区</span>
+          <p class="wxn_card-desc">坐落在南部海滨的现代化海洋主题公园，集极地馆、珊瑚馆、欢乐剧场于一体，拥有全长600米的跨海空中索道。</p>
         </div>
       </article>
 
       <!-- 卡片 2：星海广场 -->
-      <article class="ly-card">
-        <div class="ly-card-media">
+      <article class="wxn_card">
+        <div class="wxn_card-media">
           <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/Vu9kbKlyaoJ2hQxJ1QscFhXQn9I" alt="大连星海广场全景">
         </div>
-        <div class="ly-card-body">
-          <h3 class="ly-card-title">星海广场</h3>
-          <span class="ly-card-loc">大连 · 沙河口区</span>
-          <p class="ly-card-desc">亚洲知名的大型城市广场，中央音乐喷泉与百年城雕交相辉映，毗邻会展中心与星海湾大桥，是滨海 CBD 休闲核心。</p>
+        <div class="wxn_card-body">
+          <h3 class="wxn_card-title">星海广场</h3>
+          <span class="wxn_card-loc">大连 · 沙河口区</span>
+          <p class="wxn_card-desc">亚洲知名的大型城市广场，中央音乐喷泉与百年城雕交相辉映，毗邻会展中心与星海湾大桥，是滨海 CBD 休闲核心。</p>
         </div>
       </article>
 
       <!-- 卡片 3：金石滩度假区 -->
-      <article class="ly-card">
-        <div class="ly-card-media">
+      <article class="wxn_card">
+        <div class="wxn_card-media">
           <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/CTeXbynQYovpnMxo8HmcMcCSnhe" alt="大连金石滩恐龙探海海蚀地貌">
         </div>
-        <div class="ly-card-body">
-          <h3 class="ly-card-title">金石滩度假区</h3>
-          <span class="ly-card-loc">大连 · 金州区</span>
-          <p class="ly-card-desc">国家5A级旅游景区，滨海国家地质公园拥有"恐龙探海""龟裂石"等海蚀奇观，更有十里黄金海岸沙滩，集地质与海滨度假于一体。</p>
+        <div class="wxn_card-body">
+          <h3 class="wxn_card-title">金石滩度假区</h3>
+          <span class="wxn_card-loc">大连 · 金州区</span>
+          <p class="wxn_card-desc">国家5A级旅游景区，滨海国家地质公园拥有"恐龙探海""龟裂石"等海蚀奇观，更有十里黄金海岸沙滩，集地质与海滨度假于一体。</p>
         </div>
       </article>
     </div>
@@ -211,25 +210,25 @@ ul{ list-style:none; }
 </section>
 
 <!-- ===================== 网页元素三：左图右文（景点详解，图文可左右交替） ===================== -->
-<section class="ly-detail" id="tuijian">
-  <div class="ly-container">
-    <div class="ly-sec-head">
-      <span class="ly-eyebrow">深度推荐 · 左图右文详解</span>
-      <h2 class="ly-sec-title">值得一游的滨海目的地</h2>
-      <p class="ly-sec-desc">以下两条采用"左图右文"式网页元素：左侧为景点图片、右侧为介绍文字；两条通过修饰类实现图文左右交替。</p>
+<section class="wxn_detail" id="wxn_tuijian">
+  <div class="wxn_container">
+    <div class="wxn_sec-head">
+      <span class="wxn_eyebrow">深度推荐 · 左图右文详解</span>
+      <h2 class="wxn_sec-title">值得一游的滨海目的地</h2>
+      <p class="wxn_sec-desc">以下两条采用"左图右文"式网页元素：左侧为景点图片、右侧为介绍文字；两条通过修饰类实现图文左右交替。</p>
     </div>
 
-    <div class="ly-detail-list">
+    <div class="wxn_detail-list">
       <!-- 第 1 行：左图右文 -->
-      <article class="ly-detail-row">
-        <div class="ly-detail-media">
+      <article class="wxn_detail-row">
+        <div class="wxn_detail-media">
           <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/WsUvbUbagou3SRxCBEHcYIFyndg" alt="大连棒棰岛海上小岛">
         </div>
-        <div class="ly-detail-info">
-          <h3 class="ly-detail-name">棒棰岛</h3>
-          <span class="ly-detail-loc">大连 · 滨海路东段</span>
-          <p class="ly-detail-text">三面环山、一面濒海，因离岸约五百米海面上一座棒槌形小岛得名。山、海、岛、滩景观兼备，沙滩平缓，是依山傍海的静谧度假之地。</p>
-          <ul class="ly-detail-features">
+        <div class="wxn_detail-info">
+          <h3 class="wxn_detail-name">棒棰岛</h3>
+          <span class="wxn_detail-loc">大连 · 滨海路东段</span>
+          <p class="wxn_detail-text">三面环山、一面濒海，因离岸约五百米海面上一座棒槌形小岛得名。山、海、岛、滩景观兼备，沙滩平缓，是依山傍海的静谧度假之地。</p>
+          <ul class="wxn_detail-features">
             <li>山海岛滩</li>
             <li>避暑疗养胜地</li>
             <li>滨海路沿线</li>
@@ -237,16 +236,16 @@ ul{ list-style:none; }
         </div>
       </article>
 
-      <!-- 第 2 行：右图左文（类名 ly-reverse 实现图文交替） -->
-      <article class="ly-detail-row ly-reverse">
-        <div class="ly-detail-media">
+      <!-- 第 2 行：右图左文（类名 wxn_reverse 实现图文交替） -->
+      <article class="wxn_detail-row wxn_reverse">
+        <div class="wxn_detail-media">
           <img src="https://media.doubao.com/space/api/box/stream/download/all_by_mount_point/QlOIbPfxyouY4MxZV7sc4iVIn7g" alt="大连旅顺口军港灯塔">
         </div>
-        <div class="ly-detail-info">
-          <h3 class="ly-detail-name">旅顺口</h3>
-          <span class="ly-detail-loc">大连 · 旅顺口区</span>
-          <p class="ly-detail-text">中国近代史重要军港与史迹集中地，拥有旅顺军港、白玉山、日俄战争遗址等。山海相依、史迹深厚，是了解大连百年历史的重要一站。</p>
-          <ul class="ly-detail-features">
+        <div class="wxn_detail-info">
+          <h3 class="wxn_detail-name">旅顺口</h3>
+          <span class="wxn_detail-loc">大连 · 旅顺口区</span>
+          <p class="wxn_detail-text">中国近代史重要军港与史迹集中地，拥有旅顺军港、白玉山、日俄战争遗址等。山海相依、史迹深厚，是了解大连百年历史的重要一站。</p>
+          <ul class="wxn_detail-features">
             <li>百年军港</li>
             <li>近代史迹</li>
             <li>山海景观</li>
@@ -258,9 +257,9 @@ ul{ list-style:none; }
 </section>
 
 <!-- ===================== 页脚 ===================== -->
-<footer class="ly-footer" id="guan-yu">
-  <div class="ly-footer-inner ly-container">
-    <p class="ly-footer-name">高级网页设计I · 网页元素设计实验</p>
+<footer class="wxn_footer" id="wxn_guan_yu">
+  <div class="wxn_footer-inner wxn_container">
+    <p class="wxn_footer-name">高级网页设计I · 网页元素设计实验</p>
     <p>选题：旅游景点介绍　|　学号：<em>629</em>　姓名：<em>王秀宁</em></p>
     <small>本页使用 HTML + CSS 完成，布局采用 flex / grid，含全局公共 CSS 与类选择器，未使用浮动与表格。</small>
   </div>
