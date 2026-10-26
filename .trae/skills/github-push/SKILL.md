@@ -29,6 +29,23 @@ Commit all staged changes and push to the GitHub repository.
 ## Notes
 
 - Use SSH for authentication (public key is already configured by the user).
-- The project may have **two** remotes: `gitee` (existing) and `github` (this skill's target). Do NOT overwrite `gitee`.
+- The project may have **two** remotes: `origin` (Gitee) and `github` (this skill's target). Do NOT overwrite the Gitee remote.
 - If the remote repository is empty, the first push must use `-u` to set upstream tracking.
 - This skill only handles `github` remote; if the user also wants Gitee pushed, use the `gitee-push` skill separately.
+
+## Network Note (Windows school/work network)
+
+The local network **blocks SSH port 22** to github.com, but port 443 works. An SSH config entry has been added to `~/.ssh/config` that transparently routes github.com → `ssh.github.com:443`:
+
+```ssh-config
+Host github.com
+  HostName ssh.github.com
+  Port 443
+  User git
+  IdentityFile ~/.ssh/id_ed25519
+```
+
+If GitHub push fails with `Connection refused` on port 22, verify this config block exists and that `ssh -T git@github.com` returns a success greeting like `Hi wxn2238659151!`.
+
+Alternative — push with HTTPS if cert errors are resolved later:
+`git remote set-url github https://github.com/wxn2238659151/wangxiuning.git`
