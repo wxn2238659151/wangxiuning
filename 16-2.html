@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-10-26，功能名称：JavaScript 程序结构 - 条件与循环 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS 程序结构 · 条件与循环 - 王秀宁</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", Consolas, "Courier New", monospace;
+            background: linear-gradient(135deg, #f5f7ff, #eef8ff);
+            padding: 30px 20px 60px;
+            color: #1a2040;
+        }
+        .wxn_container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .wxn_title {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #3a5bd9, #00909e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .wxn_subtitle {
+            text-align: center;
+            color: #6b7899;
+            margin-bottom: 28px;
+            font-size: 14px;
+        }
+        .wxn_card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 22px 26px;
+            margin-bottom: 22px;
+            box-shadow: 0 6px 20px rgba(58,91,217,.08);
+        }
+        .wxn_card h3 {
+            font-size: 18px;
+            color: #3a5bd9;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #dbe3ff;
+        }
+        .wxn_card h3 .wxn_tag {
+            display: inline-block;
+            background: #3a5bd9;
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        pre.wxn_code {
+            background: #1e2a4a;
+            color: #b8c8f0;
+            padding: 14px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            margin-bottom: 12px;
+            line-height: 1.65;
+        }
+        pre.wxn_code .wxn_key { color: #ff79c6; }
+        pre.wxn_code .wxn_str { color: #f1fa8c; }
+        pre.wxn_code .wxn_com { color: #6272a4; font-style: italic; }
+        pre.wxn_code .wxn_num { color: #bd93f9; }
+        .wxn_output {
+            background: #f0f3ff;
+            border-left: 4px solid #3a5bd9;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            font-size: 13px;
+            white-space: pre-wrap;
+            line-height: 1.8;
+            color: #2d3a66;
+        }
+        .wxn_output b { color: #3a5bd9; }
+        .wxn_footer {
+            text-align: center;
+            color: #6b7899;
+            font-size: 13px;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wxn_container">
+        <h1 class="wxn_title">JavaScript 程序结构</h1>
+        <p class="wxn_subtitle">王秀宁 · 条件 & 循环</p>
+
+        <!-- ============ 条件 ============ -->
+
+        <div class="wxn_card">
+            <h3><span class="wxn_tag">条件</span> 1. if / else if / else</h3>
+            <pre class="wxn_code"><span class="wxn_key">let</span> wxn_score = <span class="wxn_num">85</span>;
+<span class="wxn_com">// 根据分数判断等级</span>
+<span class="wxn_key">if</span> (wxn_score >= <span class="wxn_num">90</span>) {
+    wxn_grade = <span class="wxn_str">"优秀"</span>;
+} <span class="wxn_key">else if</span> (wxn_score >= <span class="wxn_num">80</span>) {
+    wxn_grade = <span class="wxn_str">"良好"</span>;
+} <span class="wxn_key">else if</span> (wxn_score >= <span class="wxn_num">60</span>) {
+    wxn_grade = <span class="wxn_str">"及格"</span>;
+} <span class="wxn_key">else</span> {
+    wxn_grade = <span class="wxn_str">"不及格"</span>;
+}</pre>
+            <div class="wxn_output" id="wxn_out1"></div>
+        </div>
+
+        <div class="wxn_card">
+            <h3><span class="wxn_tag">条件</span> 2. switch（多分支）</h3>
+            <pre class="wxn_code"><span class="wxn_key">let</span> wxn_day = <span class="wxn_num">3</span>;  <span class="wxn_com">// 1=周一, 7=周日</span>
+<span class="wxn_key">switch</span> (wxn_day) {
+    <span class="wxn_key">case</span> <span class="wxn_num">1</span>: wxn_week = <span class="wxn_str">"星期一"</span>; <span class="wxn_key">break</span>;
+    <span class="wxn_key">case</span> <span class="wxn_num">2</span>: wxn_week = <span class="wxn_str">"星期二"</span>; <span class="wxn_key">break</span>;
+    <span class="wxn_key">case</span> <span class="wxn_num">3</span>: wxn_week = <span class="wxn_str">"星期三"</span>; <span class="wxn_key">break</span>;
+    <span class="wxn_key">case</span> <span class="wxn_num">4</span>: wxn_week = <span class="wxn_str">"星期四"</span>; <span class="wxn_key">break</span>;
+    <span class="wxn_key">default</span>: wxn_week = <span class="wxn_str">"其它"</span>;
+}</pre>
+            <div class="wxn_output" id="wxn_out2"></div>
+        </div>
+
+        <div class="wxn_card">
+            <h3><span class="wxn_tag">条件</span> 3. 三元运算符 ? :</h3>
+            <pre class="wxn_code"><span class="wxn_key">let</span> wxn_age = <span class="wxn_num">20</span>;
+<span class="wxn_key">let</span> wxn_isAdult = wxn_age >= <span class="wxn_num">18</span> ? <span class="wxn_str">"成年"</span> : <span class="wxn_str">"未成年"</span>;</pre>
+            <div class="wxn_output" id="wxn_out3"></div>
+        </div>
+
+        <!-- ============ 循环 ============ -->
+
+        <div class="wxn_card">
+            <h3><span class="wxn_tag">循环</span> 1. for（次数循环）</h3>
+            <pre class="wxn_code"><span class="wxn_com">// 计算 1+2+3+...+100</span>
+<span class="wxn_key">let</span> wxn_sum = <span class="wxn_num">0</span>;
+<span class="wxn_key">for</span> (<span class="wxn_key">let</span> wxn_i = <span class="wxn_num">1</span>; wxn_i <= <span class="wxn_num">100</span>; wxn_i++) {
+    wxn_sum += wxn_i;
+}</pre>
+            <div class="wxn_output" id="wxn_out4"></div>
+        </div>
+
+        <div class="wxn_card">
+            <h3><span class="wxn_tag">循环</span> 2. for...of（遍历数组）</h3>
+            <pre class="wxn_code"><span class="wxn_key">const</span> wxn_fruits = [<span class="wxn_str">"🍎苹果"</span>, <span class="wxn_str">"🍌香蕉"</span>, <span class="wxn_str">"🍊橘子"</span>, <span class="wxn_str">"🍇葡萄"</span>];
+<span class="wxn_key">for</span> (<span class="wxn_key">let</span> wxn_fruit <span class="wxn_key">of</span> wxn_fruits) {
+    wxn_list.push(wxn_fruit);
+}</pre>
+            <div class="wxn_output" id="wxn_out5"></div>
+        </div>
+
+        <div class="wxn_card">
+            <h3><span class="wxn_tag">循环</span> 3. while（条件循环）</h3>
+            <pre class="wxn_code"><span class="wxn_key">let</span> wxn_count = <span class="wxn_num">0</span>;
+<span class="wxn_key">let</span> wxn_n = <span class="wxn_num">1</span>;
+<span class="wxn_key">while</span> (wxn_n < <span class="wxn_num">100</span>) {
+    wxn_count++;
+    wxn_n *= <span class="wxn_num">2</span>;  <span class="wxn_com">// 2, 4, 8, 16, 32, 64, 128...</span>
+}</pre>
+            <div class="wxn_output" id="wxn_out6"></div>
+        </div>
+
+        <div class="wxn_card">
+            <h3><span class="wxn_tag">循环</span> 4. do...while（至少执行一次）</h3>
+            <pre class="wxn_code"><span class="wxn_key">let</span> wxn_doCount = <span class="wxn_num">0</span>;
+<span class="wxn_key">do</span> {
+    wxn_doCount++;
+} <span class="wxn_key">while</span> (wxn_doCount < <span class="wxn_num">3</span>);</pre>
+            <div class="wxn_output" id="wxn_out7"></div>
+        </div>
+
+        <div class="wxn_card">
+            <h3><span class="wxn_tag">循环</span> 5. for...in（遍历对象键）</h3>
+            <pre class="wxn_code"><span class="wxn_key">let</span> wxn_user = { name: <span class="wxn_str">"王秀宁"</span>, age: <span class="wxn_num">20</span>, city: <span class="wxn_str">"大连"</span> };
+<span class="wxn_key">let</span> wxn_keys = [];
+<span class="wxn_key">for</span> (<span class="wxn_key">let</span> wxn_k <span class="wxn_key">in</span> wxn_user) {
+    wxn_keys.push(wxn_k + <span class="wxn_str">"="</span> + wxn_user[wxn_k]);
+}</pre>
+            <div class="wxn_output" id="wxn_out8"></div>
+        </div>
+
+        <div class="wxn_card">
+            <h3><span class="wxn_tag">循环</span> break 与 continue</h3>
+            <pre class="wxn_code"><span class="wxn_com">// break: 跳出整个循环；continue: 跳过当前一轮</span>
+<span class="wxn_key">let</span> wxn_evens = [];
+<span class="wxn_key">for</span> (<span class="wxn_key">let</span> wxn_i = <span class="wxn_num">1</span>; wxn_i <= <span class="wxn_num">10</span>; wxn_i++) {
+    <span class="wxn_key">if</span> (wxn_i === <span class="wxn_num">8</span>) <span class="wxn_key">break</span>;       <span class="wxn_com">// 到 8 就停</span>
+    <span class="wxn_key">if</span> (wxn_i % <span class="wxn_num">2</span> !== <span class="wxn_num">0</span>) <span class="wxn_key">continue</span>;  <span class="wxn_com">// 奇数跳过</span>
+    wxn_evens.push(wxn_i);
+}</pre>
+            <div class="wxn_output" id="wxn_out9"></div>
+        </div>
+
+        <div class="wxn_footer">— 王秀宁《高级网页设计》课堂实践 —</div>
+    </div>
+
+    <script>
+        // ====== 条件 1: if / else if / else ======
+        (function() {
+            let wxn_score = 85;
+            let wxn_grade;
+            if (wxn_score >= 90) wxn_grade = "优秀";
+            else if (wxn_score >= 80) wxn_grade = "良好";
+            else if (wxn_score >= 60) wxn_grade = "及格";
+            else wxn_grade = "不及格";
+            document.getElementById("wxn_out1").innerHTML =
+                '分数 85 → 等级: <b>' + wxn_grade + '</b>';
+        })();
+
+        // ====== 条件 2: switch ======
+        (function() {
+            let wxn_day = 3;
+            let wxn_week;
+            switch (wxn_day) {
+                case 1: wxn_week = "星期一"; break;
+                case 2: wxn_week = "星期二"; break;
+                case 3: wxn_week = "星期三"; break;
+                case 4: wxn_week = "星期四"; break;
+                default: wxn_week = "其它";
+            }
+            document.getElementById("wxn_out2").innerHTML =
+                'day = 3 → <b>' + wxn_week + '</b>';
+        })();
+
+        // ====== 条件 3: 三元 ======
+        (function() {
+            let wxn_age = 20;
+            let wxn_isAdult = wxn_age >= 18 ? "成年" : "未成年";
+            document.getElementById("wxn_out3").innerHTML =
+                'age = 20 → <b>' + wxn_isAdult + '</b>';
+        })();
+
+        // ====== 循环 1: for ======
+        (function() {
+            let wxn_sum = 0;
+            for (let wxn_i = 1; wxn_i <= 100; wxn_i++) {
+                wxn_sum += wxn_i;
+            }
+            document.getElementById("wxn_out4").innerHTML =
+                '1 + 2 + ... + 100 = <b>' + wxn_sum + '</b>';
+        })();
+
+        // ====== 循环 2: for...of ======
+        (function() {
+            const wxn_fruits = ["🍎苹果", "🍌香蕉", "🍊橘子", "🍇葡萄"];
+            let wxn_list = [];
+            for (let wxn_fruit of wxn_fruits) {
+                wxn_list.push(wxn_fruit);
+            }
+            document.getElementById("wxn_out5").innerHTML =
+                '遍历数组: <b>' + wxn_list.join(" → ") + '</b>';
+        })();
+
+        // ====== 循环 3: while ======
+        (function() {
+            let wxn_count = 0;
+            let wxn_n = 1;
+            let wxn_steps = [];
+            while (wxn_n < 100) {
+                wxn_steps.push(wxn_n);
+                wxn_count++;
+                wxn_n *= 2;
+            }
+            document.getElementById("wxn_out6").innerHTML =
+                '翻倍到 ≥100 为止，走过: <b>' + wxn_steps.join(", ") + '</b>（共 ' + wxn_count + ' 次）';
+        })();
+
+        // ====== 循环 4: do...while ======
+        (function() {
+            let wxn_doCount = 0;
+            let wxn_steps = [];
+            do {
+                wxn_doCount++;
+                wxn_steps.push(wxn_doCount);
+            } while (wxn_doCount < 3);
+            document.getElementById("wxn_out7").innerHTML =
+                'do...while 执行顺序: <b>' + wxn_steps.join(" → ") + '</b>';
+        })();
+
+        // ====== 循环 5: for...in ======
+        (function() {
+            let wxn_user = { name: "王秀宁", age: 20, city: "大连" };
+            let wxn_keys = [];
+            for (let wxn_k in wxn_user) {
+                wxn_keys.push(wxn_k + "=" + wxn_user[wxn_k]);
+            }
+            document.getElementById("wxn_out8").innerHTML =
+                '对象键值对: <b>' + wxn_keys.join(", ") + '</b>';
+        })();
+
+        // ====== break / continue ======
+        (function() {
+            let wxn_evens = [];
+            for (let wxn_i = 1; wxn_i <= 10; wxn_i++) {
+                if (wxn_i === 8) break;
+                if (wxn_i % 2 !== 0) continue;
+                wxn_evens.push(wxn_i);
+            }
+            document.getElementById("wxn_out9").innerHTML =
+                '1~10 中，到 8 停，只收偶数 → <b>' + wxn_evens.join(", ") + '</b>';
+        })();
+
+        console.log("王秀宁 · JS 程序结构演示页面加载完成");
+    </script>
+</body>
+</html>
