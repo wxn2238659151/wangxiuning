@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-10-26，功能名称：数7游戏（1~100 盒子按规则显示） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数7游戏 - 王秀宁</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background: linear-gradient(135deg, #fef6ff, #eef3ff);
+            min-height: 100vh;
+            padding: 30px 20px 60px;
+            color: #2d2a4a;
+        }
+        .wxn_container {
+            max-width: 920px;
+            margin: 0 auto;
+        }
+        .wxn_title {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #6257d9, #ff6baa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .wxn_subtitle {
+            text-align: center;
+            color: #858198;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+        .wxn_rule {
+            background: #fff;
+            border-left: 4px solid #6257d9;
+            padding: 12px 18px;
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 24px;
+            font-size: 14px;
+            line-height: 1.9;
+        }
+        .wxn_grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px;
+            background: #fff;
+            padding: 16px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(98,87,217,.12);
+        }
+        .wxn_box {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            background: #f2f0ff;
+            color: #6257d9;
+            transition: .2s;
+            cursor: default;
+        }
+        .wxn_box:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 12px rgba(98,87,217,.25);
+        }
+        /* 满足数7规则 —— 空盒子，粉红色 */
+        .wxn_box-empty {
+            background: linear-gradient(135deg, #ff9ec7, #ff6baa);
+            color: transparent;
+            box-shadow: inset 0 0 0 2px rgba(255,255,255,.5);
+        }
+        .wxn_box-empty:hover {
+            color: #fff;
+        }
+        .wxn_footer {
+            margin-top: 22px;
+            text-align: center;
+            color: #858198;
+            font-size: 13px;
+        }
+        @media (max-width: 600px) {
+            .wxn_grid { grid-template-columns: repeat(8, 1fr); }
+            .wxn_box { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wxn_container">
+        <h1 class="wxn_title">数7 游戏</h1>
+        <p class="wxn_subtitle">王秀宁 · 1~100</p>
+
+        <div class="wxn_rule">
+            <b>规则：</b>数字从 1 数到 100，凡满足以下任一条件的盒子显示为<strong>空（粉色）</strong>：<br>
+            ① <b>7 的倍数</b>（7、14、21、28……） &nbsp; ② <b>末尾是 7</b>（7、17、27、37……） &nbsp; ③ <b>包含数字 7</b>（7、17、71、72……）
+        </div>
+
+        <div class="wxn_grid" id="wxn_grid"></div>
+
+        <div class="wxn_footer">— 王秀宁《高级网页设计》课堂实践 —</div>
+    </div>
+
+    <script>
+        // 数7规则：7的倍数、末尾是7、包含数字7
+        function wxn_isCount7(wxn_num) {
+            if (wxn_num % 7 === 0) return true;          // 7的倍数
+            if (wxn_num % 10 === 7) return true;         // 末尾是7
+            if (String(wxn_num).indexOf("7") !== -1) return true; // 包含数字7
+            return false;
+        }
+
+        const wxn_grid = document.getElementById("wxn_grid");
+        let wxn_html = "";
+
+        for (let wxn_i = 1; wxn_i <= 100; wxn_i++) {
+            const wxn_isEmpty = wxn_isCount7(wxn_i);
+            const wxn_class = wxn_isEmpty ? "wxn_box wxn_box-empty" : "wxn_box";
+            const wxn_content = wxn_isEmpty ? "" : wxn_i;
+            wxn_html += '<div class="' + wxn_class + '">' + wxn_content + '</div>';
+        }
+
+        wxn_grid.innerHTML = wxn_html;
+
+        // 控制台输出命中情况（王秀宁）
+        const wxn_hit = [];
+        for (let wxn_i = 1; wxn_i <= 100; wxn_i++) {
+            if (wxn_isCount7(wxn_i)) wxn_hit.push(wxn_i);
+        }
+        console.log("王秀宁 · 数7命中 " + wxn_hit.length + " 个数：", wxn_hit);
+    </script>
+</body>
+</html>
