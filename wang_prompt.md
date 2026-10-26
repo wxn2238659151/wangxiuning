@@ -133,3 +133,19 @@
 > 新建12-3.html. css 3D 立体菜单网页和3D 透视效果演示页
 
 ---
+
+## 2026-10-26-16-10
+**Model:** Trae proprietary model
+
+**Prompt 11:**
+> 从现在开始，所有css类名，id名、js变量都以wxn_开始，所有的提示词都在执行之前写入文件wang_prompt.md，以附加的方式写入，不覆盖之前的内容，写入的内容包括时间yyyy-mm-dd-hh-mm、使用的模型、提示词内容。
+
+---
+
+## 2026-10-26-16-19
+**Model:** Trae proprietary model
+
+**Prompt 12:**
+> 提交到github
+
+---

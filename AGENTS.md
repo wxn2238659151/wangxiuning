@@ -51,6 +51,26 @@ Open `index.html` directly in a browser, or serve the root with any static serve
     .catch(err => { /* 错误处理 */ });
   ```
 
+## Prompt Logging (before every execution)
+- 在**执行任何用户指令之前**，必须先把本次用户提示词追加写入项目根目录的 `wang_prompt.md`（append-only，绝不覆盖）。
+- 每条记录格式如下（Markdown 标题为时间戳，使用 `---` 与上一条分隔）：
+  ```markdown
+  ## yyyy-mm-dd-hh-mm
+  **Model:** Trae proprietary model
+
+  **Prompt N:**
+  > 完整的用户原始提示词，用 `>` 逐行 quote 包裹
+
+  ---
+  ```
+- 字段说明：
+  - 时间戳格式严格为 `yyyy-MM-dd-HH-mm`（24 小时制，本地时区），使用 `Get-Date -Format "yyyy-MM-dd-HH-mm"` 或等价方式获取。
+  - `Model` 固定写 `Trae proprietary model`，历史遗留条目保持原样不改动。
+  - `Prompt N` 的 N 递增，取文件中最大编号 + 1。
+  - Prompt 内容为用户**原始消息**全文，不做翻译、不做摘要、不做改写。
+- 如果 `wang_prompt.md` 不存在则创建，首行写 `# Wang Prompt Log` 作为标题。
+- 执行写入后再开始真正的用户任务，保证日志与操作一一对应。
+
 ## General Conventions
 - Pages are self-contained; each has its own inline `<style>` block.
 - Image paths are relative (`./img/1.png`).
