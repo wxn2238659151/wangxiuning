@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-10-29，功能名称：新闻 Tab 选项卡（最新投诉/官方回应/追踪调查） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新闻 Tab 选项卡 - 最新投诉 / 官方回应 / 追踪调查</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Microsoft YaHei", "SimSun", sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 0;
+      min-height: 100vh;
+    }
+
+    /* ===== 选项卡整体容器 ===== */
+    .wxn_tabCard {
+      width: 316px;
+      background: #ffffff;
+      border: 2px solid #c8000a;
+      box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ===== 顶部标签栏 ===== */
+    .wxn_tabBar {
+      display: flex;
+      border-bottom: 2px solid #c8000a;
+      background: #c8000a;
+    }
+
+    .wxn_tabItem {
+      flex: 1;
+      text-align: center;
+      padding: 7px 0;
+      font-size: 15px;
+      font-weight: bold;
+      color: #c8000a;
+      background: #ffffff;
+      cursor: pointer;
+      border-right: 1px solid #c8000a;
+      user-select: none;
+      transition: background-color 0.25s, color 0.25s;
+      letter-spacing: 1px;
+    }
+
+    .wxn_tabItem:last-child {
+      border-right: none;
+    }
+
+    .wxn_tabItem:hover {
+      background: #ffe9e9;
+    }
+
+    /* 激活状态：红底白字 */
+    .wxn_tabItem.wxn_active {
+      background: #c8000a;
+      color: #ffffff;
+    }
+
+    /* ===== 内容区 ===== */
+    .wxn_tabContent {
+      padding: 8px 6px 10px 6px;
+      min-height: 268px;
+    }
+
+    .wxn_newsList {
+      display: none;
+      list-style: none;
+      animation: wxn_fadeIn 0.35s ease;
+    }
+
+    .wxn_newsList.wxn_show {
+      display: block;
+    }
+
+    @keyframes wxn_fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .wxn_newsList li {
+      font-size: 13px;
+      color: #222222;
+      line-height: 1.55;
+      padding: 3px 0 3px 14px;
+      position: relative;
+      white-space: nowrap;       /* 不换行，超出部分裁切，与原图效果一致 */
+      overflow: hidden;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    /* 红色圆点项目符号 */
+    .wxn_newsList li::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #c8000a;
+    }
+
+    .wxn_newsList li:hover {
+      color: #c8000a;
+      text-decoration: underline;
+    }
+
+    /* ===== 底部说明 ===== */
+    .wxn_tip {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wxn_tabCard">
+    <!-- 标签栏 -->
+    <div class="wxn_tabBar">
+      <div class="wxn_tabItem wxn_active" data-wxn-tab="0">最新投诉</div>
+      <div class="wxn_tabItem" data-wxn-tab="1">官方回应</div>
+      <div class="wxn_tabItem" data-wxn-tab="2">追踪调查</div>
+    </div>
+
+    <!-- 内容区 -->
+    <div class="wxn_tabContent">
+      <!-- 面板一：最新投诉 -->
+      <ul class="wxn_newsList wxn_show">
+        <li>北京火车站出租车乱调查 司机称计价器坏</li>
+        <li>公园仙人掌被刻字"毁容" 一棵仙人掌被刻</li>
+        <li>昆明翠湖游客"徒手撞鸥" 网友道歉(组图)</li>
+        <li>四川一星级酒店开业7年未曾改变 "茶楼"</li>
+        <li>北京北海公园暗藏高端会所 园方称"硬件"</li>
+        <li>北京北海金丝楠木建屋英文牌"签名"破坏</li>
+        <li>北京动物园猴山靠玩摇摇 低价门票遭"雪藏"</li>
+        <li>女子不满"无购物"投诉旅行社 新东一样被</li>
+        <li>老年梦团游权益受损 旅行社被疑对老人</li>
+      </ul>
+
+      <!-- 面板二：官方回应 -->
+      <ul class="wxn_newsList">
+        <li>大绿鸭、翘鼻鸭凑热闹 法官解读"山案鸭"是</li>
+        <li>国家旅游局回应涨价："团队游价格系正常</li>
+        <li>国家旅游局回应"新旅游法实施后旅行社团</li>
+        <li>出游遇纠纷可依《旅游法》维权 明确旅游投</li>
+        <li>解读新旅游法"误传" 扫码铁可安心</li>
+        <li>《旅游法》将抑制"零负团费"和"门票经</li>
+        <li>文明旅游将入旅游合同 行为指南和公约将作</li>
+        <li>天津二季度旅行社服务质量来公布 投诉率及</li>
+        <li>敦煌：国家法定节假日所有景点区免收停</li>
+      </ul>
+
+      <!-- 面板三：追踪调查 -->
+      <ul class="wxn_newsList">
+        <li>《旅游法》实施半月 白费景区遭正式一日游</li>
+        <li>迪庆香格里拉旅游"经营" 涉事导游等已</li>
+        <li>导游诗诗诉"攻略"：逃离旅行社自己</li>
+        <li>九寨沟为何要成"死胡同"？——数千游客</li>
+        <li>九寨沟为何仍现游客滞留？</li>
+        <li>旅游之恼地："报爷"游博物馆 女士超性进</li>
+        <li>记者暗访兵马俑景区：玉器店玉 近期门票</li>
+        <li>睡帽宿游客借卡转账 两女子忽悠女大学生</li>
+        <li>39家旅游单位违法被罚1800万 购物店结盟缆</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="wxn_tip">点击上方红色标签可切换不同栏目内容</p>
+
+  <script>
+    // 获取所有标签和对应的内容列表
+    var wxn_tabItems = document.querySelectorAll(".wxn_tabItem");
+    var wxn_newsLists = document.querySelectorAll(".wxn_newsList");
+
+    // 点击切换函数
+    function wxn_switchTab(wxn_index) {
+      wxn_tabItems.forEach(function (wxn_tab) {
+        wxn_tab.classList.remove("wxn_active");
+      });
+      wxn_newsLists.forEach(function (wxn_list) {
+        wxn_list.classList.remove("wxn_show");
+      });
+      wxn_tabItems[wxn_index].classList.add("wxn_active");
+      wxn_newsLists[wxn_index].classList.add("wxn_show");
+    }
+
+    // 绑定点击事件
+    wxn_tabItems.forEach(function (wxn_tab, wxn_index) {
+      wxn_tab.addEventListener("click", function () {
+        wxn_switchTab(wxn_index);
+      });
+    });
+  </script>
+</body>
+</html>
