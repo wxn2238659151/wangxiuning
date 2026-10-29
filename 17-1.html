@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-10-29，功能名称：JavaScript 数组方法可视化演示 -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS 数组方法实验室</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      color: #2b2942;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      background: linear-gradient(135deg, #f2f0ff, #fff5fa);
+    }
+
+    header {
+      padding: 45px 20px 40px;
+      color: #fff;
+      text-align: center;
+      background: linear-gradient(135deg, #5148bf, #a26bd8);
+      clip-path: ellipse(100% 78% at 50% 18%);
+    }
+
+    header h1 {
+      margin-bottom: 10px;
+      font-size: clamp(24px, 4.5vw, 38px);
+      letter-spacing: 2px;
+    }
+
+    header p {
+      opacity: .9;
+      font-size: 15px;
+    }
+
+    main {
+      width: min(1100px, 94%);
+      margin: 0 auto 60px;
+    }
+
+    .wxn_stage {
+      padding: 26px;
+      border: 1px solid #eeeafa;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 0 14px 36px rgba(68, 55, 140, .1);
+    }
+
+    .wxn_stage-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .wxn_stage-head h2 {
+      font-size: 19px;
+    }
+
+    .wxn_btn-reset {
+      padding: 9px 18px;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #f2709c, #ff9a76);
+      cursor: pointer;
+      font-size: 14px;
+      transition: .2s;
+    }
+
+    .wxn_btn-reset:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(242, 112, 156, .35);
+    }
+
+    .wxn_var-name {
+      color: #6257d9;
+      font-weight: bold;
+      font-family: Consolas, monospace;
+    }
+
+    .wxn_array-view {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      min-height: 110px;
+      padding: 20px;
+      border-radius: 16px;
+      background: #f7f6ff;
+      border: 2px dashed #cfc8f5;
+    }
+
+    .wxn_bracket {
+      font-size: 42px;
+      font-weight: bold;
+      color: #a49ccf;
+      font-family: Consolas, monospace;
+      user-select: none;
+    }
+
+    .wxn_empty-tip {
+      color: #8d87a8;
+      font-size: 15px;
+    }
+
+    .wxn_item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      animation: wxn_pop .35s ease;
+    }
+
+    .wxn_item-box {
+      display: grid;
+      place-items: center;
+      min-width: 76px;
+      padding: 14px 12px;
+      color: #fff;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: bold;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, .14);
+      transition: .3s;
+    }
+
+    .wxn_item-idx {
+      color: #8d87a8;
+      font-size: 12px;
+      font-family: Consolas, monospace;
+    }
+
+    .wxn_out {
+      animation: wxn_out .4s ease forwards;
+    }
+
+    @keyframes wxn_pop {
+      from { transform: scale(.3); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes wxn_out {
+      to { transform: scale(.2) translateY(24px); opacity: 0; }
+    }
+
+    .wxn_arrow {
+      color: #b9b1e2;
+      font-size: 22px;
+      font-weight: bold;
+      animation: wxn_pop .3s ease;
+    }
+
+    .wxn_result-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+      min-height: 34px;
+      font-family: Consolas, monospace;
+      font-size: 15px;
+    }
+
+    .wxn_ret-label {
+      padding: 4px 12px;
+      color: #fff;
+      border-radius: 999px;
+      background: #6257d9;
+      font-size: 13px;
+      font-family: "Microsoft YaHei", sans-serif;
+    }
+
+    .wxn_ret-value {
+      padding: 6px 14px;
+      border-radius: 10px;
+      background: #eefcff;
+      border: 1px solid #bfeef2;
+      color: #0e7c8a;
+      word-break: break-all;
+    }
+
+    .wxn_mut-badge {
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-family: "Microsoft YaHei", sans-serif;
+    }
+
+    .wxn_mut-yes {
+      color: #b23b3b;
+      background: #fdeaea;
+      border: 1px solid #f3c1c1;
+    }
+
+    .wxn_mut-no {
+      color: #1e7d46;
+      background: #e8f8ee;
+      border: 1px solid #bfe6cd;
+    }
+
+    .wxn_layout {
+      display: grid;
+      grid-template-columns: minmax(300px, 380px) 1fr;
+      gap: 22px;
+      margin-top: 24px;
+    }
+
+    .wxn_panel {
+      padding: 22px;
+      border: 1px solid #eeeafa;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 0 14px 36px rgba(68, 55, 140, .1);
+    }
+
+    .wxn_panel h2 {
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+
+    .wxn_group-title {
+      margin: 16px 0 8px;
+      color: #6257d9;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .wxn_group-title:first-of-type {
+      margin-top: 0;
+    }
+
+    .wxn_method-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .wxn_method-btn {
+      padding: 8px 14px;
+      border: 1px solid #dedaf3;
+      border-radius: 999px;
+      background: #f7f6ff;
+      color: #4b4663;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: Consolas, monospace;
+      transition: .2s;
+    }
+
+    .wxn_method-btn:hover {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, #6257d9, #9b8cff);
+      transform: translateY(-2px);
+    }
+
+    .wxn_method-btn.wxn_active {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, #6257d9, #9b8cff);
+    }
+
+    .wxn_code {
+      padding: 16px;
+      margin-bottom: 14px;
+      border-radius: 12px;
+      background: #2b2942;
+      color: #d6f5d6;
+      font-family: Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+
+    .wxn_desc {
+      margin-bottom: 14px;
+      padding: 14px;
+      border-left: 4px solid #6257d9;
+      border-radius: 0 10px 10px 0;
+      background: #f7f6ff;
+      color: #5c5872;
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    .wxn_log {
+      margin-top: 26px;
+      padding: 20px 22px;
+      border: 1px solid #eeeafa;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 0 14px 36px rgba(68, 55, 140, .1);
+    }
+
+    .wxn_log h2 {
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    .wxn_log ul {
+      list-style: none;
+    }
+
+    .wxn_log li {
+      padding: 9px 12px;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      background: #f7f6ff;
+      color: #55506e;
+      font-family: Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+    }
+
+    .wxn_log li b {
+      color: #6257d9;
+    }
+
+    @media (max-width: 860px) {
+      .wxn_layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>JavaScript 数组方法实验室</h1>
+    <p>点击下方方法按钮，直观看到数组如何被"加工"——盒子代表数组元素，下标一目了然</p>
+  </header>
+
+  <main>
+    <!-- 数组舞台 -->
+    <section class="wxn_stage">
+      <div class="wxn_stage-head">
+        <h2>数组舞台：<span class="wxn_var-name">const wxn_fruits = [ ... ]</span></h2>
+        <button class="wxn_btn-reset" id="wxn_btnReset">↺ 恢复初始数组</button>
+      </div>
+      <div class="wxn_array-view" id="wxn_arrayView"></div>
+      <div class="wxn_result-strip" id="wxn_resultStrip"></div>
+    </section>
+
+    <div class="wxn_layout">
+      <!-- 方法按钮区 -->
+      <section class="wxn_panel">
+        <h2>选择一个数组方法</h2>
+        <div id="wxn_methodArea"></div>
+      </section>
+
+      <!-- 说明与代码区 -->
+      <section class="wxn_panel">
+        <h2>方法讲解</h2>
+        <div class="wxn_desc" id="wxn_desc">👆 点击左侧任意方法按钮，这里会显示该方法的说明，上方舞台会播放对应的动画演示。</div>
+        <div class="wxn_code" id="wxn_code">// 等待选择方法…</div>
+        <div class="wxn_result-strip" id="wxn_resultInfo"></div>
+      </section>
+    </div>
+
+    <!-- 操作日志 -->
+    <section class="wxn_log">
+      <h2>操作日志</h2>
+      <ul id="wxn_logList"></ul>
+    </section>
+  </main>
+
+  <script>
+    /* ===================== 基础数据 ===================== */
+    const wxn_initValues = ["苹果", "香蕉", "橙子", "葡萄", "火龙果"];
+
+    let wxn_uid = 0;
+    const wxn_newId = () => ++wxn_uid;
+
+    // 把普通值数组转成带唯一 id 的元素（id 用于动画定位）
+    const wxn_toItems = (wxn_values) =>
+      wxn_values.map(wxn_v => ({ id: wxn_newId(), v: wxn_v }));
+
+    let wxn_items = wxn_toItems(wxn_initValues);
+
+    // 元素配色盘
+    const wxn_colors = ["#6257d9", "#e8618c", "#0ea5a4", "#f59e0b", "#7c5cd6", "#3b82c4", "#ef6c3f"];
+    const wxn_colorOf = (wxn_v) =>
+      wxn_colors[[...wxn_v].reduce((wxn_s, wxn_c) => wxn_s + wxn_c.charCodeAt(0), 0) % wxn_colors.length];
+
+    /* ===================== 渲染舞台 ===================== */
+    const wxn_arrayView = document.getElementById("wxn_arrayView");
+
+    function wxn_render() {
+      if (!wxn_items.length) {
+        wxn_arrayView.innerHTML = '<span class="wxn_empty-tip">数组是空的 [ ]，试试 push 加点水果进来 🍽</span>';
+        return;
+      }
+      wxn_arrayView.innerHTML =
+        '<span class="wxn_bracket">[</span>' +
+        wxn_items.map((wxn_it, wxn_i) => `
+          <div class="wxn_item" data-id="${wxn_it.id}">
+            <div class="wxn_item-box" style="background:${wxn_colorOf(wxn_it.v)}">${wxn_it.v}</div>
+            <span class="wxn_item-idx">${wxn_i}</span>
+          </div>
+        `).join('<span class="wxn_arrow">,</span>') +
+        '<span class="wxn_bracket">]</span>';
+    }
+
+    // 删除动画：先给目标元素加移出动画，等动画结束再真正重绘
+    function wxn_renderWithRemoval(wxn_removedIds, wxn_done) {
+      wxn_removedIds.forEach(wxn_id => {
+        const wxn_el = wxn_arrayView.querySelector(`[data-id="${wxn_id}"]`);
+        if (wxn_el) wxn_el.classList.add("wxn_out");
+      });
+      setTimeout(wxn_done, 400);
+    }
+
+    /* ===================== 结果条 ===================== */
+    const wxn_resultStrip = document.getElementById("wxn_resultStrip");
+    const wxn_resultInfo = document.getElementById("wxn_resultInfo");
+
+    function wxn_showResult(wxn_retText, wxn_mutating) {
+      const wxn_html = `
+        <span class="wxn_ret-label">返回值</span>
+        <span class="wxn_ret-value">${wxn_retText}</span>
+        <span class="wxn_mut-badge ${wxn_mutating ? "wxn_mut-yes" : "wxn_mut-no"}">
+          ${wxn_mutating ? "⚠ 会改变原数组" : "✓ 不改变原数组"}
+        </span>`;
+      wxn_resultStrip.innerHTML = wxn_html;
+      wxn_resultInfo.innerHTML = wxn_html;
+    }
+
+    /* ===================== 日志 ===================== */
+    const wxn_logList = document.getElementById("wxn_logList");
+
+    function wxn_addLog(wxn_codeText, wxn_retText) {
+      const wxn_li = document.createElement("li");
+      wxn_li.innerHTML = `<b>wxn_fruits</b>.${wxn_codeText} → <b>${wxn_retText}</b>`;
+      wxn_logList.prepend(wxn_li);
+    }
+
+    /* ===================== 方法定义 ===================== */
+    // 每个方法：mutating(是否改变原数组) / desc(说明) / code(展示代码) / run(执行：返回 [新数组, 返回值文本, 移除的id列表])
+    const wxn_methods = [
+      // —— 增删元素（改变原数组）——
+      {
+        name: "push", group: "① 增删元素", mutating: true,
+        desc: "在数组<b>末尾</b>添加一个或多个元素，返回<b>新长度</b>。就像往队伍最后再排一个人。",
+        code: () => `wxn_fruits.push('蓝莓')`,
+        run: () => {
+          const wxn_ni = { id: wxn_newId(), v: "蓝莓" };
+          wxn_items.push(wxn_ni);
+          return [[wxn_ni.id], `新长度 = ${wxn_items.length}`];
+        }
+      },
+      {
+        name: "pop", group: "① 增删元素", mutating: true,
+        desc: "删除数组<b>最后一个</b>元素，返回被删的那个元素。就像队伍末尾的人离队。",
+        code: () => `wxn_fruits.pop()`,
+        run: () => {
+          const wxn_removed = wxn_items.pop();
+          return [[wxn_removed.id], `删除了 "${wxn_removed.v}"`];
+        }
+      },
+      {
+        name: "shift", group: "① 增删元素", mutating: true,
+        desc: "删除数组<b>第一个</b>元素，返回被删的那个元素。就像排在最前面的人先离队。",
+        code: () => `wxn_fruits.shift()`,
+        run: () => {
+          const wxn_removed = wxn_items.shift();
+          return [[wxn_removed.id], `删除了 "${wxn_removed.v}"`];
+        }
+      },
+      {
+        name: "unshift", group: "① 增删元素", mutating: true,
+        desc: "在数组<b>开头</b>添加一个或多个元素，返回<b>新长度</b>。就像有人插队排到了最前面。",
+        code: () => `wxn_fruits.unshift('草莓')`,
+        run: () => {
+          const wxn_ni = { id: wxn_newId(), v: "草莓" };
+          wxn_items.unshift(wxn_ni);
+          return [[wxn_ni.id], `新长度 = ${wxn_items.length}`];
+        }
+      },
+      {
+        name: "splice", group: "① 增删元素", mutating: true,
+        desc: "万能手术刀：<b>从指定下标开始</b>删除若干元素，还可同时插入新元素。这里演示从下标 1 开始删 1 个，并插入 '柠檬'。",
+        code: () => `wxn_fruits.splice(1, 1, '柠檬')`,
+        run: () => {
+          const wxn_removedId = wxn_items[1] ? wxn_items[1].id : null;
+          wxn_items.splice(1, 1, { id: wxn_newId(), v: "柠檬" });
+          return [wxn_removedId ? [wxn_removedId] : [], "删除了 1 个元素"];
+        }
+      },
+      // —— 查找与判断（不改变原数组）——
+      {
+        name: "indexOf", group: "② 查找与判断", mutating: false,
+        desc: "查找元素第一次出现的<b>下标</b>，找不到返回 <b>-1</b>。相当于问：'香蕉' 排在第几位？",
+        code: () => `wxn_fruits.indexOf('香蕉')`,
+        run: () => [[], `下标 = ${wxn_items.findIndex(w => w.v === "香蕉")}`]
+      },
+      {
+        name: "includes", group: "② 查找与判断", mutating: false,
+        desc: "判断数组里<b>是否包含</b>某元素，返回 true / false。相当于问：数组里有 '葡萄' 吗？",
+        code: () => `wxn_fruits.includes('葡萄')`,
+        run: () => [[], `${wxn_items.some(w => w.v === "葡萄")}`]
+      },
+      {
+        name: "find", group: "② 查找与判断", mutating: false,
+        desc: "按条件找到<b>第一个</b>满足的元素并返回它，找不到返回 undefined。这里找以 '葡' 开头的水果。",
+        code: () => `wxn_fruits.find(f => f.startsWith('葡'))`,
+        run: () => {
+          const wxn_found = wxn_items.find(w => w.v.startsWith("葡"));
+          return [wxn_found ? [wxn_found.id] : [], `找到: "${wxn_found ? wxn_found.v : "undefined"}"`];
+        }
+      },
+      {
+        name: "some", group: "② 查找与判断", mutating: false,
+        desc: "只要有<b>至少一个</b>元素满足条件就返回 true（有人及格就行）。这里判断是否存在带 '果' 字的水果。",
+        code: () => `wxn_fruits.some(f => f.includes('果'))`,
+        run: () => [[], `${wxn_items.some(w => w.v.includes("果"))}`]
+      },
+      {
+        name: "every", group: "② 查找与判断", mutating: false,
+        desc: "必须<b>所有</b>元素都满足条件才返回 true（全员及格才行）。这里判断是否所有水果都带 '果' 字。",
+        code: () => `wxn_fruits.every(f => f.includes('果'))`,
+        run: () => [[], `${wxn_items.every(w => w.v.includes("果"))}`]
+      },
+      // —— 截取与拼接（不改变原数组）——
+      {
+        name: "slice", group: "③ 截取与拼接", mutating: false,
+        desc: "切出数组的一段（下标 1 到 3，<b>不含 3</b>），返回<b>新数组</b>，原数组毫发无损。就像切蛋糕的一块。",
+        code: () => `wxn_fruits.slice(1, 3)`,
+        run: () => {
+          const wxn_part = wxn_items.slice(1, 3);
+          return [wxn_part.map(w => w.id), `[${wxn_part.map(w => `"${w.v}"`).join(", ")}]`];
+        }
+      },
+      {
+        name: "concat", group: "③ 截取与拼接", mutating: false,
+        desc: "把两个数组<b>拼接</b>成一个新数组，原数组不变。就像两条队伍合成一条。",
+        code: () => `wxn_fruits.concat(['西瓜', '桃子'])`,
+        run: () => {
+          const wxn_new = [...wxn_items, ...wxn_toItems(["西瓜", "桃子"])];
+          return [wxn_new.map(w => w.id), `拼接后共 ${wxn_new.length} 个元素`];
+        }
+      },
+      {
+        name: "join", group: "③ 截取与拼接", mutating: false,
+        desc: "把数组所有元素用指定符号<b>连接成一个字符串</b>。这里用 ' · ' 连接。",
+        code: () => `wxn_fruits.join(' · ')`,
+        run: () => [[], `"${wxn_items.map(w => w.v).join(" · ")}"`]
+      },
+      {
+        name: "reverse", group: "③ 截取与拼接", mutating: true,
+        desc: "把数组<b>整个翻转</b>，第一个变最后一个。注意：它会直接改变原数组！",
+        code: () => `wxn_fruits.reverse()`,
+        run: () => {
+          wxn_items.reverse();
+          return [wxn_items.map(w => w.id), "数组已翻转"];
+        }
+      },
+      {
+        name: "sort", group: "③ 截取与拼接", mutating: true,
+        desc: "对数组<b>排序</b>，默认按字符串顺序。这里按<b>名字长度</b>从短到长排序，会改变原数组。",
+        code: () => `wxn_fruits.sort((a, b) => a.length - b.length)`,
+        run: () => {
+          wxn_items.sort((a, b) => a.v.length - b.v.length);
+          return [wxn_items.map(w => w.id), "已按名字长度排序"];
+        }
+      },
+      // —— 遍历与加工（高阶方法）——
+      {
+        name: "forEach", group: "④ 遍历与加工", mutating: false,
+        desc: "对每个元素<b>执行一遍</b>给定函数，没有返回值。就像老师挨个点名。",
+        code: () => `wxn_fruits.forEach(f => console.log(f))`,
+        run: () => {
+          const wxn_text = wxn_items.map(w => w.v).join(" → ");
+          return [wxn_items.map(w => w.id), `依次打印: ${wxn_text || "(空)"}`];
+        }
+      },
+      {
+        name: "map", group: "④ 遍历与加工", mutating: false,
+        desc: "对每个元素<b>加工</b>后返回一个<b>全新的数组</b>（原数组不变）。这里把每种水果都'榨成果汁'。",
+        code: () => `wxn_fruits.map(f => f + '汁')`,
+        run: () => {
+          const wxn_juice = wxn_items.map(w => w.v + "汁").join(", ");
+          return [[], `[${wxn_juice}]`];
+        }
+      },
+      {
+        name: "filter", group: "④ 遍历与加工", mutating: false,
+        desc: "按条件<b>筛选</b>元素，满足条件的组成一个<b>新数组</b>。这里筛出名字正好 2 个字的水果。",
+        code: () => `wxn_fruits.filter(f => f.length === 2)`,
+        run: () => {
+          const wxn_hit = wxn_items.filter(w => w.v.length === 2);
+          return [wxn_hit.map(w => w.id), `[${wxn_hit.map(w => `"${w.v}"`).join(", ")}]`];
+        }
+      },
+      {
+        name: "reduce", group: "④ 遍历与加工", mutating: false,
+        desc: "把数组<b>归约成一个值</b>：从头到尾不断累积计算。这里把所有水果名字的长度加起来，得到总字数。",
+        code: () => `wxn_fruits.reduce((n, f) => n + f.length, 0)`,
+        run: () => {
+          const wxn_sum = wxn_items.reduce((wxn_n, w) => wxn_n + w.v.length, 0);
+          return [wxn_items.map(w => w.id), `总字数 = ${wxn_sum}`];
+        }
+      }
+    ];
+
+    /* ===================== 渲染方法按钮 ===================== */
+    const wxn_methodArea = document.getElementById("wxn_methodArea");
+    let wxn_lastGroup = "";
+    wxn_methodArea.innerHTML = wxn_methods.map(wxn_m => {
+      const wxn_head = wxn_m.group !== wxn_lastGroup
+        ? `<div class="wxn_group-title">${wxn_m.group}</div>` : "";
+      wxn_lastGroup = wxn_m.group;
+      return `${wxn_head}<button class="wxn_method-btn" data-name="${wxn_m.name}">${wxn_m.name}</button>`;
+    }).join("");
+
+    /* ===================== 交互逻辑 ===================== */
+    const wxn_descEl = document.getElementById("wxn_desc");
+    const wxn_codeEl = document.getElementById("wxn_code");
+
+    function wxn_runMethod(wxn_m) {
+      wxn_descEl.innerHTML = wxn_m.desc;
+      wxn_codeEl.textContent = wxn_m.code();
+      document.querySelectorAll(".wxn_method-btn").forEach(wxn_b =>
+        wxn_b.classList.toggle("wxn_active", wxn_b.dataset.name === wxn_m.name));
+
+      const [wxn_removedIds, wxn_retText] = wxn_m.run();
+      wxn_renderWithRemoval(wxn_removedIds, () => {
+        wxn_render();
+        wxn_showResult(wxn_retText, wxn_m.mutating);
+        wxn_addLog(wxn_m.code().replace("wxn_fruits.", ""), wxn_retText);
+      });
+    }
+
+    wxn_methodArea.addEventListener("click", wxn_e => {
+      const wxn_btn = wxn_e.target.closest(".wxn_method-btn");
+      if (!wxn_btn) return;
+      const wxn_m = wxn_methods.find(w => w.name === wxn_btn.dataset.name);
+      if (wxn_m) wxn_runMethod(wxn_m);
+    });
+
+    // 恢复初始数组
+    document.getElementById("wxn_btnReset").addEventListener("click", () => {
+      wxn_items = wxn_toItems(wxn_initValues);
+      wxn_render();
+      wxn_showResult("已恢复初始数组 [" + wxn_initValues.join(", ") + "]", false);
+      wxn_descEl.innerHTML = "👆 点击左侧任意方法按钮，这里会显示该方法的说明，上方舞台会播放对应的动画演示。";
+      wxn_codeEl.textContent = "// 等待选择方法…";
+    });
+
+    // 初始渲染
+    wxn_render();
+  </script>
+</body>
+</html>

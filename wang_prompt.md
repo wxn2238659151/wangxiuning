@@ -166,3 +166,27 @@
 > 然后提交到github。
 
 ---
+
+## 2026-10-29-15-38
+**Model:** Trae proprietary model
+
+**Prompt 15:**
+> 编写17-1.html,形象地展示javascript主要的数组方法。
+
+---
+
+## 2026-10-29-15-51
+**Model:** Trae proprietary model
+
+**Prompt 16:**
+> 生成17-2.html,形象展示javascript的对象和字符串。
+
+---
+
+## 2026-10-29-15-56
+**Model:** Trae proprietary model
+
+**Prompt 17:**
+> 把17-1.html和17-2.html,提交到GitHub
+
+---

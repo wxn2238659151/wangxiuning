@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-10-29，功能名称：JavaScript 对象与字符串可视化演示 -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS 对象与字符串可视化实验室</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      color: #2b2942;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      background: linear-gradient(135deg, #f2f0ff, #fff5fa);
+    }
+
+    header {
+      padding: 45px 20px 40px;
+      color: #fff;
+      text-align: center;
+      background: linear-gradient(135deg, #5148bf, #a26bd8);
+      clip-path: ellipse(100% 78% at 50% 18%);
+    }
+
+    header h1 {
+      margin-bottom: 10px;
+      font-size: clamp(24px, 4.5vw, 38px);
+      letter-spacing: 2px;
+    }
+
+    header p {
+      opacity: .9;
+      font-size: 15px;
+    }
+
+    main {
+      width: min(1100px, 94%);
+      margin: 0 auto 60px;
+    }
+
+    .wxn_stage {
+      padding: 26px;
+      margin-bottom: 30px;
+      border: 1px solid #eeeafa;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 0 14px 36px rgba(68, 55, 140, .1);
+    }
+
+    .wxn_stage-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .wxn_stage-head h2 {
+      font-size: 20px;
+    }
+
+    .wxn_stage > p.wxn_desc {
+      margin-bottom: 18px;
+      color: #747188;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .wxn_code {
+      margin-bottom: 14px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #2b2942;
+      color: #d8d4ff;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+
+    .wxn_code em {
+      color: #ffd479;
+      font-style: normal;
+    }
+
+    .wxn_btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .wxn_btn {
+      padding: 9px 16px;
+      color: #5148bf;
+      border: 1px solid #cfc7ff;
+      border-radius: 999px;
+      background: #f5f2ff;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+      transition: .2s;
+    }
+
+    .wxn_btn:hover {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, #6257d9, #9b8cff);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(98, 87, 217, .3);
+    }
+
+    /* ===== 对象部分 ===== */
+    .wxn_object-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .wxn_object-name {
+      color: #5148bf;
+      white-space: nowrap;
+    }
+
+    .wxn_prop-shelf {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      min-height: 92px;
+    }
+
+    .wxn_prop-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 130px;
+      padding: 12px 18px;
+      border: 2px solid #d9d2ff;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #faf8ff, #f1ecff);
+      box-shadow: 0 6px 14px rgba(98, 87, 217, .12);
+      animation: wxn_pop .35s ease;
+    }
+
+    .wxn_prop-card.wxn_flash-add {
+      border-color: #4cc98a;
+      background: linear-gradient(180deg, #effaf3, #d9f4e6);
+    }
+
+    .wxn_prop-card.wxn_flash-edit {
+      border-color: #ffb14c;
+      background: linear-gradient(180deg, #fff8ef, #ffe8cc);
+    }
+
+    .wxn_prop-key {
+      color: #5148bf;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+    }
+
+    .wxn_prop-value {
+      margin-top: 5px;
+      color: #2b2942;
+      font-size: 17px;
+      font-weight: bold;
+      word-break: break-all;
+    }
+
+    @keyframes wxn_pop {
+      from {
+        opacity: 0;
+        transform: scale(.6) translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .wxn_empty-slot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 80px;
+      width: 100%;
+      color: #a49dc4;
+      border: 2px dashed #d9d2ff;
+      border-radius: 14px;
+      font-size: 14px;
+    }
+
+    /* ===== 字符串部分 ===== */
+    .wxn_string-tools {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .wxn_string-tools label {
+      color: #5148bf;
+      font-weight: bold;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    #wxn_stringInput {
+      flex: 1;
+      min-width: 200px;
+      padding: 11px 16px;
+      border: 1px solid #dedaf3;
+      border-radius: 12px;
+      outline: none;
+      font-size: 15px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    #wxn_stringInput:focus {
+      border-color: #6257d9;
+      box-shadow: 0 0 0 4px rgba(98, 87, 217, .12);
+    }
+
+    .wxn_char-track {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding: 18px;
+      border-radius: 16px;
+      background: #f7f6ff;
+    }
+
+    .wxn_char-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .wxn_char-char {
+      display: grid;
+      place-items: center;
+      min-width: 38px;
+      height: 44px;
+      padding: 0 6px;
+      border: 2px solid #d9d2ff;
+      border-radius: 10px;
+      background: #fff;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 20px;
+      font-weight: bold;
+      animation: wxn_pop .3s ease;
+    }
+
+    .wxn_char-char.wxn_char-hit {
+      border-color: #4cc98a;
+      background: #d9f4e6;
+    }
+
+    .wxn_char-index {
+      color: #a49dc4;
+      font-size: 11px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    /* ===== 控制台 ===== */
+    .wxn_console {
+      padding: 16px 18px;
+      border-radius: 14px;
+      background: #2b2942;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13.5px;
+      line-height: 1.9;
+      min-height: 130px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .wxn_console-line {
+      color: #c9c4f2;
+      word-break: break-all;
+    }
+
+    .wxn_console-line .wxn_console-code {
+      color: #ffd479;
+    }
+
+    .wxn_console-line .wxn_console-result {
+      color: #7ee2a8;
+    }
+
+    .wxn_console-empty {
+      color: #7c77a3;
+    }
+
+    .wxn_section-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      margin-right: 10px;
+      border-radius: 11px;
+      color: #fff;
+      background: linear-gradient(135deg, #6257d9, #9b8cff);
+      font-size: 18px;
+      vertical-align: middle;
+    }
+
+    footer {
+      padding: 25px;
+      color: #747188;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .wxn_stage {
+        padding: 18px;
+      }
+
+      .wxn_char-char {
+        min-width: 30px;
+        height: 38px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>JS 对象与字符串实验室</h1>
+    <p>第 17 课 · 形象化展示 JavaScript 的对象与字符串操作</p>
+  </header>
+
+  <main>
+    <!-- ============ 对象部分 ============ -->
+    <section class="wxn_stage">
+      <div class="wxn_stage-head">
+        <h2><span class="wxn_section-icon">📦</span>对象 Object —— 一格一格的"属性抽屉"</h2>
+        <button class="wxn_btn" id="wxn_resetObjBtn">↺ 重置对象</button>
+      </div>
+      <p class="wxn_desc">
+        对象用<em style="font-style:normal;color:#5148bf;">花括号 { }</em>包裹，里面每一格是一个
+        <em style="font-style:normal;color:#5148bf;">键(key) → 值(value)</em> 的组合，就像一个带标签的抽屉柜。
+        点击下方按钮，观察"抽屉"如何被增、删、改、查。
+      </p>
+
+      <div class="wxn_code">
+        const wxn_student = { <em>name: "王秀宁"</em>, <em>age: 20</em>, <em>major: "高级网页设计"</em>, <em>hobby: "写代码"</em> };
+      </div>
+
+      <div class="wxn_object-box">
+        <span class="wxn_object-name">wxn_student =</span>
+        <span>{ … }</span>
+      </div>
+
+      <div class="wxn_prop-shelf" id="wxn_propShelf"></div>
+
+      <div class="wxn_btn-group" style="margin-top:18px;">
+        <button class="wxn_btn" data-wxn-act="add">＋ wxn_student.gender = "男"（点语法添加）</button>
+        <button class="wxn_btn" data-wxn-act="addBracket">＋ wxn_student["city"] = "北京"（括号语法添加）</button>
+        <button class="wxn_btn" data-wxn-act="edit">✎ wxn_student.age = 21（修改属性）</button>
+        <button class="wxn_btn" data-wxn-act="del">－ delete wxn_student.hobby（删除属性）</button>
+        <button class="wxn_btn" data-wxn-act="keys">Object.keys()</button>
+        <button class="wxn_btn" data-wxn-act="values">Object.values()</button>
+        <button class="wxn_btn" data-wxn-act="entries">Object.entries()</button>
+        <button class="wxn_btn" data-wxn-act="forin">for...in 遍历</button>
+      </div>
+
+      <div class="wxn_console" id="wxn_objConsole">
+        <div class="wxn_console-line wxn_console-empty">// 控制台：点击上方按钮，这里会显示执行的代码与结果</div>
+      </div>
+    </section>
+
+    <!-- ============ 字符串部分 ============ -->
+    <section class="wxn_stage">
+      <div class="wxn_stage-head">
+        <h2><span class="wxn_section-icon">🔤</span>字符串 String —— 一格一格的"字符储物柜"</h2>
+        <button class="wxn_btn" id="wxn_resetStrBtn">↺ 恢复默认文本</button>
+      </div>
+      <p class="wxn_desc">
+        字符串里的每个字符都有自己的编号（<em style="font-style:normal;color:#5148bf;">下标从 0 开始</em>）。
+        修改输入框内容或点击方法按钮，看每个字符怎么被取出来、改大小写、切片段、做替换。
+      </p>
+
+      <div class="wxn_string-tools">
+        <label for="wxn_stringInput">文本：</label>
+        <input id="wxn_stringInput" type="text" value="JavaScript" maxlength="24">
+        <span id="wxn_lengthBadge" style="padding:8px 14px;border-radius:999px;background:#f1ecff;color:#5148bf;font-weight:bold;font-size:13px;">length = 10</span>
+      </div>
+
+      <div class="wxn_char-track" id="wxn_charTrack"></div>
+
+      <div class="wxn_btn-group">
+        <button class="wxn_btn" data-wxn-fn="toUpperCase">toUpperCase() 转大写</button>
+        <button class="wxn_btn" data-wxn-fn="toLowerCase">toLowerCase() 转小写</button>
+        <button class="wxn_btn" data-wxn-fn="charAt">charAt(3) 取下标3的字符</button>
+        <button class="wxn_btn" data-wxn-fn="indexOf">indexOf("S") 查找下标</button>
+        <button class="wxn_btn" data-wxn-fn="slice">slice(0, 4) 切片</button>
+        <button class="wxn_btn" data-wxn-fn="replace">replace("Java", "Coffee") 替换</button>
+        <button class="wxn_btn" data-wxn-fn="split">split("") 拆成数组</button>
+        <button class="wxn_btn" data-wxn-fn="includes">includes("Script") 是否包含</button>
+        <button class="wxn_btn" data-wxn-fn="concat">concat("!") 拼接</button>
+        <button class="wxn_btn" data-wxn-fn="repeat">repeat(2) 重复</button>
+      </div>
+
+      <div class="wxn_console" id="wxn_strConsole">
+        <div class="wxn_console-line wxn_console-empty">// 控制台：点击上方按钮，这里会显示执行的代码与结果</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>© <span id="wxn_year"></span> 王秀宁《高级网页设计》课堂实践 · 17-2 对象与字符串</footer>
+
+  <script>
+    /* ================= 对象部分 ================= */
+    const wxn_initStudent = { name: "王秀宁", age: 20, major: "高级网页设计", hobby: "写代码" };
+    let wxn_student = { ...wxn_initStudent };
+    const wxn_propShelf = document.getElementById("wxn_propShelf");
+    const wxn_objConsole = document.getElementById("wxn_objConsole");
+
+    function wxn_renderProps(wxn_flashKey = "", wxn_flashType = "") {
+      const wxn_keys = Object.keys(wxn_student);
+      if (!wxn_keys.length) {
+        wxn_propShelf.innerHTML = '<div class="wxn_empty-slot">对象已被清空，快添加一些属性吧！</div>';
+        return;
+      }
+      wxn_propShelf.innerHTML = wxn_keys.map(wxn_key => {
+        let wxn_flash = "";
+        if (wxn_key === wxn_flashKey) {
+          if (wxn_flashType === "add") wxn_flash = " wxn_flash-add";
+          if (wxn_flashType === "edit") wxn_flash = " wxn_flash-edit";
+        }
+        return '<div class="wxn_prop-card' + wxn_flash + '">' +
+                 '<span class="wxn_prop-key">🔑 ' + wxn_key + '</span>' +
+                 '<span class="wxn_prop-value">' + wxn_student[wxn_key] + '</span>' +
+               '</div>';
+      }).join("");
+    }
+
+    function wxn_log(wxn_console, wxn_code, wxn_result) {
+      const wxn_first = wxn_console.querySelector(".wxn_console-empty");
+      if (wxn_first) wxn_first.remove();
+      const wxn_line = document.createElement("div");
+      wxn_line.className = "wxn_console-line";
+      wxn_line.innerHTML = '<span class="wxn_console-code">&gt; ' + wxn_code + '</span><br>' +
+                           '<span class="wxn_console-result">→ ' + wxn_result + '</span>';
+      wxn_console.appendChild(wxn_line);
+      wxn_console.scrollTop = wxn_console.scrollHeight;
+    }
+
+    function wxn_fmt(wxn_val) {
+      if (typeof wxn_val === "string") return '"' + wxn_val + '"';
+      if (Array.isArray(wxn_val)) return "[ " + wxn_val.map(wxn_fmt).join(", ") + " ]";
+      if (wxn_val === null) return "null";
+      if (typeof wxn_val === "object") {
+        return "{ " + Object.keys(wxn_val).map(wxn_k => wxn_k + ": " + wxn_fmt(wxn_val[wxn_k])).join(", ") + " }";
+      }
+      return String(wxn_val);
+    }
+
+    const wxn_objActions = {
+      add() {
+        wxn_student.gender = "男";
+        wxn_log(wxn_objConsole, 'wxn_student.gender = "男"', "添加成功！点语法用 . 直接访问属性");
+        wxn_renderProps("gender", "add");
+      },
+      addBracket() {
+        wxn_student["city"] = "北京";
+        wxn_log(wxn_objConsole, 'wxn_student["city"] = "北京"', "添加成功！括号语法适合带特殊字符或变量的键名");
+        wxn_renderProps("city", "add");
+      },
+      edit() {
+        wxn_student.age = 21;
+        wxn_log(wxn_objConsole, "wxn_student.age = 21", "修改成功！同名键会被覆盖");
+        wxn_renderProps("age", "edit");
+      },
+      del() {
+        if (!("hobby" in wxn_student)) {
+          wxn_log(wxn_objConsole, "delete wxn_student.hobby", "hobby 已经不存在了，先重置对象再试试");
+          return;
+        }
+        delete wxn_student.hobby;
+        wxn_log(wxn_objConsole, "delete wxn_student.hobby", "删除成功！delete 只删除属性，不删除对象");
+        wxn_renderProps();
+      },
+      keys() {
+        const wxn_r = Object.keys(wxn_student);
+        wxn_log(wxn_objConsole, "Object.keys(wxn_student)", wxn_fmt(wxn_r) + " —— 所有键组成的数组");
+      },
+      values() {
+        const wxn_r = Object.values(wxn_student);
+        wxn_log(wxn_objConsole, "Object.values(wxn_student)", wxn_fmt(wxn_r) + " —— 所有值组成的数组");
+      },
+      entries() {
+        const wxn_r = Object.entries(wxn_student);
+        wxn_log(wxn_objConsole, "Object.entries(wxn_student)", wxn_fmt(wxn_r) + " —— [键, 值] 对组成的数组");
+      },
+      forin() {
+        wxn_log(wxn_objConsole, "for (const key in wxn_student) { ... }", "开始逐格遍历 ↓");
+        Object.keys(wxn_student).forEach((wxn_k, wxn_i) => {
+          setTimeout(() => {
+            wxn_log(wxn_objConsole, "key = " + wxn_k, wxn_fmt(wxn_student[wxn_k]));
+          }, wxn_i * 350);
+        });
+      }
+    };
+
+    document.querySelectorAll("[data-wxn-act]").forEach(wxn_btn => {
+      wxn_btn.addEventListener("click", () => {
+        wxn_objActions[wxn_btn.dataset.wxnAct]();
+      });
+    });
+
+    document.getElementById("wxn_resetObjBtn").addEventListener("click", () => {
+      wxn_student = { ...wxn_initStudent };
+      wxn_renderProps();
+      wxn_objConsole.innerHTML = '<div class="wxn_console-line wxn_console-empty">// 对象已重置为初始状态</div>';
+    });
+
+    /* ================= 字符串部分 ================= */
+    let wxn_text = "JavaScript";
+    const wxn_stringInput = document.getElementById("wxn_stringInput");
+    const wxn_charTrack = document.getElementById("wxn_charTrack");
+    const wxn_lengthBadge = document.getElementById("wxn_lengthBadge");
+    const wxn_strConsole = document.getElementById("wxn_strConsole");
+
+    function wxn_renderChars(wxn_hitIndex = -1, wxn_endIndex = -1) {
+      wxn_lengthBadge.textContent = "length = " + wxn_text.length;
+      if (!wxn_text.length) {
+        wxn_charTrack.innerHTML = '<div class="wxn_empty-slot">字符串为空</div>';
+        return;
+      }
+      wxn_charTrack.innerHTML = wxn_text.split("").map((wxn_ch, wxn_i) => {
+        const wxn_hit = (wxn_i === wxn_hitIndex) || (wxn_hitIndex >= 0 && wxn_i > wxn_hitIndex && wxn_i < wxn_endIndex);
+        return '<div class="wxn_char-cell">' +
+                 '<div class="wxn_char-char' + (wxn_hit ? " wxn_char-hit" : "") + '">' + wxn_ch + '</div>' +
+                 '<span class="wxn_char-index">' + wxn_i + '</span>' +
+               '</div>';
+      }).join("");
+    }
+
+    const wxn_strActions = {
+      toUpperCase() {
+        const wxn_r = wxn_text.toUpperCase();
+        wxn_log(wxn_strConsole, 'wxn_text.toUpperCase()', wxn_fmt(wxn_r));
+        wxn_text = wxn_r;
+        wxn_stringInput.value = wxn_r;
+        wxn_renderChars();
+      },
+      toLowerCase() {
+        const wxn_r = wxn_text.toLowerCase();
+        wxn_log(wxn_strConsole, 'wxn_text.toLowerCase()', wxn_fmt(wxn_r));
+        wxn_text = wxn_r;
+        wxn_stringInput.value = wxn_r;
+        wxn_renderChars();
+      },
+      charAt() {
+        const wxn_r = wxn_text.charAt(3);
+        wxn_log(wxn_strConsole, 'wxn_text.charAt(3)', wxn_fmt(wxn_r) + ' —— 下标 3 上的字符（绿色格子）');
+        wxn_renderChars(3);
+      },
+      indexOf() {
+        const wxn_i = wxn_text.indexOf("S");
+        wxn_log(wxn_strConsole, 'wxn_text.indexOf("S")', wxn_i === -1 ? "-1 —— 没找到！找不到时返回 -1" : wxn_i + " —— 字符 S 第一次出现的位置（绿色格子）");
+        if (wxn_i !== -1) wxn_renderChars(wxn_i);
+      },
+      slice() {
+        const wxn_r = wxn_text.slice(0, 4);
+        wxn_log(wxn_strConsole, 'wxn_text.slice(0, 4)', wxn_fmt(wxn_r) + " —— 取下标 [0, 4) 的片段（绿色格子，含头不含尾）");
+        wxn_renderChars(0, 4);
+      },
+      replace() {
+        const wxn_r = wxn_text.replace("Java", "Coffee");
+        wxn_log(wxn_strConsole, 'wxn_text.replace("Java", "Coffee")', wxn_fmt(wxn_r) + " —— 原字符串不变，返回新字符串");
+        wxn_text = wxn_r;
+        wxn_stringInput.value = wxn_r;
+        wxn_renderChars();
+      },
+      split() {
+        const wxn_r = wxn_text.split("");
+        wxn_log(wxn_strConsole, 'wxn_text.split("")', wxn_fmt(wxn_r) + " —— 按空字符串拆成字符数组");
+      },
+      includes() {
+        const wxn_r = wxn_text.includes("Script");
+        wxn_log(wxn_strConsole, 'wxn_text.includes("Script")', wxn_r + " —— 是否包含指定子串");
+      },
+      concat() {
+        const wxn_r = wxn_text.concat("!");
+        wxn_log(wxn_strConsole, 'wxn_text.concat("!")', wxn_fmt(wxn_r) + " —— 相当于 wxn_text + \"!\"");
+        wxn_text = wxn_r;
+        wxn_stringInput.value = wxn_r;
+        wxn_renderChars();
+      },
+      repeat() {
+        const wxn_r = wxn_text.repeat(2);
+        wxn_log(wxn_strConsole, "wxn_text.repeat(2)", wxn_fmt(wxn_r));
+        wxn_text = wxn_r.length <= 24 ? wxn_r : wxn_text;
+        wxn_stringInput.value = wxn_text;
+        wxn_renderChars();
+      }
+    };
+
+    document.querySelectorAll("[data-wxn-fn]").forEach(wxn_btn => {
+      wxn_btn.addEventListener("click", () => {
+        wxn_text = wxn_stringInput.value;
+        wxn_strActions[wxn_btn.dataset.wxnFn]();
+      });
+    });
+
+    wxn_stringInput.addEventListener("input", () => {
+      wxn_text = wxn_stringInput.value;
+      wxn_renderChars();
+    });
+
+    document.getElementById("wxn_resetStrBtn").addEventListener("click", () => {
+      wxn_text = "JavaScript";
+      wxn_stringInput.value = wxn_text;
+      wxn_renderChars();
+      wxn_strConsole.innerHTML = '<div class="wxn_console-line wxn_console-empty">// 文本已恢复为 "JavaScript"</div>';
+    });
+
+    /* ================= 初始化 ================= */
+    document.getElementById("wxn_year").textContent = new Date().getFullYear();
+    wxn_renderProps();
+    wxn_renderChars();
+  </script>
+</body>
+</html>
