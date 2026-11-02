@@ -246,3 +246,47 @@
 > 上传到GitHub
 
 ---
+
+## 2026-11-02-15-37
+**Model:** Trae proprietary model
+
+**Prompt 24:**
+> 创建18-1.html，展示json.
+
+---
+
+## 2026-11-02-15-40
+**Model:** Trae proprietary model
+
+**Prompt 25:**
+> 提交到github.
+
+---
+
+## 2026-11-02-15-38
+**Model:** Trae proprietary model
+
+**Prompt 25:**
+> 完成18-2.html 获取一个接口的数据并展示。接口可以跨域访问。使用fetch和原生代码实现。接口如下（随机抽取）：https://dog.ceo/api/breeds/image/random
+> http://jsonplaceholder.typicode.com/users
+> https://dog.ceo/api/breed/hound/images/random/3
+> https://jsonplaceholder.typicode.com/posts
+> https://dummyjson.com/products
+> https://fakestoreapi.com/products
+> 列表与列表详情：
+> 列表：https://dummyjson.com/products?limit=8，默认商品列表。
+> 详情：https://dummyjson.com/products/1，根据 ID 获取单个商品。
+> post
+> https://jsonplaceholder.typicode.com/posts
+
+---
+
+## 2026-11-02-15-39
+**Model:** Trae proprietary model
+
+**Prompt 26:**
+> 创建18-3.html 和18-3-detail.html，显示列表和列表详情，数据来源于接口，使用fetch
+> 列表：https://dummyjson.com/products?limit=8，默认商品列表。
+> 详情：https://dummyjson.com/products/1，根据 ID 获取单个商品。
+
+---

@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-11-02，功能名称：JSON 数据格式可视化演示 -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON 数据格式可视化实验室</title>
+  <link rel="stylesheet" href="./font/iconfont.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --wxn_purple: #6257d9;
+      --wxn_purple-deep: #5148bf;
+      --wxn_purple-light: #9b8cff;
+      --wxn_text: #2b2942;
+      --wxn_gray: #747188;
+      --wxn_line: #eeeafa;
+      --wxn_red: #d94a4a;
+      --wxn_green: #2f9e6f;
+      --wxn_orange: #d98324;
+      --wxn_blue: #3a72c4;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--wxn_text);
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      background: linear-gradient(135deg, #f2f0ff, #fff5fa);
+      line-height: 1.7;
+    }
+
+    /* ===== 头部 ===== */
+    .wxn_header {
+      padding: 46px 20px 56px;
+      color: #fff;
+      text-align: center;
+      background: linear-gradient(135deg, #5148bf, #a26bd8);
+      clip-path: ellipse(100% 78% at 50% 18%);
+    }
+
+    .wxn_badge {
+      display: inline-block;
+      padding: 6px 16px;
+      font-size: 12px;
+      letter-spacing: 3px;
+      border: 1px solid rgba(255, 255, 255, .55);
+      border-radius: 999px;
+    }
+
+    .wxn_header h1 {
+      margin: 16px 0 10px;
+      font-size: clamp(24px, 4.6vw, 40px);
+      letter-spacing: 2px;
+    }
+
+    .wxn_header p {
+      font-size: 15px;
+      opacity: .92;
+    }
+
+    .wxn_header code {
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+      background: rgba(255, 255, 255, .18);
+    }
+
+    /* ===== 布局 ===== */
+    .wxn_main {
+      width: min(1120px, 94%);
+      margin: 0 auto 60px;
+    }
+
+    .wxn_section {
+      padding: 26px;
+      margin-bottom: 26px;
+      border: 1px solid var(--wxn_line);
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 0 14px 34px rgba(68, 55, 140, .09);
+    }
+
+    .wxn_section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .wxn_section-head h2 {
+      font-size: 21px;
+      letter-spacing: .5px;
+    }
+
+    .wxn_section-head h2 .wxn_idx {
+      display: inline-grid;
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+      place-items: center;
+      vertical-align: -6px;
+      font-size: 14px;
+      color: #fff;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--wxn_purple), var(--wxn_purple-light));
+    }
+
+    .wxn_tag {
+      padding: 4px 12px;
+      font-size: 12px;
+      color: var(--wxn_purple);
+      border-radius: 999px;
+      background: #f1eeff;
+    }
+
+    .wxn_desc {
+      margin-bottom: 18px;
+      color: var(--wxn_gray);
+      font-size: 14px;
+    }
+
+    .wxn_desc b {
+      color: var(--wxn_purple-deep);
+    }
+
+    /* ===== 通用按钮 ===== */
+    .wxn_btn {
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--wxn_purple-deep);
+      cursor: pointer;
+      border: 1px solid #ddd8f7;
+      border-radius: 999px;
+      background: #f7f6ff;
+      transition: .22s ease;
+    }
+
+    .wxn_btn:hover {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--wxn_purple), var(--wxn_purple-light));
+      box-shadow: 0 8px 18px rgba(98, 87, 217, .28);
+    }
+
+    .wxn_btn i {
+      margin-right: 4px;
+      font-size: 12px;
+    }
+
+    /* ===== 1. 数据类型卡片 ===== */
+    .wxn_type-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    .wxn_type-card {
+      padding: 16px;
+      text-align: left;
+      font-family: inherit;
+      cursor: pointer;
+      border: 1px solid var(--wxn_line);
+      border-radius: 16px;
+      background: #fbfaff;
+      transition: .22s ease;
+    }
+
+    .wxn_type-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(68, 55, 140, .12);
+    }
+
+    .wxn_type-card.wxn_active {
+      border-color: transparent;
+      box-shadow: 0 14px 26px rgba(98, 87, 217, .3);
+      background: linear-gradient(135deg, var(--wxn_purple), var(--wxn_purple-light));
+      color: #fff;
+    }
+
+    .wxn_type-name {
+      display: block;
+      font-size: 13px;
+      letter-spacing: 1px;
+      opacity: .75;
+    }
+
+    .wxn_type-card.wxn_active .wxn_type-name {
+      opacity: .85;
+    }
+
+    .wxn_type-value {
+      display: block;
+      margin-top: 6px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      word-break: break-all;
+    }
+
+    .wxn_type-detail {
+      margin-top: 16px;
+      padding: 16px 18px;
+      color: #514d68;
+      font-size: 14px;
+      border-left: 4px solid var(--wxn_purple);
+      border-radius: 0 12px 12px 0;
+      background: #f7f6ff;
+    }
+
+    .wxn_type-detail code {
+      padding: 1px 6px;
+      font-family: Consolas, "Courier New", monospace;
+      color: var(--wxn_purple-deep);
+      border-radius: 5px;
+      background: #ece8ff;
+    }
+
+    /* ===== 2. 语法规则 ===== */
+    .wxn_rule-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 14px;
+    }
+
+    .wxn_rule {
+      display: flex;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--wxn_line);
+      background: #fbfaff;
+    }
+
+    .wxn_rule-mark {
+      flex: 0 0 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      color: #fff;
+      border-radius: 50%;
+      background: var(--wxn_green);
+    }
+
+    .wxn_rule-mark.wxn_no {
+      background: var(--wxn_red);
+    }
+
+    .wxn_rule-body {
+      font-size: 13.5px;
+    }
+
+    .wxn_rule-body strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .wxn_rule-body span {
+      color: var(--wxn_gray);
+    }
+
+    code.wxn_inline {
+      padding: 1px 6px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      color: var(--wxn_purple-deep);
+      border-radius: 5px;
+      background: #ece8ff;
+      word-break: break-all;
+    }
+
+    /* ===== 3. 对照表 ===== */
+    .wxn_compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .wxn_compare-col {
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--wxn_line);
+      background: #fbfaff;
+    }
+
+    .wxn_compare-col h3 {
+      margin-bottom: 10px;
+      font-size: 14px;
+      letter-spacing: .5px;
+    }
+
+    .wxn_compare-col pre {
+      margin-bottom: 12px;
+      padding: 12px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      color: #3d3a56;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px dashed #e4e0f6;
+    }
+
+    .wxn_compare-col ul {
+      padding-left: 18px;
+      font-size: 13px;
+      color: var(--wxn_gray);
+    }
+
+    .wxn_compare-col li {
+      margin-bottom: 4px;
+    }
+
+    /* ===== 4. 解析器 ===== */
+    .wxn_editor {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .wxn_panel {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      border: 1px solid var(--wxn_line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fbfaff;
+    }
+
+    .wxn_panel-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      font-size: 12px;
+      color: var(--wxn_gray);
+      border-bottom: 1px solid var(--wxn_line);
+      background: #f4f2ff;
+    }
+
+    .wxn_dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #d9d4f7;
+    }
+
+    .wxn_dot:nth-child(2) {
+      background: #c6bdf5;
+    }
+
+    .wxn_dot:nth-child(3) {
+      background: #b0a4f2;
+    }
+
+    .wxn_panel-bar span.wxn_file {
+      margin-left: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    .wxn_panel-bar .wxn_copy {
+      margin-left: auto;
+      padding: 3px 10px;
+      font-family: inherit;
+      font-size: 12px;
+      color: var(--wxn_purple-deep);
+      cursor: pointer;
+      border: 1px solid #ddd8f7;
+      border-radius: 999px;
+      background: #fff;
+    }
+
+    #wxn_input {
+      flex: 1;
+      min-height: 320px;
+      padding: 14px 16px;
+      resize: vertical;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.85;
+      color: #3d3a56;
+      border: 0;
+      outline: none;
+      background: #fff;
+      tab-size: 2;
+    }
+
+    #wxn_output {
+      flex: 1;
+      min-height: 320px;
+      max-height: 520px;
+      margin: 0;
+      padding: 14px 16px;
+      overflow: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.85;
+      color: #3d3a56;
+      background: #fff;
+      white-space: pre;
+    }
+
+    .wxn_key {
+      color: var(--wxn_purple-deep);
+    }
+
+    .wxn_str {
+      color: var(--wxn_green);
+    }
+
+    .wxn_num {
+      color: var(--wxn_blue);
+    }
+
+    .wxn_bool {
+      color: var(--wxn_orange);
+      font-weight: bold;
+    }
+
+    .wxn_null {
+      color: #9b96ad;
+      font-style: italic;
+    }
+
+    /* 状态条 */
+    .wxn_status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 11px 16px;
+      font-size: 13.5px;
+      border-radius: 12px;
+    }
+
+    .wxn_status.wxn_ok {
+      color: #1f7a55;
+      background: #eaf8f1;
+    }
+
+    .wxn_status.wxn_err {
+      color: #a12f2f;
+      background: #fdeeee;
+    }
+
+    .wxn_status i {
+      font-size: 15px;
+    }
+
+    /* 统计 */
+    .wxn_stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .wxn_stat {
+      padding: 12px 14px;
+      text-align: center;
+      border-radius: 14px;
+      background: #f7f6ff;
+      border: 1px solid var(--wxn_line);
+    }
+
+    .wxn_stat b {
+      display: block;
+      font-size: 20px;
+      color: var(--wxn_purple-deep);
+    }
+
+    .wxn_stat span {
+      font-size: 12px;
+      color: var(--wxn_gray);
+    }
+
+    /* JSON 树 */
+    .wxn_tree {
+      margin-top: 16px;
+      padding: 16px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      border-radius: 14px;
+      background: #fbfaff;
+      border: 1px solid var(--wxn_line);
+      overflow-x: auto;
+    }
+
+    .wxn_tree-title {
+      margin-bottom: 10px;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      font-size: 13px;
+      color: var(--wxn_gray);
+    }
+
+    .wxn_node {
+      padding-left: 16px;
+      border-left: 1px dashed #ddd8f7;
+      margin-left: 4px;
+    }
+
+    .wxn_node-root {
+      padding-left: 0;
+      border-left: 0;
+      margin-left: 0;
+    }
+
+    .wxn_node-row {
+      padding: 1px 0;
+    }
+
+    .wxn_node-key {
+      color: var(--wxn_purple-deep);
+    }
+
+    .wxn_node-val {
+      color: var(--wxn_green);
+    }
+
+    .wxn_node-val.wxn_v-num {
+      color: var(--wxn_blue);
+    }
+
+    .wxn_node-val.wxn_v-bool {
+      color: var(--wxn_orange);
+    }
+
+    .wxn_node-val.wxn_v-null {
+      color: #9b96ad;
+    }
+
+    .wxn_node-count {
+      margin-left: 6px;
+      padding: 0 7px;
+      font-size: 11px;
+      color: var(--wxn_gray);
+      border-radius: 999px;
+      background: #ece8ff;
+    }
+
+    /* ===== 5. stringify ===== */
+    .wxn_toolbar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .wxn_toolbar label {
+      font-size: 13px;
+      color: var(--wxn_gray);
+    }
+
+    .wxn_toolbar select {
+      padding: 7px 12px;
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--wxn_text);
+      border: 1px solid #ddd8f7;
+      border-radius: 999px;
+      background: #f7f6ff;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .wxn_out-box {
+      margin: 0;
+      padding: 16px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.85;
+      color: #3d3a56;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid var(--wxn_line);
+      white-space: pre;
+    }
+
+    /* ===== 6. 渲染卡片 ===== */
+    .wxn_goods {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .wxn_goods-card {
+      padding: 18px;
+      border: 1px solid var(--wxn_line);
+      border-radius: 16px;
+      background: #fbfaff;
+      transition: .22s ease;
+    }
+
+    .wxn_goods-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 26px rgba(68, 55, 140, .12);
+    }
+
+    .wxn_goods-card h4 {
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .wxn_goods-card .wxn_price {
+      font-size: 18px;
+      color: var(--wxn_red);
+      font-weight: bold;
+    }
+
+    .wxn_goods-card .wxn_price::before {
+      content: "¥";
+      margin-right: 2px;
+      font-size: 13px;
+    }
+
+    .wxn_goods-card p {
+      margin-top: 6px;
+      font-size: 12.5px;
+      color: var(--wxn_gray);
+    }
+
+    .wxn_flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 6px 0 16px;
+      font-size: 13px;
+    }
+
+    .wxn_flow-step {
+      padding: 6px 14px;
+      color: var(--wxn_purple-deep);
+      border-radius: 999px;
+      background: #f1eeff;
+    }
+
+    .wxn_flow-arrow {
+      color: #b7b0dd;
+    }
+
+    /* ===== 页脚 ===== */
+    .wxn_footer {
+      padding: 26px;
+      color: var(--wxn_gray);
+      text-align: center;
+      font-size: 13.5px;
+    }
+
+    .wxn_footer a {
+      color: var(--wxn_purple);
+      text-decoration: none;
+    }
+
+    .wxn_footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== 响应式 ===== */
+    @media (max-width: 860px) {
+      .wxn_editor,
+      .wxn_compare {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .wxn_section {
+        padding: 20px 16px;
+      }
+
+      #wxn_input,
+      #wxn_output {
+        min-height: 260px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="wxn_header">
+    <div class="wxn_badge">JSON</div>
+    <h1>JSON 数据格式可视化实验室</h1>
+    <p>六种数据类型 · 语法红线 · 对象对照 · 实时解析 · <code>stringify</code> / <code>parse</code> 实战</p>
+  </header>
+
+  <main class="wxn_main">
+
+    <!-- 1. 数据类型 -->
+    <section class="wxn_section">
+      <div class="wxn_section-head">
+        <h2><span class="wxn_idx">1</span>JSON 的六种数据类型</h2>
+        <span class="wxn_tag">点击卡片查看说明</span>
+      </div>
+      <p class="wxn_desc">
+        JSON（JavaScript Object Notation）只认这 <b>6 种</b>值：字符串、数字、布尔、null、对象、数组。
+        没有 <code class="wxn_inline">undefined</code>、没有函数、没有日期类型。
+      </p>
+      <div class="wxn_type-grid" id="wxn_typeGrid"></div>
+      <div class="wxn_type-detail" id="wxn_typeDetail"></div>
+    </section>
+
+    <!-- 2. 语法规则 -->
+    <section class="wxn_section">
+      <div class="wxn_section-head">
+        <h2><span class="wxn_idx">2</span>五条语法红线</h2>
+        <span class="wxn_tag">写错一条就解析失败</span>
+      </div>
+      <p class="wxn_desc">JSON 是"严格"的数据格式，浏览器里的 <code class="wxn_inline">JSON.parse()</code> 不会替你宽容任何一处违规。</p>
+      <div class="wxn_rule-list">
+        <div class="wxn_rule">
+          <div class="wxn_rule-mark">✓</div>
+          <div class="wxn_rule-body">
+            <strong>键名必须用双引号</strong>
+            <span>正确：<code class="wxn_inline">{"name":"王秀宁"}</code>　错误：<code class="wxn_inline">{name:"王秀宁"}</code></span>
+          </div>
+        </div>
+        <div class="wxn_rule">
+          <div class="wxn_rule-mark">✓</div>
+          <div class="wxn_rule-body">
+            <strong>字符串只能用双引号</strong>
+            <span>单引号 <code class="wxn_inline">'abc'</code> 在 JSON 中非法，JS 对象里却合法。</span>
+          </div>
+        </div>
+        <div class="wxn_rule">
+          <div class="wxn_rule-mark wxn_no">✗</div>
+          <div class="wxn_rule-body">
+            <strong>不能写注释</strong>
+            <span><code class="wxn_inline">// 说明</code> 与 <code class="wxn_inline">/* 说明 */</code> 都会让解析报错。</span>
+          </div>
+        </div>
+        <div class="wxn_rule">
+          <div class="wxn_rule-mark wxn_no">✗</div>
+          <div class="wxn_rule-body">
+            <strong>最后一项不能有逗号</strong>
+            <span><code class="wxn_inline">{"a":1,"b":2,}</code> 是非法尾逗号。</span>
+          </div>
+        </div>
+        <div class="wxn_rule">
+          <div class="wxn_rule-mark wxn_no">✗</div>
+          <div class="wxn_rule-body">
+            <strong>不允许 undefined 与函数</strong>
+            <span><code class="wxn_inline">{"fn":function(){}}</code> 无法序列化，会被直接丢弃。</span>
+          </div>
+        </div>
+        <div class="wxn_rule">
+          <div class="wxn_rule-mark">✓</div>
+          <div class="wxn_rule-body">
+            <strong>最外层可以是对象或数组</strong>
+            <span><code class="wxn_inline">{ ... }</code> 与 <code class="wxn_inline">[ ... ]</code> 都算合法 JSON 文本。</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 对象 vs JSON -->
+    <section class="wxn_section">
+      <div class="wxn_section-head">
+        <h2><span class="wxn_idx">3</span>JS 对象 ≠ JSON</h2>
+        <span class="wxn_tag">长得像，规矩不同</span>
+      </div>
+      <p class="wxn_desc">JSON 是<b>字符串</b>，用来传输；JS 对象是<b>内存里的数据结构</b>，用来操作。两者靠 <code class="wxn_inline">JSON.stringify()</code> 与 <code class="wxn_inline">JSON.parse()</code> 互相转换。</p>
+      <div class="wxn_compare">
+        <div class="wxn_compare-col">
+          <h3>JS 对象字面量（宽松）</h3>
+          <pre>const wxn_user = {
+  name: '王秀宁',          // 键可不加引号
+  age: 20,
+  sayHi() { return 'hi'; } // 可以有函数
+};</pre>
+          <ul>
+            <li>键名可省略引号</li>
+            <li>字符串可用单引号</li>
+            <li>可以写注释、尾逗号</li>
+            <li>可以放函数、undefined、Date</li>
+          </ul>
+        </div>
+        <div class="wxn_compare-col">
+          <h3>JSON 文本（严格）</h3>
+          <pre>{
+  "name": "王秀宁",
+  "age": 20,
+  "tags": ["前端", "JSON"],
+  "vip": true,
+  "remark": null
+}</pre>
+          <ul>
+            <li>键名必须是双引号字符串</li>
+            <li>只允许 6 种数据类型</li>
+            <li>不能写注释、不能有尾逗号</li>
+            <li>本质就是一串纯文本</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 实时解析 -->
+    <section class="wxn_section">
+      <div class="wxn_section-head">
+        <h2><span class="wxn_idx">4</span>实时解析器：边写边验</h2>
+        <span class="wxn_tag">调用 JSON.parse()</span>
+      </div>
+      <p class="wxn_desc">左侧文本可自由编辑，右侧实时显示<b>格式化结果</b>与<b>错误信息</b>。试着删掉一个引号或加个尾逗号，看会发生什么。</p>
+      <div class="wxn_toolbar">
+        <button class="wxn_btn" id="wxn_demoUser" type="button"><i class="iconfont icon-bianji"></i>示例：学生信息</button>
+        <button class="wxn_btn" id="wxn_demoGoods" type="button"><i class="iconfont icon-shangcheng"></i>示例：商品列表</button>
+        <button class="wxn_btn" id="wxn_demoError" type="button"><i class="iconfont icon-shanchu"></i>示例：错误写法</button>
+        <button class="wxn_btn" id="wxn_demoReset" type="button"><i class="iconfont icon-zhongxinshengcheng"></i>恢复默认</button>
+      </div>
+      <div class="wxn_editor">
+        <div class="wxn_panel">
+          <div class="wxn_panel-bar">
+            <i class="wxn_dot"></i><i class="wxn_dot"></i><i class="wxn_dot"></i>
+            <span class="wxn_file">input.json</span>
+          </div>
+          <textarea id="wxn_input" spellcheck="false" aria-label="JSON 输入框"></textarea>
+        </div>
+        <div class="wxn_panel">
+          <div class="wxn_panel-bar">
+            <i class="wxn_dot"></i><i class="wxn_dot"></i><i class="wxn_dot"></i>
+            <span class="wxn_file">output · JSON.parse()</span>
+            <button class="wxn_copy" id="wxn_copy" type="button">复制</button>
+          </div>
+          <pre id="wxn_output"></pre>
+        </div>
+      </div>
+      <div class="wxn_status" id="wxn_status"></div>
+      <div class="wxn_stats" id="wxn_stats"></div>
+      <div class="wxn_tree" id="wxn_tree"></div>
+    </section>
+
+    <!-- 5. stringify -->
+    <section class="wxn_section">
+      <div class="wxn_section-head">
+        <h2><span class="wxn_idx">5</span>JSON.stringify() 的三个参数</h2>
+        <span class="wxn_tag">对象 → 字符串</span>
+      </div>
+      <p class="wxn_desc">第三个参数 <code class="wxn_inline">space</code> 控制缩进，数字表示空格数；第二个参数 <code class="wxn_inline">replacer</code> 可以过滤字段。改动下面的选项，观察输出如何变化。</p>
+      <div class="wxn_toolbar">
+        <label for="wxn_space">缩进 space：</label>
+        <select id="wxn_space">
+          <option value="0">0（紧凑单行）</option>
+          <option value="2" selected>2 个空格</option>
+          <option value="4">4 个空格</option>
+          <option value="tab">制表符 \t</option>
+        </select>
+        <label for="wxn_replacer">过滤 replacer：</label>
+        <select id="wxn_replacer">
+          <option value="all" selected>不筛选，输出全部字段</option>
+          <option value="pick">只保留 id / name / price</option>
+        </select>
+      </div>
+      <pre class="wxn_out-box" id="wxn_stringify"></pre>
+    </section>
+
+    <!-- 6. 实战 -->
+    <section class="wxn_section">
+      <div class="wxn_section-head">
+        <h2><span class="wxn_idx">6</span>实战：用 JSON 数据渲染页面</h2>
+        <span class="wxn_tag">接口最常见的用法</span>
+      </div>
+      <p class="wxn_desc">后端接口返回的永远是 JSON <b>字符串</b>，前端拿到后 <code class="wxn_inline">JSON.parse()</code> 成对象，再用 <code class="wxn_inline">map()</code> 拼接成 HTML。</p>
+      <div class="wxn_flow">
+        <span class="wxn_flow-step">服务器返回 JSON 文本</span>
+        <span class="wxn_flow-arrow">→</span>
+        <span class="wxn_flow-step">JSON.parse() 转对象</span>
+        <span class="wxn_flow-arrow">→</span>
+        <span class="wxn_flow-step">遍历数组拼 HTML</span>
+        <span class="wxn_flow-arrow">→</span>
+        <span class="wxn_flow-step">插入页面</span>
+      </div>
+      <div class="wxn_goods" id="wxn_goods"></div>
+    </section>
+
+  </main>
+
+  <footer class="wxn_footer">
+    © <span id="wxn_year"></span> 王秀宁《高级网页设计》课堂实践 · <a href="./index.html">返回首页</a>
+  </footer>
+
+  <script>
+    /* ============ 通用：JSON 语法高亮 ============ */
+    function wxn_escapeHtml(wxn_text) {
+      return wxn_text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function wxn_highlight(wxn_text) {
+      const wxn_escaped = wxn_escapeHtml(wxn_text);
+      return wxn_escaped.replace(
+        /("(\\.|[^"\\])*")(\s*:)?|\b(true|false)\b|\bnull\b|-?\d+(\.\d+)?([eE][+-]?\d+)?/g,
+        function (wxn_match, wxn_str, wxn_body, wxn_colon, wxn_bool) {
+          if (wxn_str !== undefined) {
+            if (wxn_colon) {
+              return '<span class="wxn_key">' + wxn_str + "</span>" + wxn_colon;
+            }
+            return '<span class="wxn_str">' + wxn_str + "</span>";
+          }
+          if (wxn_bool !== undefined) {
+            return '<span class="wxn_bool">' + wxn_match + "</span>";
+          }
+          if (wxn_match === "null") {
+            return '<span class="wxn_null">null</span>';
+          }
+          return '<span class="wxn_num">' + wxn_match + "</span>";
+        }
+      );
+    }
+
+    /* ============ 1. 数据类型卡片 ============ */
+    const wxn_types = [
+      {
+        name: "string 字符串",
+        value: '"王秀宁"',
+        detail: '字符串必须用<b>双引号</b>包裹，支持转义，如 <code>"line\\nbreak"</code>、<code>"引号\\"内部\\""</code>。中文可以直接写，无需转成 Unicode。'
+      },
+      {
+        name: "number 数字",
+        value: "20 / -3.14 / 1.5e3",
+        detail: '整数、小数、科学计数法都算 number，<b>不加引号</b>。没有 int / float 之分，也不允许 NaN、Infinity（写进 JSON 会变成 <code>null</code>）。'
+      },
+      {
+        name: "boolean 布尔",
+        value: "true / false",
+        detail: '只有两个字面量 <code>true</code> 与 <code>false</code>，全部小写。<code>"true"</code>（带引号）是字符串，不是布尔值。'
+      },
+      {
+        name: "null 空值",
+        value: "null",
+        detail: '表示"有意留空"。JSON 里只有 <code>null</code>，<b>没有 undefined</b>；对象中值为 undefined 的键在序列化时会被直接删掉。'
+      },
+      {
+        name: "object 对象",
+        value: '{"name":"王秀宁","age":20}',
+        detail: '无序的键值对集合，用 <code>{ }</code> 包裹。键名必须是双引号字符串，多个成员之间用逗号分隔，最后一个成员后面<b>不能有逗号</b>。'
+      },
+      {
+        name: "array 数组",
+        value: '["前端","JSON",20,true]',
+        detail: '有序的值列表，用 <code>[ ]</code> 包裹。元素类型可以混用，也可以嵌套对象与数组，形成树形结构。'
+      }
+    ];
+
+    const wxn_typeGrid = document.getElementById("wxn_typeGrid");
+    const wxn_typeDetail = document.getElementById("wxn_typeDetail");
+
+    wxn_typeGrid.innerHTML = wxn_types
+      .map(function (wxn_item, wxn_i) {
+        return (
+          '<button class="wxn_type-card' + (wxn_i === 0 ? " wxn_active" : "") + '" type="button" data-wxn-index="' + wxn_i + '">' +
+            '<span class="wxn_type-name">' + wxn_item.name + "</span>" +
+            '<code class="wxn_type-value">' + wxn_escapeHtml(wxn_item.value) + "</code>" +
+          "</button>"
+        );
+      })
+      .join("");
+
+    function wxn_showType(wxn_index) {
+      wxn_typeDetail.innerHTML = wxn_types[wxn_index].detail;
+      Array.prototype.forEach.call(
+        wxn_typeGrid.children,
+        function (wxn_card) {
+          wxn_card.classList.toggle(
+            "wxn_active",
+            Number(wxn_card.dataset.wxnIndex) === wxn_index
+          );
+        }
+      );
+    }
+
+    wxn_typeGrid.addEventListener("click", function (wxn_event) {
+      const wxn_card = wxn_event.target.closest(".wxn_type-card");
+      if (wxn_card) {
+        wxn_showType(Number(wxn_card.dataset.wxnIndex));
+      }
+    });
+
+    wxn_showType(0);
+
+    /* ============ 4. 实时解析器 ============ */
+    const wxn_input = document.getElementById("wxn_input");
+    const wxn_output = document.getElementById("wxn_output");
+    const wxn_status = document.getElementById("wxn_status");
+    const wxn_stats = document.getElementById("wxn_stats");
+    const wxn_tree = document.getElementById("wxn_tree");
+
+    const wxn_samples = {
+      user: '{\n  "name": "王秀宁",\n  "age": 20,\n  "isStudent": true,\n  "major": "数字媒体技术",\n  "skills": ["HTML", "CSS", "JavaScript"],\n  "contact": {\n    "email": "wang@example.com",\n    "city": "青岛"\n  },\n  "remark": null\n}',
+      goods: '[\n  { "id": 1001, "name": "机械键盘", "price": 299, "stock": 32, "onSale": true },\n  { "id": 1002, "name": "无线鼠标", "price": 89, "stock": 0, "onSale": false },\n  { "id": 1003, "name": "显示器支架", "price": 159, "stock": 12, "onSale": true }\n]',
+      error: '{\n  name: "王秀宁",\n  "age": 20,\n  "skills": ["HTML", "CSS",],\n}'
+    };
+
+    wxn_input.value = wxn_samples.user;
+
+    /* 统计节点数量与嵌套深度 */
+    function wxn_analyze(wxn_value) {
+      let wxn_nodes = 0;
+      let wxn_keys = 0;
+      let wxn_depth = 1;
+
+      function wxn_walk(wxn_item, wxn_level) {
+        wxn_nodes += 1;
+        wxn_depth = Math.max(wxn_depth, wxn_level);
+        if (wxn_item !== null && typeof wxn_item === "object") {
+          Object.keys(wxn_item).forEach(function (wxn_k) {
+            if (!Array.isArray(wxn_item)) {
+              wxn_keys += 1;
+            }
+            wxn_walk(wxn_item[wxn_k], wxn_level + 1);
+          });
+        }
+      }
+
+      wxn_walk(wxn_value, 1);
+      return { nodes: wxn_nodes, keys: wxn_keys, depth: wxn_depth };
+    }
+
+    /* 渲染 JSON 树 */
+    function wxn_renderTree(wxn_value, wxn_key, wxn_isRoot) {
+      const wxn_wrap = document.createElement("div");
+      wxn_wrap.className = "wxn_node" + (wxn_isRoot ? " wxn_node-root" : "");
+      const wxn_row = document.createElement("div");
+      wxn_row.className = "wxn_node-row";
+
+      const wxn_label = wxn_key === null
+        ? "root"
+        : wxn_key;
+
+      if (wxn_value !== null && typeof wxn_value === "object") {
+        const wxn_isArray = Array.isArray(wxn_value);
+        const wxn_len = Object.keys(wxn_value).length;
+        wxn_row.innerHTML =
+          '<span class="wxn_node-key">' + wxn_escapeHtml(String(wxn_label)) + "</span>" +
+          " : " + (wxn_isArray ? "Array" : "Object") +
+          '<span class="wxn_node-count">' + wxn_len + " 项</span>";
+        wxn_wrap.appendChild(wxn_row);
+
+        Object.keys(wxn_value).forEach(function (wxn_k) {
+          wxn_wrap.appendChild(wxn_renderTree(wxn_value[wxn_k], wxn_k, false));
+        });
+        return wxn_wrap;
+      }
+
+      let wxn_class = "wxn_v-num";
+      let wxn_show = String(wxn_value);
+      if (typeof wxn_value === "string") {
+        wxn_class = "";
+        wxn_show = '"' + wxn_value + '"';
+      } else if (typeof wxn_value === "boolean") {
+        wxn_class = "wxn_v-bool";
+      } else if (wxn_value === null) {
+        wxn_class = "wxn_v-null";
+        wxn_show = "null";
+      }
+
+      wxn_row.innerHTML =
+        '<span class="wxn_node-key">' + wxn_escapeHtml(String(wxn_label)) + "</span>" +
+        ' : <span class="wxn_node-val ' + wxn_class + '">' + wxn_escapeHtml(wxn_show) + "</span>";
+      wxn_wrap.appendChild(wxn_row);
+      return wxn_wrap;
+    }
+
+    let wxn_lastValid = "";
+
+    function wxn_parseInput() {
+      const wxn_text = wxn_input.value;
+
+      if (!wxn_text.trim()) {
+        wxn_output.innerHTML = "";
+        wxn_status.className = "wxn_status wxn_err";
+        wxn_status.innerHTML = '<i class="iconfont icon-shanchu"></i>输入为空，请写入 JSON 文本。';
+        wxn_stats.innerHTML = "";
+        wxn_tree.innerHTML = '<div class="wxn_tree-title">结构预览</div><div>暂无数据</div>';
+        return;
+      }
+
+      try {
+        const wxn_data = JSON.parse(wxn_text);
+        wxn_lastValid = wxn_text;
+
+        const wxn_formatted = JSON.stringify(wxn_data, null, 2);
+        wxn_output.innerHTML = wxn_highlight(wxn_formatted);
+
+        wxn_status.className = "wxn_status wxn_ok";
+        wxn_status.innerHTML =
+          '<i class="iconfont icon-dianzan"></i>解析成功：JSON.parse() 已返回 ' +
+          (Array.isArray(wxn_data) ? "数组" : typeof wxn_data) +
+          " 类型的数据。";
+
+        const wxn_info = wxn_analyze(wxn_data);
+        const wxn_chars = JSON.stringify(wxn_data).length;
+        wxn_stats.innerHTML = [
+          { label: "总节点数", value: wxn_info.nodes },
+          { label: "对象键数", value: wxn_info.keys },
+          { label: "嵌套深度", value: wxn_info.depth + " 层" },
+          { label: "压缩后字符", value: wxn_chars }
+        ].map(function (wxn_s) {
+          return '<div class="wxn_stat"><b>' + wxn_s.value + "</b><span>" + wxn_s.label + "</span></div>";
+        }).join("");
+
+        wxn_tree.innerHTML = '<div class="wxn_tree-title">结构预览（JSON → 树）</div>';
+        wxn_tree.appendChild(wxn_renderTree(wxn_data, null, true));
+      } catch (wxn_err) {
+        wxn_output.innerHTML = wxn_lastValid
+          ? wxn_highlight(JSON.stringify(JSON.parse(wxn_lastValid), null, 2))
+          : "";
+        wxn_status.className = "wxn_status wxn_err";
+        wxn_status.innerHTML =
+          '<i class="iconfont icon-shanchu"></i>解析失败：' + wxn_escapeHtml(wxn_err.message) +
+          "（右侧仍显示上一次解析成功的结果）";
+        wxn_stats.innerHTML = "";
+        wxn_tree.innerHTML =
+          '<div class="wxn_tree-title">结构预览</div><div>JSON 语法有误，无法生成结构树。</div>';
+      }
+    }
+
+    wxn_input.addEventListener("input", wxn_parseInput);
+
+    document.getElementById("wxn_demoUser").addEventListener("click", function () {
+      wxn_input.value = wxn_samples.user;
+      wxn_parseInput();
+    });
+
+    document.getElementById("wxn_demoGoods").addEventListener("click", function () {
+      wxn_input.value = wxn_samples.goods;
+      wxn_parseInput();
+    });
+
+    document.getElementById("wxn_demoError").addEventListener("click", function () {
+      wxn_input.value = wxn_samples.error;
+      wxn_parseInput();
+    });
+
+    document.getElementById("wxn_demoReset").addEventListener("click", function () {
+      wxn_input.value = wxn_samples.user;
+      wxn_parseInput();
+    });
+
+    document.getElementById("wxn_copy").addEventListener("click", function () {
+      const wxn_text = wxn_output.textContent;
+      if (!wxn_text) {
+        return;
+      }
+      const wxn_btn = this;
+
+      function wxn_done() {
+        wxn_btn.textContent = "已复制";
+        setTimeout(function () {
+          wxn_btn.textContent = "复制";
+        }, 1200);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(wxn_text).then(wxn_done, function () {
+          wxn_btn.textContent = "复制失败";
+        });
+      } else {
+        const wxn_area = document.createElement("textarea");
+        wxn_area.value = wxn_text;
+        document.body.appendChild(wxn_area);
+        wxn_area.select();
+        document.execCommand("copy");
+        document.body.removeChild(wxn_area);
+        wxn_done();
+      }
+    });
+
+    wxn_parseInput();
+
+    /* ============ 5. stringify 演示 ============ */
+    const wxn_goodsData = [
+      { id: 1001, name: "机械键盘", price: 299, stock: 32, onSale: true, tag: "热卖" },
+      { id: 1002, name: "无线鼠标", price: 89, stock: 0, onSale: false, tag: "缺货" },
+      { id: 1003, name: "显示器支架", price: 159, stock: 12, onSale: true, tag: "新品" }
+    ];
+
+    const wxn_space = document.getElementById("wxn_space");
+    const wxn_replacer = document.getElementById("wxn_replacer");
+    const wxn_stringifyBox = document.getElementById("wxn_stringify");
+
+    function wxn_updateStringify() {
+      const wxn_spaceValue = wxn_space.value === "tab" ? "\t" : Number(wxn_space.value);
+      const wxn_replacerValue = wxn_replacer.value === "pick"
+        ? ["id", "name", "price"]
+        : null;
+      const wxn_result = JSON.stringify(wxn_goodsData, wxn_replacerValue, wxn_spaceValue);
+      wxn_stringifyBox.innerHTML = wxn_highlight(wxn_result);
+    }
+
+    wxn_space.addEventListener("change", wxn_updateStringify);
+    wxn_replacer.addEventListener("change", wxn_updateStringify);
+    wxn_updateStringify();
+
+    /* ============ 6. 用 JSON 渲染卡片 ============ */
+    const wxn_goodsJson = '[\n  { "id": 1001, "name": "机械键盘", "price": 299, "shop": "京东自营", "tag": "热卖" },\n  { "id": 1002, "name": "无线鼠标", "price": 89, "shop": "品牌旗舰店", "tag": "缺货" },\n  { "id": 1003, "name": "显示器支架", "price": 159, "shop": "京东自营", "tag": "新品" },\n  { "id": 1004, "name": "桌面收纳盒", "price": 45, "shop": "品牌旗舰店", "tag": "包邮" }\n]';
+
+    const wxn_goodsList = JSON.parse(wxn_goodsJson);
+    document.getElementById("wxn_goods").innerHTML = wxn_goodsList
+      .map(function (wxn_item) {
+        return (
+          '<article class="wxn_goods-card">' +
+            "<h4>" + wxn_item.name + "</h4>" +
+            '<div class="wxn_price">' + wxn_item.price.toFixed(2) + "</div>" +
+            "<p>" + wxn_item.shop + " · " + wxn_item.tag + "</p>" +
+            "<p>商品编号：" + wxn_item.id + "</p>" +
+          "</article>"
+        );
+      })
+      .join("");
+
+    /* ============ 页脚年份 ============ */
+    document.getElementById("wxn_year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
