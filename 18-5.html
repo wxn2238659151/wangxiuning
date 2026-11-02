@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-11-02，功能名称：JavaScript 两种定时器（setTimeout / setInterval）演示 -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>18-5 JavaScript 两种定时器</title>
+  <link rel="stylesheet" href="./font/iconfont.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: linear-gradient(135deg, #f2f3ff, #f7f4ff 45%, #eef6ff);
+      color: #2b2a3d;
+      min-height: 100vh;
+      line-height: 1.7;
+    }
+
+    .wxn_container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    /* ---------- 顶部标题栏 ---------- */
+    .wxn_header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 20px 26px;
+      border-radius: 16px;
+      color: #fff;
+      background: linear-gradient(135deg, #5b57d9, #8f6bff);
+      box-shadow: 0 10px 26px rgba(91, 87, 217, 0.28);
+    }
+
+    .wxn_header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .wxn_header-left .iconfont {
+      font-size: 30px;
+    }
+
+    .wxn_header h1 {
+      font-size: 23px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .wxn_header-sub {
+      font-size: 13px;
+      opacity: 0.9;
+      margin-top: 2px;
+    }
+
+    .wxn_clock {
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 20px;
+      letter-spacing: 2px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    /* ---------- 通用区块 ---------- */
+    .wxn_section {
+      margin-top: 22px;
+      padding: 24px 26px;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 6px 20px rgba(60, 52, 130, 0.08);
+    }
+
+    .wxn_section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .wxn_section-title .iconfont {
+      color: #6b5cf5;
+      font-size: 20px;
+    }
+
+    .wxn_section-desc {
+      font-size: 14px;
+      color: #6f6c86;
+      margin-bottom: 18px;
+    }
+
+    .wxn_tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 400;
+      padding: 2px 10px;
+      border-radius: 20px;
+      background: #efedff;
+      color: #5b57d9;
+      vertical-align: middle;
+    }
+
+    /* ---------- 概念对比 ---------- */
+    .wxn_compare {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .wxn_compare-card {
+      padding: 20px;
+      border-radius: 14px;
+      border: 1px solid #ece9ff;
+      background: #fbfaff;
+    }
+
+    .wxn_compare-card.is-interval {
+      border-color: #d8ecff;
+      background: #f8fcff;
+    }
+
+    .wxn_compare-card h3 {
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .wxn_dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #6b5cf5;
+    }
+
+    .wxn_dot.is-green {
+      background: #12a594;
+    }
+
+    .wxn_compare-card p {
+      font-size: 14px;
+      color: #5f5c76;
+    }
+
+    .wxn_compare-card code {
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 13px;
+      background: #efedff;
+      color: #4b43c9;
+      padding: 1px 6px;
+      border-radius: 5px;
+    }
+
+    .wxn_compare-card.is-interval code {
+      background: #e4f4ff;
+      color: #0b7fa8;
+    }
+
+    /* ---------- 表单与按钮 ---------- */
+    .wxn_row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .wxn_label {
+      font-size: 14px;
+      color: #55526e;
+    }
+
+    .wxn_input,
+    .wxn_select {
+      width: 120px;
+      padding: 9px 12px;
+      font-size: 14px;
+      font-family: inherit;
+      border: 1px solid #ddd9f0;
+      border-radius: 9px;
+      outline: none;
+      background: #fdfdff;
+      transition: 0.2s;
+    }
+
+    .wxn_input:focus,
+    .wxn_select:focus {
+      border-color: #7a6bf7;
+      box-shadow: 0 0 0 4px rgba(107, 92, 245, 0.12);
+    }
+
+    .wxn_btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 20px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #6b5cf5, #8f6bff);
+      box-shadow: 0 4px 12px rgba(107, 92, 245, 0.28);
+      transition: 0.2s;
+    }
+
+    .wxn_btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 7px 18px rgba(107, 92, 245, 0.35);
+    }
+
+    .wxn_btn:active {
+      transform: translateY(0);
+    }
+
+    .wxn_btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .wxn_btn.is-ghost {
+      color: #5b57d9;
+      background: #f1efff;
+      box-shadow: none;
+    }
+
+    .wxn_btn.is-ghost:hover {
+      background: #e7e3ff;
+      box-shadow: none;
+    }
+
+    .wxn_btn.is-green {
+      background: linear-gradient(135deg, #12a594, #33c9a5);
+      box-shadow: 0 4px 12px rgba(18, 165, 148, 0.28);
+    }
+
+    .wxn_btn.is-gray {
+      color: #5f5c76;
+      background: #f0f0f5;
+      box-shadow: none;
+    }
+
+    /* ---------- 状态与进度 ---------- */
+    .wxn_status-box {
+      padding: 16px 18px;
+      border-radius: 12px;
+      background: #fafaff;
+      border: 1px dashed #e2ddfb;
+      font-size: 14px;
+      color: #55526e;
+    }
+
+    .wxn_status-text {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: #4b43c9;
+    }
+
+    .wxn_status-text.is-done {
+      color: #0e8a72;
+    }
+
+    .wxn_progress {
+      height: 8px;
+      margin-top: 12px;
+      border-radius: 999px;
+      background: #eceaf9;
+      overflow: hidden;
+    }
+
+    .wxn_progress-bar {
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #6b5cf5, #a98cff);
+      transition: width 0.1s linear;
+    }
+
+    /* ---------- 秒表 ---------- */
+    .wxn_stopwatch {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 18px;
+      padding: 20px 24px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #101a3d, #26356b);
+      color: #fff;
+    }
+
+    .wxn_stopwatch-time {
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      line-height: 1.2;
+      color: #9ff5e3;
+      text-shadow: 0 0 16px rgba(120, 240, 215, 0.35);
+    }
+
+    .wxn_stopwatch-time small {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 1px;
+      margin-left: 8px;
+    }
+
+    .wxn_stopwatch-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .wxn_sw-btn {
+      padding: 9px 20px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .wxn_sw-btn:hover {
+      background: rgba(255, 255, 255, 0.24);
+    }
+
+    .wxn_sw-btn.is-primary {
+      border-color: transparent;
+      background: linear-gradient(135deg, #12a594, #33c9a5);
+    }
+
+    .wxn_sw-meta {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #6f6c86;
+    }
+
+    .wxn_sw-meta b {
+      font-family: "Consolas", "Courier New", monospace;
+      color: #4b43c9;
+    }
+
+    /* ---------- 日志 ---------- */
+    .wxn_log {
+      max-height: 220px;
+      overflow-y: auto;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #16172b;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.9;
+      color: #cdd3f5;
+    }
+
+    .wxn_log-line {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 1px 0;
+      word-break: break-all;
+    }
+
+    .wxn_log-line:last-child {
+      border-bottom: none;
+    }
+
+    .wxn_log-time {
+      color: #7b86b8;
+      margin-right: 8px;
+    }
+
+    .wxn_log-line.is-timeout .wxn_log-msg {
+      color: #ffd479;
+    }
+
+    .wxn_log-line.is-interval .wxn_log-msg {
+      color: #7ef0d0;
+    }
+
+    .wxn_log-line.is-action .wxn_log-msg {
+      color: #9fb6ff;
+    }
+
+    .wxn_log-empty {
+      color: #6b7196;
+    }
+
+    /* ---------- 表格与代码 ---------- */
+    .wxn_table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .wxn_table th,
+    .wxn_table td {
+      padding: 11px 14px;
+      text-align: left;
+      border-bottom: 1px solid #f0eefb;
+      vertical-align: top;
+    }
+
+    .wxn_table th {
+      font-weight: 600;
+      color: #4b43c9;
+      background: #f7f5ff;
+    }
+
+    .wxn_table td code {
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 13px;
+      color: #b03a86;
+      background: #fdf2f9;
+      padding: 1px 6px;
+      border-radius: 5px;
+    }
+
+    .wxn_table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .wxn_code {
+      margin-top: 6px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      background: #16172b;
+      color: #e5e8ff;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.9;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .wxn_code .wxn_cm {
+      color: #7b86b8;
+    }
+
+    .wxn_code .wxn_kw {
+      color: #ff9ecb;
+    }
+
+    .wxn_code .wxn_fn {
+      color: #ffd479;
+    }
+
+    .wxn_code .wxn_str {
+      color: #7ef0d0;
+    }
+
+    /* ---------- 提示条 ---------- */
+    .wxn_tips {
+      margin-top: 18px;
+      padding: 16px 20px;
+      border-left: 4px solid #f0a63c;
+      border-radius: 10px;
+      background: #fffaf0;
+      font-size: 14px;
+      color: #6b5a3d;
+    }
+
+    .wxn_tips li {
+      margin-left: 18px;
+    }
+
+    /* ---------- 底部 ---------- */
+    .wxn_footer {
+      margin-top: 26px;
+      text-align: center;
+      font-size: 13px;
+      color: #858198;
+    }
+
+    .wxn_footer a {
+      color: #5b57d9;
+      text-decoration: none;
+    }
+
+    .wxn_footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .wxn_section {
+        padding: 20px 16px;
+      }
+
+      .wxn_stopwatch-time {
+        font-size: 30px;
+      }
+
+      .wxn_clock {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wxn_container">
+    <!-- 顶部标题 -->
+    <header class="wxn_header">
+      <div class="wxn_header-left">
+        <i class="iconfont icon-zhongxinshengcheng"></i>
+        <div>
+          <h1>JavaScript 的两种定时器</h1>
+          <div class="wxn_header-sub">setTimeout 延时执行一次　·　setInterval 每隔一段时间重复执行</div>
+        </div>
+      </div>
+      <div class="wxn_clock" id="wxn_clock">--:--:--</div>
+    </header>
+
+    <!-- 概念对比 -->
+    <section class="wxn_section">
+      <div class="wxn_section-title">
+        <i class="iconfont icon-bianji"></i>
+        <span>一、两种定时器的区别</span>
+      </div>
+      <p class="wxn_section-desc">两者都属于 window 对象的方法，返回值都是一个数字编号（定时器 ID），需要通过这个 ID 来清除。</p>
+
+      <div class="wxn_compare">
+        <div class="wxn_compare-card">
+          <h3><span class="wxn_dot"></span>setTimeout：一次性定时器</h3>
+          <p>
+            在等待指定的毫秒数之后，<strong>只执行一次</strong>回调函数，执行完就自动结束。<br />
+            写法：<code>setTimeout(函数, 毫秒)</code><br />
+            清除：<code>clearTimeout(id)</code>
+          </p>
+        </div>
+        <div class="wxn_compare-card is-interval">
+          <h3><span class="wxn_dot is-green"></span>setInterval：周期性定时器</h3>
+          <p>
+            每隔指定的毫秒数就<strong>重复执行</strong>回调函数，直到被清除为止。<br />
+            写法：<code>setInterval(函数, 毫秒)</code><br />
+            清除：<code>clearInterval(id)</code>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- setTimeout 演示 -->
+    <section class="wxn_section">
+      <div class="wxn_section-title">
+        <i class="iconfont icon-diandu"></i>
+        <span>二、setTimeout 演示</span>
+        <span class="wxn_tag">延时执行一次</span>
+      </div>
+      <p class="wxn_section-desc">设置一个延迟时间后点击「启动延时任务」，到时间后回调才会执行；在它执行之前点「取消任务」，回调就不会执行了。</p>
+
+      <div class="wxn_row">
+        <span class="wxn_label">延迟时间：</span>
+        <select class="wxn_select" id="wxn_delaySelect">
+          <option value="1000">1000 毫秒（1 秒）</option>
+          <option value="2000" selected>2000 毫秒（2 秒）</option>
+          <option value="3000">3000 毫秒（3 秒）</option>
+          <option value="5000">5000 毫秒（5 秒）</option>
+        </select>
+        <button class="wxn_btn" id="wxn_delayStartBtn">
+          <i class="iconfont icon-zhongxinshengcheng"></i>启动延时任务
+        </button>
+        <button class="wxn_btn is-ghost" id="wxn_delayCancelBtn" disabled>取消任务（clearTimeout）</button>
+      </div>
+
+      <div class="wxn_status-box">
+        <div class="wxn_status-text" id="wxn_delayStatus">
+          <span>●</span>等待启动……
+        </div>
+        <div class="wxn_progress">
+          <div class="wxn_progress-bar" id="wxn_delayBar"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- setInterval 演示 -->
+    <section class="wxn_section">
+      <div class="wxn_section-title">
+        <i class="iconfont icon-faxian"></i>
+        <span>三、setInterval 演示</span>
+        <span class="wxn_tag">每隔一段时间重复执行</span>
+      </div>
+      <p class="wxn_section-desc">下面的秒表每 50 毫秒由 setInterval 刷新一次显示；暂停时用 clearInterval 把定时器清掉，计时停止。</p>
+
+      <div class="wxn_stopwatch">
+        <div class="wxn_stopwatch-time" id="wxn_swDisplay">00:00.00<small>分:秒.百分秒</small></div>
+        <div class="wxn_stopwatch-actions">
+          <button class="wxn_sw-btn is-primary" id="wxn_swStartBtn">开始计时</button>
+          <button class="wxn_sw-btn" id="wxn_swPauseBtn">暂停</button>
+          <button class="wxn_sw-btn" id="wxn_swResetBtn">归零</button>
+        </div>
+      </div>
+      <p class="wxn_sw-meta">
+        当前 setInterval 的定时器 ID：<b id="wxn_swTimerId">无（未启动）</b>　·　刷新间隔：<b>50ms</b>
+      </p>
+    </section>
+
+    <!-- 运行日志 -->
+    <section class="wxn_section">
+      <div class="wxn_section-title">
+        <i class="iconfont icon-shoucang"></i>
+        <span>四、执行日志</span>
+      </div>
+      <p class="wxn_section-desc">每次定时器被触发、被清除，都会在这里留下一条记录，方便观察「执行一次」和「反复执行」的差别。</p>
+
+      <div class="wxn_log" id="wxn_logBox">
+        <div class="wxn_log-empty">暂无记录，试着点击上面的按钮吧……</div>
+      </div>
+
+      <div class="wxn_row" style="margin: 14px 0 0;">
+        <button class="wxn_btn is-gray" id="wxn_clearLogBtn">清空日志</button>
+      </div>
+    </section>
+
+    <!-- 参数说明 -->
+    <section class="wxn_section">
+      <div class="wxn_section-title">
+        <i class="iconfont icon-sousuo-sousuo-copy"></i>
+        <span>五、参数与返回值</span>
+      </div>
+
+      <table class="wxn_table">
+        <thead>
+          <tr>
+            <th style="width: 130px;">方法</th>
+            <th style="width: 150px;">参数</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>setTimeout()</code></td>
+            <td>回调函数, 毫秒, 参数1…</td>
+            <td>延迟指定毫秒后执行<strong>一次</strong>回调；返回一个数字 ID，可用 <code>clearTimeout(id)</code> 取消。</td>
+          </tr>
+          <tr>
+            <td><code>setInterval()</code></td>
+            <td>回调函数, 毫秒, 参数1…</td>
+            <td>每隔指定毫秒执行<strong>一次</strong>回调，不断重复；返回一个数字 ID，可用 <code>clearInterval(id)</code> 停止。</td>
+          </tr>
+          <tr>
+            <td><code>clearTimeout()</code></td>
+            <td>定时器 ID</td>
+            <td>取消尚未执行的 setTimeout 任务，取消后回调永远不会再执行。</td>
+          </tr>
+          <tr>
+            <td><code>clearInterval()</code></td>
+            <td>定时器 ID</td>
+            <td>停止 setInterval 的循环触发。忘记清除会让定时器一直在后台跑，白白占用资源。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="wxn_code"><span class="wxn_cm">// 1. 延时执行一次：3 秒后弹出提示，期间可以取消</span>
+<span class="wxn_kw">var</span> wxn_timer = <span class="wxn_fn">setTimeout</span>(<span class="wxn_kw">function</span> () {
+  <span class="wxn_fn">alert</span>(<span class="wxn_str">"3 秒到了"</span>);
+}, <span class="wxn_str">3000</span>);
+
+<span class="wxn_fn">clearTimeout</span>(wxn_timer);   <span class="wxn_cm">// 取消，回调不再执行</span>
+
+<span class="wxn_cm">// 2. 周期性执行：每隔 1 秒让数字加 1，数到 5 就停下</span>
+<span class="wxn_kw">var</span> wxn_count = <span class="wxn_str">0</span>;
+<span class="wxn_kw">var</span> wxn_interval = <span class="wxn_fn">setInterval</span>(<span class="wxn_kw">function</span> () {
+  wxn_count++;
+  console.<span class="wxn_fn">log</span>(<span class="wxn_str">"第 "</span> + wxn_count + <span class="wxn_str">" 秒"</span>);
+  <span class="wxn_kw">if</span> (wxn_count === <span class="wxn_str">5</span>) {
+    <span class="wxn_fn">clearInterval</span>(wxn_interval);  <span class="wxn_cm">// 到 5 次就停止，否则会一直跑下去</span>
+  }
+}, <span class="wxn_str">1000</span>);</div>
+
+      <div class="wxn_tips">
+        <strong>课堂小结：</strong>
+        <ul>
+          <li>setTimeout 只执行一次，setInterval 会一直重复，两者的第一个参数都是「函数」，第二个参数都是「毫秒」。</li>
+          <li>两个方法都是<strong>异步</strong>的：代码写在这里，回调要等到时间到了才进入任务队列执行，所以后面同步的代码会先跑完。</li>
+          <li>延迟时间写成 0 也不是立刻执行，只是尽快排进队列，仍然要等当前代码执行完。</li>
+          <li>定时器一定要保存 ID 并记得清除；页面关闭前清除，可以避免回调操作已经被销毁的 DOM。</li>
+        </ul>
+      </div>
+    </section>
+
+    <p class="wxn_footer">
+      <a href="./index.html">← 返回作品集首页</a>　|　王秀宁《高级网页设计》课堂实践 · 18-5
+    </p>
+  </div>
+
+  <script>
+    /* ================= 公共：日志输出 ================= */
+    var wxn_logBox = document.getElementById("wxn_logBox");
+    var wxn_logCount = 0;
+
+    // 向日志面板追加一条记录，wxn_type 决定文字颜色
+    function wxn_log(wxn_msg, wxn_type) {
+      if (wxn_logCount === 0) {
+        wxn_logBox.innerHTML = "";
+      }
+
+      var wxn_line = document.createElement("div");
+      wxn_line.className = "wxn_log-line is-" + (wxn_type || "action");
+
+      var wxn_now = new Date();
+      var wxn_timeText =
+        ("0" + wxn_now.getHours()).slice(-2) + ":" +
+        ("0" + wxn_now.getMinutes()).slice(-2) + ":" +
+        ("0" + wxn_now.getSeconds()).slice(-2) + "." +
+        ("00" + wxn_now.getMilliseconds()).slice(-3);
+
+      wxn_line.innerHTML =
+        '<span class="wxn_log-time">' + wxn_timeText + "</span>" +
+        '<span class="wxn_log-msg">' + wxn_msg + "</span>";
+
+      wxn_logBox.appendChild(wxn_line);
+      wxn_logBox.scrollTop = wxn_logBox.scrollHeight;
+      wxn_logCount++;
+
+      // 最多保留 60 条，避免节点过多
+      if (wxn_logBox.children.length > 60) {
+        wxn_logBox.removeChild(wxn_logBox.firstChild);
+      }
+    }
+
+    /* ================= 顶部实时时钟（setInterval） ================= */
+    var wxn_clockEl = document.getElementById("wxn_clock");
+
+    function wxn_updateClock() {
+      var wxn_d = new Date();
+      wxn_clockEl.textContent =
+        ("0" + wxn_d.getHours()).slice(-2) + ":" +
+        ("0" + wxn_d.getMinutes()).slice(-2) + ":" +
+        ("0" + wxn_d.getSeconds()).slice(-2);
+    }
+
+    wxn_updateClock();
+    var wxn_clockTimer = setInterval(wxn_updateClock, 1000); // 每秒刷新一次
+
+    /* ================= 一、setTimeout 演示 ================= */
+    var wxn_delaySelect = document.getElementById("wxn_delaySelect");
+    var wxn_delayStartBtn = document.getElementById("wxn_delayStartBtn");
+    var wxn_delayCancelBtn = document.getElementById("wxn_delayCancelBtn");
+    var wxn_delayStatus = document.getElementById("wxn_delayStatus");
+    var wxn_delayBar = document.getElementById("wxn_delayBar");
+
+    var wxn_delayTimer = null;    // setTimeout 返回的定时器 ID
+    var wxn_delayTicker = null;   // 用来刷新剩余毫秒的 setInterval ID
+    var wxn_delayTotal = 0;
+    var wxn_delayStartAt = 0;
+
+    // 重置进度条与状态文字
+    function wxn_resetDelayView() {
+      wxn_delayBar.style.width = "0%";
+      wxn_delayStatus.className = "wxn_status-text";
+      wxn_delayStatus.innerHTML = "<span>&#9679;</span>等待启动……";
+      wxn_delayStartBtn.disabled = false;
+      wxn_delayCancelBtn.disabled = true;
+    }
+
+    // 清除正在进行的延时任务（clearTimeout + clearInterval）
+    function wxn_stopDelay() {
+      if (wxn_delayTimer !== null) {
+        clearTimeout(wxn_delayTimer);
+        wxn_delayTimer = null;
+      }
+      if (wxn_delayTicker !== null) {
+        clearInterval(wxn_delayTicker);
+        wxn_delayTicker = null;
+      }
+    }
+
+    // 启动延时任务
+    function wxn_startDelay() {
+      wxn_stopDelay();
+      wxn_resetDelayView();
+
+      wxn_delayTotal = Number(wxn_delaySelect.value) || 2000;
+      wxn_delayStartAt = Date.now();
+
+      wxn_delayStartBtn.disabled = true;
+      wxn_delayCancelBtn.disabled = false;
+      wxn_delayStatus.innerHTML =
+        "<span>&#9679;</span>任务已安排，将在 " + wxn_delayTotal + " 毫秒后执行一次……";
+
+      // 核心：setTimeout 只在时间到了之后执行一次回调
+      wxn_delayTimer = setTimeout(function () {
+        wxn_delayTimer = null;
+        if (wxn_delayTicker !== null) {
+          clearInterval(wxn_delayTicker); // 任务已执行，负责刷新进度的定时器也要清掉
+          wxn_delayTicker = null;
+        }
+
+        wxn_delayBar.style.width = "100%";
+        wxn_delayStatus.className = "wxn_status-text is-done";
+        wxn_delayStatus.innerHTML = "<span>&#10003;</span>延时任务已执行（共等待约 " + wxn_delayTotal + " 毫秒）";
+        wxn_delayStartBtn.disabled = false;
+        wxn_delayCancelBtn.disabled = true;
+
+        wxn_log("setTimeout 回调执行了！延时 " + wxn_delayTotal + " 毫秒，只执行这一次。", "timeout");
+      }, wxn_delayTotal);
+
+      wxn_log("调用 setTimeout，返回定时器 ID：" + wxn_delayTimer + "，延时 " + wxn_delayTotal + " 毫秒。", "action");
+
+      // 辅助：用 setInterval 每 50 毫秒刷新一次剩余时间与进度条
+      wxn_delayTicker = setInterval(function () {
+        var wxn_passed = Date.now() - wxn_delayStartAt;
+        var wxn_left = wxn_delayTotal - wxn_passed;
+        if (wxn_left < 0) {
+          wxn_left = 0;
+        }
+        if (wxn_delayTimer !== null) {
+          wxn_delayStatus.innerHTML =
+            "<span>&#9679;</span>等待中，剩余约 " + wxn_left + " 毫秒……";
+          wxn_delayBar.style.width = Math.min(100, (wxn_passed / wxn_delayTotal) * 100) + "%";
+        }
+      }, 50);
+    }
+
+    // 取消延时任务
+    function wxn_cancelDelay() {
+      if (wxn_delayTimer === null) {
+        return;
+      }
+      var wxn_oldId = wxn_delayTimer;
+      wxn_stopDelay();
+
+      wxn_delayStatus.innerHTML = "<span>&#10007;</span>任务已取消，回调不会再执行。";
+      wxn_delayBar.style.width = "0%";
+      wxn_delayStartBtn.disabled = false;
+      wxn_delayCancelBtn.disabled = true;
+
+      wxn_log("调用 clearTimeout(" + wxn_oldId + ")，延时任务被取消。", "action");
+    }
+
+    wxn_delayStartBtn.addEventListener("click", wxn_startDelay);
+    wxn_delayCancelBtn.addEventListener("click", wxn_cancelDelay);
+
+    /* ================= 二、setInterval 秒表 ================= */
+    var wxn_swDisplay = document.getElementById("wxn_swDisplay");
+    var wxn_swStartBtn = document.getElementById("wxn_swStartBtn");
+    var wxn_swPauseBtn = document.getElementById("wxn_swPauseBtn");
+    var wxn_swResetBtn = document.getElementById("wxn_swResetBtn");
+    var wxn_swTimerIdEl = document.getElementById("wxn_swTimerId");
+
+    var wxn_swTimer = null;      // setInterval 返回的 ID
+    var wxn_swAccum = 0;         // 之前累计的毫秒数
+    var wxn_swStartAt = 0;       // 本次开始的时间戳
+    var wxn_swRunning = false;
+
+    // 把毫秒格式化成 分:秒.百分秒
+    function wxn_formatTime(wxn_ms) {
+      var wxn_min = Math.floor(wxn_ms / 60000);
+      var wxn_sec = Math.floor((wxn_ms % 60000) / 1000);
+      var wxn_cs = Math.floor((wxn_ms % 1000) / 10);
+      return (
+        ("0" + wxn_min).slice(-2) + ":" +
+        ("0" + wxn_sec).slice(-2) + "." +
+        ("0" + wxn_cs).slice(-2)
+      );
+    }
+
+    // 刷新秒表显示
+    function wxn_renderStopwatch() {
+      var wxn_total = wxn_swAccum;
+      if (wxn_swRunning) {
+        wxn_total += Date.now() - wxn_swStartAt;
+      }
+      wxn_swDisplay.innerHTML = wxn_formatTime(wxn_total) + "<small>分:秒.百分秒</small>";
+    }
+
+    // 开始计时
+    function wxn_swStart() {
+      if (wxn_swRunning) {
+        return;
+      }
+      wxn_swRunning = true;
+      wxn_swStartAt = Date.now();
+
+      // 核心：setInterval 每 50 毫秒执行一次回调，直到 clearInterval
+      wxn_swTimer = setInterval(wxn_renderStopwatch, 50);
+      wxn_swTimerIdEl.textContent = wxn_swTimer;
+
+      wxn_log("调用 setInterval，返回定时器 ID：" + wxn_swTimer + "，每 50 毫秒刷新秒表。", "interval");
+    }
+
+    // 暂停计时
+    function wxn_swPause() {
+      if (!wxn_swRunning) {
+        return;
+      }
+      wxn_swRunning = false;
+      wxn_swAccum += Date.now() - wxn_swStartAt;
+
+      var wxn_oldId = wxn_swTimer;
+      clearInterval(wxn_swTimer); // 不清除的话，它会一直在后台循环执行
+      wxn_swTimer = null;
+      wxn_swTimerIdEl.textContent = "无（已清除 " + wxn_oldId + "）";
+
+      wxn_renderStopwatch();
+      wxn_log("调用 clearInterval(" + wxn_oldId + ")，秒表暂停。", "interval");
+    }
+
+    // 归零
+    function wxn_swReset() {
+      if (wxn_swTimer !== null) {
+        clearInterval(wxn_swTimer);
+        wxn_swTimer = null;
+      }
+      wxn_swRunning = false;
+      wxn_swAccum = 0;
+      wxn_swTimerIdEl.textContent = "无（未启动）";
+      wxn_renderStopwatch();
+      wxn_log("秒表归零。", "action");
+    }
+
+    wxn_swStartBtn.addEventListener("click", wxn_swStart);
+    wxn_swPauseBtn.addEventListener("click", wxn_swPause);
+    wxn_swResetBtn.addEventListener("click", wxn_swReset);
+    wxn_renderStopwatch();
+
+    /* ================= 日志清空 ================= */
+    document.getElementById("wxn_clearLogBtn").addEventListener("click", function () {
+      wxn_logBox.innerHTML = '<div class="wxn_log-empty">日志已清空。</div>';
+      wxn_logCount = 0;
+    });
+
+    /* ================= 页面卸载前清理所有定时器 ================= */
+    window.addEventListener("beforeunload", function () {
+      clearTimeout(wxn_delayTimer);
+      clearInterval(wxn_delayTicker);
+      clearInterval(wxn_swTimer);
+      clearInterval(wxn_clockTimer);
+    });
+  </script>
+</body>
+</html>

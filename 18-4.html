@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-11-02，功能名称：远程数据接口测试工具（GET/POST/PUT/DELETE/PATCH） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>18-4 远程数据接口测试</title>
+  <link rel="stylesheet" href="./font/iconfont.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      padding: 30px 16px;
+      color: #1f2329;
+    }
+
+    .wxn_container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .wxn_header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .wxn_header h1 {
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+
+    .wxn_header p {
+      color: #646a73;
+      font-size: 14px;
+    }
+
+    .wxn_card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(31, 35, 41, 0.08);
+    }
+
+    .wxn_card-title {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .wxn_request-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .wxn_method-select {
+      width: 130px;
+      padding: 10px 12px;
+      border: 1px solid #d0d3d6;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .wxn_method-select:focus {
+      border-color: #3370ff;
+    }
+
+    .wxn_url-input {
+      flex: 1;
+      min-width: 240px;
+      padding: 10px 12px;
+      border: 1px solid #d0d3d6;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .wxn_url-input:focus {
+      border-color: #3370ff;
+    }
+
+    .wxn_send-btn {
+      padding: 10px 26px;
+      border: none;
+      border-radius: 8px;
+      background: #3370ff;
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .wxn_send-btn:hover {
+      background: #2860e1;
+    }
+
+    .wxn_send-btn:disabled {
+      background: #94bfff;
+      cursor: not-allowed;
+    }
+
+    .wxn_body-section {
+      margin-top: 14px;
+      display: none;
+    }
+
+    .wxn_body-section.wxn_visible {
+      display: block;
+    }
+
+    .wxn_body-section label {
+      display: block;
+      font-size: 13px;
+      color: #646a73;
+      margin-bottom: 6px;
+    }
+
+    .wxn_body-textarea {
+      width: 100%;
+      height: 130px;
+      padding: 10px 12px;
+      border: 1px solid #d0d3d6;
+      border-radius: 8px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 13px;
+      resize: vertical;
+      outline: none;
+    }
+
+    .wxn_body-textarea:focus {
+      border-color: #3370ff;
+    }
+
+    .wxn_examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .wxn_example-btn {
+      padding: 6px 12px;
+      border: 1px solid #d0d3d6;
+      border-radius: 6px;
+      background: #f5f6f7;
+      font-size: 12px;
+      color: #3370ff;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .wxn_example-btn:hover {
+      border-color: #3370ff;
+      background: #f0f5ff;
+    }
+
+    .wxn_status-bar {
+      display: none;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: #f5f6f7;
+      font-size: 13px;
+    }
+
+    .wxn_status-bar.wxn_visible {
+      display: flex;
+    }
+
+    .wxn_status-badge {
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .wxn_status-ok {
+      background: #2ea121;
+    }
+
+    .wxn_status-warn {
+      background: #ff8800;
+    }
+
+    .wxn_status-error {
+      background: #e5484d;
+    }
+
+    .wxn_status-meta {
+      color: #646a73;
+    }
+
+    .wxn_response-pre {
+      background: #0d1117;
+      color: #e6edf3;
+      border-radius: 8px;
+      padding: 16px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+
+    .wxn_error-box {
+      display: none;
+      background: #fff1f0;
+      border: 1px solid #ffa39e;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-top: 14px;
+      color: #cf1322;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .wxn_error-box.wxn_visible {
+      display: block;
+    }
+
+    .wxn_error-box strong {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .wxn_empty-tip {
+      color: #8f959e;
+      font-size: 13px;
+      text-align: center;
+      padding: 30px 0;
+    }
+
+    .wxn_loading {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      color: #3370ff;
+      font-size: 13px;
+      padding: 12px 0;
+    }
+
+    .wxn_loading.wxn_visible {
+      display: flex;
+    }
+
+    .wxn_spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #c6d9ff;
+      border-top-color: #3370ff;
+      border-radius: 50%;
+      animation: wxn_spin 0.8s linear infinite;
+    }
+
+    @keyframes wxn_spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .wxn_back {
+      display: inline-block;
+      margin-top: 8px;
+      color: #3370ff;
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .wxn_back:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="wxn_container">
+    <div class="wxn_header">
+      <h1>远程数据接口测试工具</h1>
+      <p>使用原生 fetch API 测试远程接口，支持 GET / POST / PUT / DELETE / PATCH</p>
+      <a class="wxn_back" href="./index.html">← 返回首页</a>
+    </div>
+
+    <!-- 请求配置区 -->
+    <div class="wxn_card">
+      <div class="wxn_card-title"><i class="iconfont icon-bianji"></i> 请求配置</div>
+      <div class="wxn_request-row">
+        <select class="wxn_method-select" id="wxn_method">
+          <option value="GET">GET</option>
+          <option value="POST">POST</option>
+          <option value="PUT">PUT</option>
+          <option value="DELETE">DELETE</option>
+          <option value="PATCH">PATCH</option>
+        </select>
+        <input class="wxn_url-input" id="wxn_url" type="text"
+               value="https://jsonplaceholder.typicode.com/posts" placeholder="请输入接口地址" />
+        <button class="wxn_send-btn" id="wxn_sendBtn">发送请求</button>
+      </div>
+
+      <div class="wxn_body-section" id="wxn_bodySection">
+        <label for="wxn_body">请求体（JSON 格式）：</label>
+        <textarea class="wxn_body-textarea" id="wxn_body">{
+  "title": "测试文章",
+  "body": "这是通过接口测试工具提交的内容",
+  "userId": 1
+}</textarea>
+      </div>
+
+      <div class="wxn_examples">
+        <button class="wxn_example-btn" data-wxn-method="GET" data-wxn-url="https://jsonplaceholder.typicode.com/posts">GET 文章列表</button>
+        <button class="wxn_example-btn" data-wxn-method="GET" data-wxn-url="https://jsonplaceholder.typicode.com/posts/1">GET 单篇文章</button>
+        <button class="wxn_example-btn" data-wxn-method="POST" data-wxn-url="https://jsonplaceholder.typicode.com/posts">POST 新建文章</button>
+        <button class="wxn_example-btn" data-wxn-method="PUT" data-wxn-url="https://jsonplaceholder.typicode.com/posts/1">PUT 更新文章</button>
+        <button class="wxn_example-btn" data-wxn-method="DELETE" data-wxn-url="https://jsonplaceholder.typicode.com/posts/1">DELETE 删除文章</button>
+        <button class="wxn_example-btn" data-wxn-method="GET" data-wxn-url="https://jsonplaceholder.typicode.com/posts/999999">GET 不存在的资源（404）</button>
+        <button class="wxn_example-btn" data-wxn-method="GET" data-wxn-url="https://not-exist.wxn-test.invalid/api">GET 无效地址（网络错误）</button>
+      </div>
+    </div>
+
+    <!-- 响应结果区 -->
+    <div class="wxn_card">
+      <div class="wxn_card-title"><i class="iconfont icon-diandu"></i> 响应结果</div>
+
+      <div class="wxn_status-bar" id="wxn_statusBar">
+        <span class="wxn_status-badge" id="wxn_statusBadge">200</span>
+        <span class="wxn_status-meta" id="wxn_statusText">状态描述</span>
+        <span class="wxn_status-meta" id="wxn_timeCost"></span>
+        <span class="wxn_status-meta" id="wxn_dataSize"></span>
+      </div>
+
+      <div class="wxn_loading" id="wxn_loading">
+        <span class="wxn_spinner"></span> 请求中，请稍候…
+      </div>
+
+      <pre class="wxn_response-pre" id="wxn_response" style="display:none;"></pre>
+
+      <div class="wxn_empty-tip" id="wxn_emptyTip">尚未发送请求，点击「发送请求」或上方示例按钮开始测试</div>
+
+      <div class="wxn_error-box" id="wxn_errorBox">
+        <strong><i class="iconfont icon-shanchu"></i> 请求失败</strong>
+        <div id="wxn_errorMsg"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============ 元素获取 ============
+    const wxn_methodEl = document.getElementById("wxn_method");
+    const wxn_urlEl = document.getElementById("wxn_url");
+    const wxn_sendBtnEl = document.getElementById("wxn_sendBtn");
+    const wxn_bodySectionEl = document.getElementById("wxn_bodySection");
+    const wxn_bodyEl = document.getElementById("wxn_body");
+    const wxn_statusBarEl = document.getElementById("wxn_statusBar");
+    const wxn_statusBadgeEl = document.getElementById("wxn_statusBadge");
+    const wxn_statusTextEl = document.getElementById("wxn_statusText");
+    const wxn_timeCostEl = document.getElementById("wxn_timeCost");
+    const wxn_dataSizeEl = document.getElementById("wxn_dataSize");
+    const wxn_responseEl = document.getElementById("wxn_response");
+    const wxn_emptyTipEl = document.getElementById("wxn_emptyTip");
+    const wxn_errorBoxEl = document.getElementById("wxn_errorBox");
+    const wxn_errorMsgEl = document.getElementById("wxn_errorMsg");
+    const wxn_loadingEl = document.getElementById("wxn_loading");
+
+    // 需要携带请求体的方法
+    const wxn_bodyMethods = ["POST", "PUT", "PATCH"];
+
+    // ============ 切换请求体输入区显示 ============
+    function wxn_toggleBodySection() {
+      const wxn_method = wxn_methodEl.value;
+      if (wxn_bodyMethods.includes(wxn_method)) {
+        wxn_bodySectionEl.classList.add("wxn_visible");
+      } else {
+        wxn_bodySectionEl.classList.remove("wxn_visible");
+      }
+    }
+
+    wxn_methodEl.addEventListener("change", wxn_toggleBodySection);
+
+    // ============ 示例按钮：快速填充 ============
+    document.querySelectorAll(".wxn_example-btn").forEach(function (wxn_btn) {
+      wxn_btn.addEventListener("click", function () {
+        wxn_methodEl.value = wxn_btn.dataset.wxnMethod;
+        wxn_urlEl.value = wxn_btn.dataset.wxnUrl;
+        wxn_toggleBodySection();
+        wxn_sendRequest();
+      });
+    });
+
+    // ============ 格式化 JSON（失败则原样输出）============
+    function wxn_formatBody(wxn_text) {
+      try {
+        return JSON.stringify(JSON.parse(wxn_text), null, 2);
+      } catch (wxn_e) {
+        return wxn_text;
+      }
+    }
+
+    // ============ 显示 / 隐藏错误提示 ============
+    function wxn_showError(wxn_message) {
+      wxn_errorMsgEl.textContent = wxn_message;
+      wxn_errorBoxEl.classList.add("wxn_visible");
+    }
+
+    function wxn_hideError() {
+      wxn_errorBoxEl.classList.remove("wxn_visible");
+    }
+
+    // ============ 核心逻辑：发送请求 ============
+    async function wxn_sendRequest() {
+      const wxn_method = wxn_methodEl.value;
+      const wxn_url = wxn_urlEl.value.trim();
+
+      // 前置校验
+      if (!wxn_url) {
+        wxn_showError("接口地址不能为空，请输入 URL 后重试。");
+        return;
+      }
+
+      // 复位界面状态
+      wxn_hideError();
+      wxn_statusBarEl.classList.remove("wxn_visible");
+      wxn_responseEl.style.display = "none";
+      wxn_emptyTipEl.style.display = "none";
+      wxn_loadingEl.classList.add("wxn_visible");
+      wxn_sendBtnEl.disabled = true;
+
+      const wxn_startTime = performance.now();
+
+      // 组装 fetch 配置
+      const wxn_options = {
+        method: wxn_method,
+        headers: { "Content-Type": "application/json; charset=UTF-8" }
+      };
+
+      if (wxn_bodyMethods.includes(wxn_method)) {
+        const wxn_bodyText = wxn_bodyEl.value.trim();
+        if (wxn_bodyText) {
+          // JSON 语法校验
+          try {
+            JSON.parse(wxn_bodyText);
+          } catch (wxn_e) {
+            wxn_loadingEl.classList.remove("wxn_visible");
+            wxn_sendBtnEl.disabled = false;
+            wxn_emptyTipEl.style.display = "block";
+            wxn_showError("请求体不是合法的 JSON：" + wxn_e.message);
+            return;
+          }
+          wxn_options.body = wxn_bodyText;
+        }
+      }
+
+      try {
+        const wxn_res = await fetch(wxn_url, wxn_options);
+        const wxn_costTime = Math.round(performance.now() - wxn_startTime);
+        const wxn_rawText = await wxn_res.text();
+
+        // 状态栏
+        wxn_statusBadgeEl.textContent = wxn_res.status + " " + wxn_res.statusText;
+        wxn_statusBadgeEl.className = "wxn_status-badge " +
+          (wxn_res.ok ? "wxn_status-ok" : (wxn_res.status < 500 ? "wxn_status-warn" : "wxn_status-error"));
+        wxn_statusTextEl.textContent = wxn_res.ok ? "请求成功" : "服务器返回错误状态码";
+        wxn_timeCostEl.textContent = "耗时：" + wxn_costTime + " ms";
+        wxn_dataSizeEl.textContent = "响应大小：" + (new Blob([wxn_rawText]).size / 1024).toFixed(2) + " KB";
+        wxn_statusBarEl.classList.add("wxn_visible");
+
+        // 响应数据展示
+        wxn_responseEl.textContent = wxn_rawText ? wxn_formatBody(wxn_rawText) : "（服务器未返回任何内容）";
+        wxn_responseEl.style.display = "block";
+
+        // HTTP 层面错误（404 / 500 等）额外提示
+        if (!wxn_res.ok) {
+          wxn_showError(
+            "服务器响应状态码为 " + wxn_res.status + "（" + (wxn_res.statusText || "Unknown") + "）。" +
+            "HTTP 错误不会抛出 fetch 异常，需要通过 response.ok 手动判断。请检查接口地址或参数是否正确。"
+          );
+        }
+      } catch (wxn_err) {
+        // 网络层错误（断网、域名无法解析、CORS 拦截等）
+        const wxn_failTime = Math.round(performance.now() - wxn_startTime);
+        wxn_statusBadgeEl.textContent = "失败";
+        wxn_statusBadgeEl.className = "wxn_status-badge wxn_status-error";
+        wxn_statusTextEl.textContent = "请求未到达服务器";
+        wxn_timeCostEl.textContent = "耗时：" + wxn_failTime + " ms";
+        wxn_dataSizeEl.textContent = "";
+        wxn_statusBarEl.classList.add("wxn_visible");
+
+        wxn_showError(
+          "网络请求异常：" + wxn_err.message +
+          "。可能原因：① 接口地址错误或域名无法解析；② 网络连接中断；③ 跨域（CORS）被浏览器拦截。"
+        );
+      } finally {
+        wxn_loadingEl.classList.remove("wxn_visible");
+        wxn_sendBtnEl.disabled = false;
+      }
+    }
+
+    wxn_sendBtnEl.addEventListener("click", wxn_sendRequest);
+    wxn_urlEl.addEventListener("keydown", function (wxn_e) {
+      if (wxn_e.key === "Enter") {
+        wxn_sendRequest();
+      }
+    });
+
+    // 初始显示请求体区域（默认 GET 则隐藏）
+    wxn_toggleBodySection();
+  </script>
+</body>
+</html>
