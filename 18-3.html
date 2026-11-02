@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-11-02，功能名称：商品列表页（fetch 接口数据渲染） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>18-3 商品列表</title>
+  <link rel="stylesheet" href="./font/iconfont.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: #f5f6fa;
+      color: #2d3436;
+      min-height: 100vh;
+    }
+
+    .wxn_container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    /* 顶部标题栏 */
+    .wxn_header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #ff6b35, #ff8c42);
+      color: #fff;
+      border-radius: 12px;
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
+    }
+
+    .wxn_header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .wxn_header-left .iconfont {
+      font-size: 28px;
+    }
+
+    .wxn_header h1 {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .wxn_header-tip {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    /* 加载与错误状态 */
+    .wxn_status {
+      text-align: center;
+      padding: 60px 0;
+      color: #888;
+      font-size: 15px;
+    }
+
+    .wxn_status .iconfont {
+      font-size: 40px;
+      display: block;
+      margin: 0 auto 12px;
+      animation: wxn_spin 1.2s linear infinite;
+    }
+
+    @keyframes wxn_spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .wxn_error {
+      color: #d63031;
+    }
+
+    .wxn_retry-btn {
+      margin-top: 14px;
+      border: none;
+      background: #ff6b35;
+      color: #fff;
+      padding: 8px 22px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .wxn_retry-btn:hover {
+      background: #e8541f;
+    }
+
+    /* 商品网格 */
+    .wxn_grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .wxn_card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .wxn_card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .wxn_card-img {
+      width: 100%;
+      height: 180px;
+      object-fit: contain;
+      background: #fff;
+      padding: 12px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .wxn_card-body {
+      padding: 14px 16px 16px;
+    }
+
+    .wxn_card-title {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.4;
+      height: 42px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .wxn_card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .wxn_card-price {
+      color: #ff6b35;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .wxn_card-price::before {
+      content: "¥";
+      font-size: 13px;
+      margin-right: 1px;
+    }
+
+    .wxn_card-rating {
+      font-size: 13px;
+      color: #f39c12;
+    }
+
+    .wxn_card-rating .iconfont {
+      font-size: 14px;
+      margin-right: 2px;
+    }
+
+    .wxn_card-tag {
+      display: inline-block;
+      margin-top: 10px;
+      background: #fff0e8;
+      color: #ff6b35;
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wxn_container">
+    <header class="wxn_header">
+      <div class="wxn_header-left">
+        <i class="iconfont icon-shangcheng"></i>
+        <h1>商品列表</h1>
+      </div>
+      <span class="wxn_header-tip">数据来源：dummyjson.com 接口（fetch 获取，共 8 件商品）</span>
+    </header>
+
+    <!-- 加载 / 错误 / 列表容器 -->
+    <div id="wxn_loading" class="wxn_status">
+      <i class="iconfont icon-zhongxinshengcheng"></i>
+      正在通过 fetch 加载商品数据……
+    </div>
+    <div id="wxn_error" class="wxn_status wxn_error" style="display: none;">
+      <span id="wxn_errorText">加载失败，请检查网络后重试。</span>
+      <br />
+      <button class="wxn_retry-btn" id="wxn_retryBtn">重新加载</button>
+    </div>
+    <div id="wxn_grid" class="wxn_grid" style="display: none;"></div>
+  </div>
+
+  <script>
+    // 商品列表接口：默认商品列表，限制 8 条
+    var wxn_apiUrl = "https://dummyjson.com/products?limit=8";
+    var wxn_loadingEl = document.getElementById("wxn_loading");
+    var wxn_errorEl = document.getElementById("wxn_error");
+    var wxn_errorTextEl = document.getElementById("wxn_errorText");
+    var wxn_gridEl = document.getElementById("wxn_grid");
+    var wxn_retryBtn = document.getElementById("wxn_retryBtn");
+
+    // 使用原生 fetch 获取商品列表数据
+    function wxn_loadProducts() {
+      wxn_loadingEl.style.display = "block";
+      wxn_errorEl.style.display = "none";
+      wxn_gridEl.style.display = "none";
+
+      fetch(wxn_apiUrl, { method: "GET" })
+        .then(function (res) {
+          if (!res.ok) {
+            throw new Error("接口响应异常，状态码：" + res.status);
+          }
+          return res.json();
+        })
+        .then(function (data) {
+          wxn_renderList(data.products);
+        })
+        .catch(function (err) {
+          wxn_errorTextEl.textContent = "加载失败：" + err.message;
+          wxn_loadingEl.style.display = "none";
+          wxn_errorEl.style.display = "block";
+        });
+    }
+
+    // 渲染商品卡片列表
+    function wxn_renderList(wxn_products) {
+      wxn_loadingEl.style.display = "none";
+      wxn_gridEl.style.display = "grid";
+
+      wxn_gridEl.innerHTML = wxn_products
+        .map(function (wxn_item) {
+          return (
+            '<a class="wxn_card" href="./18-3-detail.html?id=' + wxn_item.id + '">' +
+              '<img class="wxn_card-img" src="' + wxn_item.thumbnail + '" alt="' + wxn_item.title + '" />' +
+              '<div class="wxn_card-body">' +
+                '<div class="wxn_card-title">' + wxn_item.title + "</div>" +
+                '<div class="wxn_card-meta">' +
+                  '<span class="wxn_card-price">' + wxn_item.price + "</span>" +
+                  '<span class="wxn_card-rating">' +
+                    '<i class="iconfont icon-dianzan"></i>' + wxn_item.rating +
+                  "</span>" +
+                "</div>" +
+                '<span class="wxn_card-tag">' + wxn_item.category + "</span>" +
+              "</div>" +
+            "</a>"
+          );
+        })
+        .join("");
+    }
+
+    wxn_retryBtn.addEventListener("click", wxn_loadProducts);
+
+    // 页面加载完成后立即请求接口
+    wxn_loadProducts();
+  </script>
+</body>
+</html>

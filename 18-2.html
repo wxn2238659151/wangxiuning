@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-11-02，功能名称：fetch 获取商品接口数据（列表与详情） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>18-2 fetch 获取接口数据展示</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      color: #2b2a3d;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      background: linear-gradient(135deg, #eef1ff, #fdf1f7);
+    }
+
+    header {
+      padding: 45px 20px;
+      color: #fff;
+      text-align: center;
+      background: linear-gradient(135deg, #3f4bb8, #a26bd8);
+      clip-path: ellipse(100% 80% at 50% 20%);
+    }
+
+    header h1 {
+      margin-bottom: 10px;
+      font-size: 30px;
+      letter-spacing: 2px;
+    }
+
+    header p {
+      font-size: 14px;
+      opacity: .9;
+    }
+
+    .wxn_api {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 6px 16px;
+      border: 1px dashed rgba(255,255,255,.6);
+      border-radius: 999px;
+      font-size: 13px;
+      word-break: break-all;
+    }
+
+    main {
+      width: min(1100px, 92%);
+      margin: 30px auto 60px;
+    }
+
+    .wxn_toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .wxn_toolbar h2 {
+      font-size: 20px;
+    }
+
+    .wxn_btn {
+      padding: 10px 20px;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #5b4fd6, #9b8cff);
+      font-size: 14px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .wxn_btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(91,79,214,.35);
+    }
+
+    .wxn_btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .wxn_status {
+      padding: 18px;
+      margin-bottom: 20px;
+      color: #5c5872;
+      text-align: center;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 8px 22px rgba(68,55,140,.1);
+    }
+
+    .wxn_status.wxn_error {
+      color: #b83a4a;
+      background: #fff3f4;
+    }
+
+    .wxn_grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .wxn_card {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid #ece9fb;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 10px 25px rgba(68,55,140,.08);
+      transition: .25s ease;
+    }
+
+    .wxn_card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 32px rgba(68,55,140,.16);
+    }
+
+    .wxn_card-img {
+      display: grid;
+      place-items: center;
+      height: 170px;
+      background: #f7f6ff;
+    }
+
+    .wxn_card-img img {
+      max-width: 78%;
+      max-height: 82%;
+      transition: .25s;
+    }
+
+    .wxn_card:hover .wxn_card-img img {
+      transform: scale(1.08);
+    }
+
+    .wxn_card-body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding: 16px 18px 18px;
+    }
+
+    .wxn_tag {
+      align-self: flex-start;
+      margin-bottom: 8px;
+      padding: 3px 12px;
+      color: #5b4fd6;
+      font-size: 12px;
+      border-radius: 999px;
+      background: #efedff;
+    }
+
+    .wxn_card-body h3 {
+      margin-bottom: 8px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .wxn_price {
+      margin-top: auto;
+      padding-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 18px;
+      font-weight: bold;
+      color: #d8434f;
+    }
+
+    .wxn_rating {
+      color: #f5a623;
+      font-size: 13px;
+      font-weight: normal;
+    }
+
+    .wxn_more {
+      margin-top: 12px;
+      padding: 9px 0;
+      color: #5b4fd6;
+      text-align: center;
+      border: 1px solid #d9d4ff;
+      border-radius: 10px;
+      background: #faf9ff;
+      font-size: 13px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .wxn_more:hover {
+      color: #fff;
+      background: linear-gradient(135deg, #5b4fd6, #9b8cff);
+      border-color: transparent;
+    }
+
+    /* 详情弹窗 */
+    .wxn_mask {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(30, 25, 60, .55);
+      z-index: 10;
+    }
+
+    .wxn_mask.wxn_show {
+      display: grid;
+    }
+
+    .wxn_detail {
+      position: relative;
+      width: min(680px, 100%);
+      max-height: 86vh;
+      overflow: auto;
+      padding: 30px;
+      border-radius: 20px;
+      background: #fff;
+      box-shadow: 0 24px 60px rgba(0,0,0,.3);
+    }
+
+    .wxn_close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      color: #6c6884;
+      border: none;
+      border-radius: 50%;
+      background: #f1efff;
+      font-size: 18px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .wxn_close:hover {
+      color: #fff;
+      background: #d8434f;
+    }
+
+    .wxn_detail-head {
+      display: flex;
+      gap: 22px;
+      align-items: flex-start;
+    }
+
+    .wxn_detail-img {
+      display: grid;
+      flex-shrink: 0;
+      place-items: center;
+      width: 200px;
+      height: 200px;
+      border-radius: 16px;
+      background: #f7f6ff;
+    }
+
+    .wxn_detail-img img {
+      max-width: 80%;
+      max-height: 80%;
+    }
+
+    .wxn_detail-info h3 {
+      margin-bottom: 10px;
+      font-size: 20px;
+      line-height: 1.5;
+    }
+
+    .wxn_detail-price {
+      margin-bottom: 10px;
+      color: #d8434f;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .wxn_meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .wxn_meta span {
+      padding: 4px 12px;
+      color: #5c5872;
+      font-size: 12px;
+      border-radius: 999px;
+      background: #f3f2fa;
+    }
+
+    .wxn_desc {
+      color: #5c5872;
+      line-height: 1.9;
+      font-size: 14px;
+    }
+
+    @media (max-width: 620px) {
+      .wxn_detail-head {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .wxn_detail-img {
+        width: 160px;
+        height: 160px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>fetch 获取接口数据展示</h1>
+    <p>原生 fetch + 原生 JavaScript · 列表与列表详情</p>
+    <div class="wxn_api">列表接口：https://dummyjson.com/products?limit=8　·　详情接口：https://dummyjson.com/products/{id}</div>
+  </header>
+
+  <main>
+    <div class="wxn_toolbar">
+      <h2>商品列表（前 8 件）</h2>
+      <button class="wxn_btn" id="wxn_reload">重新加载</button>
+    </div>
+
+    <div class="wxn_status" id="wxn_status">正在加载数据…</div>
+    <section class="wxn_grid" id="wxn_grid"></section>
+  </main>
+
+  <!-- 详情弹窗 -->
+  <div class="wxn_mask" id="wxn_mask">
+    <div class="wxn_detail" id="wxn_detail"></div>
+  </div>
+
+  <script>
+    // 接口地址（均支持跨域 CORS 访问）
+    const wxn_LIST_URL = "https://dummyjson.com/products?limit=8";
+    const wxn_DETAIL_URL = "https://dummyjson.com/products/";
+
+    const wxn_grid = document.getElementById("wxn_grid");
+    const wxn_status = document.getElementById("wxn_status");
+    const wxn_mask = document.getElementById("wxn_mask");
+    const wxn_detail = document.getElementById("wxn_detail");
+    const wxn_reload = document.getElementById("wxn_reload");
+
+    // 页面加载后自动请求列表
+    wxn_loadList();
+
+    // 获取商品列表
+    function wxn_loadList() {
+      wxn_status.textContent = "正在加载数据…";
+      wxn_status.classList.remove("wxn_error");
+      wxn_reload.disabled = true;
+
+      fetch(wxn_LIST_URL, { method: "GET" })
+        .then(function (wxn_res) {
+          if (!wxn_res.ok) {
+            throw new Error("HTTP 状态码：" + wxn_res.status);
+          }
+          return wxn_res.json(); // 解析 JSON
+        })
+        .then(function (wxn_data) {
+          wxn_renderList(wxn_data.products);
+          wxn_status.textContent = "加载成功，共获取 " + wxn_data.products.length + " 件商品（点击卡片查看详情）";
+          wxn_reload.disabled = false;
+        })
+        .catch(function (wxn_err) {
+          wxn_status.textContent = "加载失败：" + wxn_err.message + "（请检查网络后重试）";
+          wxn_status.classList.add("wxn_error");
+          wxn_reload.disabled = false;
+        });
+    }
+
+    // 渲染商品列表
+    function wxn_renderList(wxn_products) {
+      wxn_grid.innerHTML = wxn_products.map(function (wxn_p) {
+        return `
+          <article class="wxn_card">
+            <div class="wxn_card-img"><img src="${wxn_p.thumbnail}" alt="${wxn_p.title}"></div>
+            <div class="wxn_card-body">
+              <span class="wxn_tag">${wxn_p.category}</span>
+              <h3>${wxn_p.title}</h3>
+              <div class="wxn_price">
+                ¥${wxn_p.price}
+                <span class="wxn_rating">★ ${wxn_p.rating}</span>
+              </div>
+              <button class="wxn_more" data-id="${wxn_p.id}">查看详情（ID: ${wxn_p.id}）</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    // 事件委托：点击“查看详情”按钮
+    wxn_grid.addEventListener("click", function (wxn_e) {
+      const wxn_btn = wxn_e.target.closest(".wxn_more");
+      if (wxn_btn) {
+        wxn_loadDetail(wxn_btn.dataset.id);
+      }
+    });
+
+    // 根据 ID 获取单个商品详情
+    function wxn_loadDetail(wxn_id) {
+      wxn_detail.innerHTML = '<p style="text-align:center;padding:40px 0;color:#5c5872;">正在加载详情…</p>';
+      wxn_mask.classList.add("wxn_show");
+
+      fetch(wxn_DETAIL_URL + wxn_id, { method: "GET" })
+        .then(function (wxn_res) {
+          if (!wxn_res.ok) {
+            throw new Error("HTTP 状态码：" + wxn_res.status);
+          }
+          return wxn_res.json();
+        })
+        .then(function (wxn_p) {
+          wxn_renderDetail(wxn_p);
+        })
+        .catch(function (wxn_err) {
+          wxn_detail.innerHTML = '<p style="text-align:center;padding:40px 0;color:#b83a4a;">详情加载失败：' + wxn_err.message + '</p>';
+        });
+    }
+
+    // 渲染详情弹窗
+    function wxn_renderDetail(wxn_p) {
+      wxn_detail.innerHTML = `
+        <button class="wxn_close" id="wxn_closeBtn">✕</button>
+        <div class="wxn_detail-head">
+          <div class="wxn_detail-img"><img src="${wxn_p.thumbnail}" alt="${wxn_p.title}"></div>
+          <div class="wxn_detail-info">
+            <h3>${wxn_p.title}</h3>
+            <div class="wxn_detail-price">¥${wxn_p.price}</div>
+            <div class="wxn_meta">
+              <span>ID：${wxn_p.id}</span>
+              <span>分类：${wxn_p.category}</span>
+              <span>品牌：${wxn_p.brand}</span>
+              <span>评分：★ ${wxn_p.rating}</span>
+              <span>库存：${wxn_p.stock}</span>
+            </div>
+            <p class="wxn_desc">${wxn_p.description}</p>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("wxn_closeBtn").addEventListener("click", wxn_closeMask);
+    }
+
+    // 关闭弹窗
+    function wxn_closeMask() {
+      wxn_mask.classList.remove("wxn_show");
+    }
+
+    // 点击遮罩空白处关闭
+    wxn_mask.addEventListener("click", function (wxn_e) {
+      if (wxn_e.target === wxn_mask) {
+        wxn_closeMask();
+      }
+    });
+
+    // 重新加载
+    wxn_reload.addEventListener("click", wxn_loadList);
+  </script>
+</body>
+</html>
