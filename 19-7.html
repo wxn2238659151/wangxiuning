@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-11-05，功能名称：基于 three.js 的四个 3D 数据图表（柱状图 / 环形饼图 / 折线图 / 散点图） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>19-7 three.js 3D 数据可视化</title>
+  <link rel="stylesheet" href="./font/iconfont.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: #f5f6fa;
+      color: #2d3436;
+      min-height: 100vh;
+    }
+
+    .wxn_container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    /* 顶部标题栏 */
+    .wxn_header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: linear-gradient(135deg, #4a7dfa, #7b5cf0);
+      color: #fff;
+      border-radius: 12px;
+      padding: 18px 24px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 14px rgba(74, 125, 250, 0.28);
+    }
+
+    .wxn_header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .wxn_header-left .iconfont {
+      font-size: 28px;
+    }
+
+    .wxn_header h1 {
+      font-size: 21px;
+      font-weight: 600;
+    }
+
+    .wxn_header-tip {
+      font-size: 13px;
+      opacity: 0.92;
+      text-align: right;
+      line-height: 1.6;
+    }
+
+    /* 使用说明条 */
+    .wxn_usage {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #5b6472;
+      background: #fff;
+      border: 1px solid #eaeef6;
+      border-left: 3px solid #4a7dfa;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 22px;
+      line-height: 1.7;
+    }
+
+    .wxn_usage .iconfont {
+      color: #4a7dfa;
+      font-size: 16px;
+    }
+
+    /* 图表网格 */
+    .wxn_grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .wxn_card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(45, 52, 54, 0.08);
+      padding: 18px 18px 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wxn_card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .wxn_card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #2d3436;
+    }
+
+    .wxn_card-title .iconfont {
+      font-size: 17px;
+      color: #4a7dfa;
+    }
+
+    .wxn_tag {
+      font-size: 11px;
+      color: #7b5cf0;
+      background: #f1eeff;
+      border-radius: 20px;
+      padding: 3px 9px;
+      white-space: nowrap;
+    }
+
+    /* 3D 画布容器 */
+    .wxn_chart-box {
+      position: relative;
+      width: 100%;
+      height: 340px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 50% 30%, #ffffff 0%, #f2f5fb 72%, #eef2fa 100%);
+      border: 1px solid #eef2f9;
+      overflow: hidden;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .wxn_chart-box:active {
+      cursor: grabbing;
+    }
+
+    .wxn_chart-box canvas {
+      display: block;
+    }
+
+    .wxn_hint {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      font-size: 11px;
+      color: #97a1b0;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid #eef2f9;
+      border-radius: 20px;
+      padding: 3px 9px;
+      pointer-events: none;
+    }
+
+    /* 图例 */
+    .wxn_legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 12px;
+      font-size: 12px;
+      color: #5b6472;
+    }
+
+    .wxn_legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .wxn_dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .wxn_desc {
+      font-size: 12.5px;
+      color: #636e72;
+      line-height: 1.8;
+      margin-top: 10px;
+      border-top: 1px dashed #e6ebf3;
+      padding-top: 10px;
+    }
+
+    /* 返回首页 */
+    .wxn_footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 24px;
+      font-size: 12px;
+      color: #97a1b0;
+    }
+
+    .wxn_back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #4a7dfa;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .wxn_back:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 900px) {
+      .wxn_grid {
+        grid-template-columns: 1fr;
+      }
+
+      .wxn_chart-box {
+        height: 300px;
+      }
+
+      .wxn_header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .wxn_header-tip {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wxn_container">
+    <div class="wxn_header">
+      <div class="wxn_header-left">
+        <i class="iconfont icon-faxian"></i>
+        <h1>three.js 3D 数据可视化实验</h1>
+      </div>
+      <span class="wxn_header-tip">柱状图 &amp; 环形饼图 &amp; 折线图 &amp; 散点图<br />（three.js r128 本地 cdn 文件加载）</span>
+    </div>
+
+    <div class="wxn_usage">
+      <i class="iconfont icon-diandu"></i>
+      <span>四个图表均由 three.js 实时渲染：按住鼠标左键拖拽可旋转视角，滚轮可缩放，松手后自动恢复缓慢旋转。</span>
+    </div>
+
+    <div class="wxn_grid">
+      <!-- 图一：3D 柱状图 -->
+      <section class="wxn_card">
+        <div class="wxn_card-head">
+          <div class="wxn_card-title">
+            <i class="iconfont icon-diandu"></i>
+            一周借阅量统计（3D 柱状图）
+          </div>
+          <span class="wxn_tag">BoxGeometry</span>
+        </div>
+        <div class="wxn_chart-box" id="wxn_chartBar">
+          <span class="wxn_hint">拖拽旋转 · 滚轮缩放</span>
+        </div>
+        <div class="wxn_legend">
+          <span class="wxn_legend-item"><i class="wxn_dot" style="background:#4a7dfa"></i>周初</span>
+          <span class="wxn_legend-item"><i class="wxn_dot" style="background:#7b5cf0"></i>周中</span>
+          <span class="wxn_legend-item"><i class="wxn_dot" style="background:#00b8a9"></i>周末</span>
+        </div>
+        <p class="wxn_desc">
+          每个柱子由 BoxGeometry 拉伸生成，高度按借阅量映射，颜色用 HSL 沿色相渐变；
+          页面加载时柱子依次“生长”，柱顶数值用 Canvas 纹理精灵贴图呈现。
+        </p>
+      </section>
+
+      <!-- 图二：3D 环形饼图 -->
+      <section class="wxn_card">
+        <div class="wxn_card-head">
+          <div class="wxn_card-title">
+            <i class="iconfont icon-faxian"></i>
+            课程方向占比（3D 环形饼图）
+          </div>
+          <span class="wxn_tag">ExtrudeGeometry</span>
+        </div>
+        <div class="wxn_chart-box" id="wxn_chartPie">
+          <span class="wxn_hint">拖拽旋转 · 滚轮缩放</span>
+        </div>
+        <div class="wxn_legend">
+          <span class="wxn_legend-item"><i class="wxn_dot" style="background:#4a7dfa"></i>前端开发 42%</span>
+          <span class="wxn_legend-item"><i class="wxn_dot" style="background:#7b5cf0"></i>后端开发 28%</span>
+          <span class="wxn_legend-item"><i class="wxn_dot" style="background:#00b8a9"></i>UI 设计 18%</span>
+          <span class="wxn_legend-item"><i class="wxn_dot" style="background:#ffb03a"></i>测试运维 12%</span>
+        </div>
+        <p class="wxn_desc">
+          用 Shape 的 absarc 画出内外两条圆弧构成环形扇区，再交给 ExtrudeGeometry 挤出厚度，
+          各扇区沿角平分线方向轻微炸开并上下浮动，形成立体环形饼图。
+        </p>
+      </section>
+
+      <!-- 图三：3D 折线图 -->
+      <section class="wxn_card">
+        <div class="wxn_card-head">
+          <div class="wxn_card-title">
+            <i class="iconfont icon-diandu"></i>
+            近七日访问趋势（3D 折线图）
+          </div>
+          <span class="wxn_tag">TubeGeometry</span>
+        </div>
+        <div class="wxn_chart-box" id="wxn_chartLine">
+          <span class="wxn_hint">拖拽旋转 · 滚轮缩放</span>
+        </div>
+        <div class="wxn_legend">
+          <span class="wxn_legend-item"><i class="wxn_dot" style="background:#4a7dfa"></i>本周</span>
+          <span class="wxn_legend-item"><i class="wxn_dot" style="background:#7b5cf0"></i>上周</span>
+        </div>
+        <p class="wxn_desc">
+          折线用 CatmullRomCurve3 平滑曲线 + TubeGeometry 生成有粗细的“管道”，
+          数据点用小球标记，并从每个点向下拉出半透明辅助线，便于对照地面刻度。
+        </p>
+      </section>
+
+      <!-- 图四：3D 散点图 -->
+      <section class="wxn_card">
+        <div class="wxn_card-head">
+          <div class="wxn_card-title">
+            <i class="iconfont icon-faxian"></i>
+            三维商品指标分布（3D 散点图）
+          </div>
+          <span class="wxn_tag">SphereGeometry</span>
+        </div>
+        <div class="wxn_chart-box" id="wxn_chartScatter">
+          <span class="wxn_hint">拖拽旋转 · 滚轮缩放</span>
+        </div>
+        <div class="wxn_legend">
+          <span class="wxn_legend-item"><i class="wxn_dot" style="background:#4a7dfa"></i>A 系列</span>
+          <span class="wxn_legend-item"><i class="wxn_dot" style="background:#7b5cf0"></i>B 系列</span>
+          <span class="wxn_legend-item"><i class="wxn_dot" style="background:#00b8a9"></i>C 系列</span>
+        </div>
+        <p class="wxn_desc">
+          以广告投入（X）、销量（Y）、客单价（Z）三个维度构建三维坐标系，
+          点云按系列分为三簇，用线框盒体标出坐标范围，适合观察多指标之间的聚集关系。
+        </p>
+      </section>
+    </div>
+
+    <div class="wxn_footer">
+      <a class="wxn_back" href="./index.html"><i class="iconfont icon-gengduo"></i>返回首页</a>
+      <span>高级网页设计 · 王秀宁 · three.js r128</span>
+    </div>
+  </div>
+
+  <script src="./cdn/three.min.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      var wxn_charts = [];
+
+      /* ============ 通用：文字精灵 ============ */
+      function wxn_textSprite(wxn_text, wxn_options) {
+        var wxn_cfg = wxn_options || {};
+        var wxn_color = wxn_cfg.color || '#2d3436';
+        var wxn_fontSize = wxn_cfg.fontSize || 64;
+        var wxn_worldSize = wxn_cfg.worldSize || 0.6;
+        var wxn_font = '600 ' + wxn_fontSize + 'px "Microsoft YaHei", "PingFang SC", sans-serif';
+
+        var wxn_measureCtx = document.createElement('canvas').getContext('2d');
+        wxn_measureCtx.font = wxn_font;
+        var wxn_textWidth = wxn_measureCtx.measureText(wxn_text).width;
+
+        var wxn_canvas = document.createElement('canvas');
+        wxn_canvas.width = Math.ceil(wxn_textWidth + wxn_fontSize * 0.7);
+        wxn_canvas.height = Math.ceil(wxn_fontSize * 1.7);
+
+        var wxn_ctx = wxn_canvas.getContext('2d');
+        wxn_ctx.font = wxn_font;
+        wxn_ctx.textAlign = 'center';
+        wxn_ctx.textBaseline = 'middle';
+        wxn_ctx.lineJoin = 'round';
+        wxn_ctx.lineWidth = wxn_fontSize * 0.18;
+        wxn_ctx.strokeStyle = 'rgba(255, 255, 255, 0.92)';
+        wxn_ctx.strokeText(wxn_text, wxn_canvas.width / 2, wxn_canvas.height / 2);
+        wxn_ctx.fillStyle = wxn_color;
+        wxn_ctx.fillText(wxn_text, wxn_canvas.width / 2, wxn_canvas.height / 2);
+
+        var wxn_texture = new THREE.CanvasTexture(wxn_canvas);
+        wxn_texture.minFilter = THREE.LinearFilter;
+        wxn_texture.magFilter = THREE.LinearFilter;
+
+        var wxn_sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+          map: wxn_texture,
+          transparent: true,
+          depthWrite: false,
+          depthTest: false
+        }));
+        wxn_sprite.scale.set(
+          wxn_worldSize * wxn_canvas.width / wxn_canvas.height,
+          wxn_worldSize,
+          1
+        );
+        return wxn_sprite;
+      }
+
+      /* ============ 通用：创建场景 / 相机 / 渲染器 / 交互 ============ */
+      function wxn_createChart(wxn_containerId, wxn_config) {
+        var wxn_cfg = wxn_config || {};
+        var wxn_box = document.getElementById(wxn_containerId);
+        var wxn_width = wxn_box.clientWidth || 560;
+        var wxn_height = wxn_box.clientHeight || 340;
+
+        var wxn_scene = new THREE.Scene();
+
+        var wxn_camera = new THREE.PerspectiveCamera(40, wxn_width / wxn_height, 0.1, 300);
+
+        var wxn_renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        wxn_renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        wxn_renderer.setSize(wxn_width, wxn_height);
+        if (THREE.sRGBEncoding) {
+          wxn_renderer.outputEncoding = THREE.sRGBEncoding;
+        }
+        wxn_box.appendChild(wxn_renderer.domElement);
+
+        /* 灯光：一主光 + 一补光 + 环境光，保证立体感又不过曝 */
+        wxn_scene.add(new THREE.AmbientLight(0xffffff, 0.62));
+        var wxn_mainLight = new THREE.DirectionalLight(0xffffff, 0.85);
+        wxn_mainLight.position.set(9, 16, 11);
+        wxn_scene.add(wxn_mainLight);
+        var wxn_fillLight = new THREE.DirectionalLight(0xdfe6ff, 0.42);
+        wxn_fillLight.position.set(-11, 7, -9);
+        wxn_scene.add(wxn_fillLight);
+
+        var wxn_group = new THREE.Group();
+        wxn_scene.add(wxn_group);
+
+        var wxn_view = {
+          theta: wxn_cfg.theta !== undefined ? wxn_cfg.theta : 0.6,
+          phi: wxn_cfg.phi !== undefined ? wxn_cfg.phi : 1.02,
+          radius: wxn_cfg.radius || 17,
+          target: new THREE.Vector3(0, wxn_cfg.targetY || 2, 0),
+          auto: true,
+          autoAmp: wxn_cfg.autoAmp !== undefined ? wxn_cfg.autoAmp : 0.16,
+          autoSpeed: wxn_cfg.autoSpeed || 0.35,
+          renderTheta: 0
+        };
+        wxn_view.renderTheta = wxn_view.theta;
+
+        /* 鼠标 / 触摸交互：拖拽旋转、滚轮缩放 */
+        var wxn_dom = wxn_renderer.domElement;
+        var wxn_dragging = false;
+        var wxn_lastX = 0;
+        var wxn_lastY = 0;
+
+        wxn_dom.addEventListener('pointerdown', function (wxn_event) {
+          wxn_dragging = true;
+          wxn_lastX = wxn_event.clientX;
+          wxn_lastY = wxn_event.clientY;
+          wxn_view.auto = false;
+          if (wxn_dom.setPointerCapture) {
+            try {
+              wxn_dom.setPointerCapture(wxn_event.pointerId);
+            } catch (wxn_err) {
+              /* 忽略不支持指针捕获的浏览器 */
+            }
+          }
+        });
+
+        wxn_dom.addEventListener('pointermove', function (wxn_event) {
+          if (!wxn_dragging) {
+            return;
+          }
+          wxn_view.theta -= (wxn_event.clientX - wxn_lastX) * 0.01;
+          wxn_view.phi -= (wxn_event.clientY - wxn_lastY) * 0.008;
+          wxn_view.phi = Math.max(0.26, Math.min(1.44, wxn_view.phi));
+          wxn_lastX = wxn_event.clientX;
+          wxn_lastY = wxn_event.clientY;
+        });
+
+        function wxn_endDrag() {
+          wxn_dragging = false;
+        }
+
+        wxn_dom.addEventListener('pointerup', wxn_endDrag);
+        wxn_dom.addEventListener('pointercancel', wxn_endDrag);
+        wxn_dom.addEventListener('pointerleave', wxn_endDrag);
+
+        wxn_dom.addEventListener('wheel', function (wxn_event) {
+          wxn_event.preventDefault();
+          var wxn_scale = wxn_event.deltaY > 0 ? 1.07 : 0.93;
+          wxn_view.radius = Math.max(
+            wxn_cfg.minRadius || 8,
+            Math.min(wxn_cfg.maxRadius || 34, wxn_view.radius * wxn_scale)
+          );
+        }, { passive: false });
+
+        /* 容器尺寸自适应 */
+        function wxn_resize() {
+          var wxn_newWidth = wxn_box.clientWidth;
+          var wxn_newHeight = wxn_box.clientHeight;
+          if (!wxn_newWidth || !wxn_newHeight) {
+            return;
+          }
+          wxn_camera.aspect = wxn_newWidth / wxn_newHeight;
+          wxn_camera.updateProjectionMatrix();
+          wxn_renderer.setSize(wxn_newWidth, wxn_newHeight);
+        }
+
+        if (window.ResizeObserver) {
+          new ResizeObserver(wxn_resize).observe(wxn_box);
+        } else {
+          window.addEventListener('resize', wxn_resize);
+        }
+
+        var wxn_chart = {
+          box: wxn_box,
+          scene: wxn_scene,
+          camera: wxn_camera,
+          renderer: wxn_renderer,
+          group: wxn_group,
+          view: wxn_view,
+          update: null
+        };
+
+        wxn_charts.push(wxn_chart);
+        return wxn_chart;
+      }
+
+      /* ============ 通用：根据球坐标放置相机 ============ */
+      function wxn_updateCamera(wxn_chart) {
+        var wxn_view = wxn_chart.view;
+        var wxn_sinPhi = Math.sin(wxn_view.phi);
+        var wxn_cosPhi = Math.cos(wxn_view.phi);
+        var wxn_theta = wxn_view.renderTheta !== undefined ? wxn_view.renderTheta : wxn_view.theta;
+        wxn_chart.camera.position.set(
+          wxn_view.target.x + wxn_view.radius * wxn_sinPhi * Math.sin(wxn_theta),
+          wxn_view.target.y + wxn_view.radius * wxn_cosPhi,
+          wxn_view.target.z + wxn_view.radius * wxn_sinPhi * Math.cos(wxn_theta)
+        );
+        wxn_chart.camera.lookAt(wxn_view.target);
+      }
+
+      /* ============ 图一：3D 柱状图 ============ */
+      function wxn_buildBarChart() {
+        var wxn_chart = wxn_createChart('wxn_chartBar', {
+          radius: 15.4,
+          targetY: 2.8,
+          phi: 1.08,
+          theta: 0.55,
+          minRadius: 10,
+          maxRadius: 30
+        });
+        var wxn_group = wxn_chart.group;
+
+        /* 地面网格 */
+        var wxn_grid = new THREE.GridHelper(14, 14, 0xd3dbea, 0xe9eef7);
+        wxn_grid.material.transparent = true;
+        wxn_grid.material.opacity = 0.95;
+        wxn_group.add(wxn_grid);
+
+        var wxn_data = [
+          { label: '周一', value: 32 },
+          { label: '周二', value: 46 },
+          { label: '周三', value: 38 },
+          { label: '周四', value: 55 },
+          { label: '周五', value: 61 },
+          { label: '周六', value: 44 },
+          { label: '周日', value: 28 }
+        ];
+
+        var wxn_maxValue = 70;
+        var wxn_maxHeight = 6;
+        var wxn_gap = 1.55;
+        var wxn_offset = (wxn_data.length - 1) * wxn_gap / 2;
+
+        var wxn_bars = [];
+        var wxn_valueLabels = [];
+
+        wxn_data.forEach(function (wxn_item, wxn_index) {
+          var wxn_barHeight = wxn_item.value / wxn_maxValue * wxn_maxHeight + 0.2;
+
+          var wxn_geometry = new THREE.BoxGeometry(1.05, 1, 1.05);
+          wxn_geometry.translate(0, 0.5, 0);
+
+          var wxn_color = new THREE.Color().setHSL(0.63 - wxn_index * 0.035, 0.66, 0.57);
+          var wxn_material = new THREE.MeshStandardMaterial({
+            color: wxn_color,
+            roughness: 0.32,
+            metalness: 0.16
+          });
+
+          var wxn_bar = new THREE.Mesh(wxn_geometry, wxn_material);
+          wxn_bar.position.set(-wxn_offset + wxn_index * wxn_gap, 0, 0);
+          wxn_bar.scale.y = 0.001;
+          wxn_bar.userData.height = wxn_barHeight;
+          wxn_bar.userData.delay = wxn_index * 0.08;
+          wxn_group.add(wxn_bar);
+          wxn_bars.push(wxn_bar);
+
+          var wxn_valueLabel = wxn_textSprite(String(wxn_item.value), {
+            color: '#2d3436',
+            worldSize: 0.72
+          });
+          wxn_valueLabel.position.set(wxn_bar.position.x, wxn_barHeight + 0.5, 0);
+          wxn_valueLabel.material.opacity = 0;
+          wxn_group.add(wxn_valueLabel);
+          wxn_valueLabels.push(wxn_valueLabel);
+
+          var wxn_catLabel = wxn_textSprite(wxn_item.label, {
+            color: '#4a5568',
+            worldSize: 0.56
+          });
+          wxn_catLabel.position.set(wxn_bar.position.x, 0.3, 1.35);
+          wxn_group.add(wxn_catLabel);
+        });
+
+        /* 左侧纵轴示意线 */
+        var wxn_axisPoints = [
+          new THREE.Vector3(-wxn_offset - 0.95, 0, -0.95),
+          new THREE.Vector3(-wxn_offset - 0.95, wxn_maxHeight + 0.9, -0.95)
+        ];
+        var wxn_axisLine = new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints(wxn_axisPoints),
+          new THREE.LineBasicMaterial({ color: 0xcfd7e6 })
+        );
+        wxn_group.add(wxn_axisLine);
+
+        /* 生长动画 */
+        wxn_chart.update = function (wxn_time) {
+          for (var wxn_i = 0; wxn_i < wxn_bars.length; wxn_i++) {
+            var wxn_bar = wxn_bars[wxn_i];
+            var wxn_progress = (wxn_time - wxn_bar.userData.delay) / 0.85;
+            wxn_progress = Math.max(0, Math.min(1, wxn_progress));
+            var wxn_eased = 1 - Math.pow(1 - wxn_progress, 3);
+            wxn_bar.scale.y = Math.max(0.001, wxn_bar.userData.height * wxn_eased);
+            wxn_valueLabels[wxn_i].material.opacity = wxn_eased;
+          }
+        };
+
+        return wxn_chart;
+      }
+
+      /* ============ 图二：3D 环形饼图 ============ */
+      function wxn_buildPieChart() {
+        var wxn_chart = wxn_createChart('wxn_chartPie', {
+          radius: 12.2,
+          targetY: 1.05,
+          phi: 0.74,
+          theta: 0.25,
+          minRadius: 8,
+          maxRadius: 26
+        });
+        var wxn_group = wxn_chart.group;
+
+        var wxn_data = [
+          { name: '前端开发', value: 42, color: 0x4a7dfa },
+          { name: '后端开发', value: 28, color: 0x7b5cf0 },
+          { name: 'UI 设计', value: 18, color: 0x00b8a9 },
+          { name: '测试运维', value: 12, color: 0xffb03a }
+        ];
+
+        var wxn_total = 0;
+        wxn_data.forEach(function (wxn_item) {
+          wxn_total += wxn_item.value;
+        });
+
+        var wxn_outer = 3.5;
+        var wxn_inner = 1.95;
+        var wxn_depth = 0.62;
+        var wxn_startAngle = Math.PI / 2;   /* 从 12 点方向开始 */
+        var wxn_sectors = [];
+
+        /* 底部淡色圆盘，增加悬浮感 */
+        var wxn_plate = new THREE.Mesh(
+          new THREE.CircleGeometry(4.9, 64),
+          new THREE.MeshBasicMaterial({
+            color: 0xe8eefb,
+            transparent: true,
+            opacity: 0.65,
+            side: THREE.DoubleSide
+          })
+        );
+        wxn_plate.rotation.x = -Math.PI / 2;
+        wxn_plate.position.y = -0.05;
+        wxn_group.add(wxn_plate);
+
+        wxn_data.forEach(function (wxn_item, wxn_index) {
+          var wxn_sweep = wxn_item.value / wxn_total * Math.PI * 2;
+          var wxn_endAngle = wxn_startAngle + wxn_sweep;
+          var wxn_midAngle = wxn_startAngle + wxn_sweep / 2;
+
+          var wxn_shape = new THREE.Shape();
+          wxn_shape.moveTo(Math.cos(wxn_startAngle) * wxn_inner, Math.sin(wxn_startAngle) * wxn_inner);
+          wxn_shape.lineTo(Math.cos(wxn_startAngle) * wxn_outer, Math.sin(wxn_startAngle) * wxn_outer);
+          wxn_shape.absarc(0, 0, wxn_outer, wxn_startAngle, wxn_endAngle, false);
+          wxn_shape.lineTo(Math.cos(wxn_endAngle) * wxn_inner, Math.sin(wxn_endAngle) * wxn_inner);
+          wxn_shape.absarc(0, 0, wxn_inner, wxn_endAngle, wxn_startAngle, true);
+
+          var wxn_geometry = new THREE.ExtrudeGeometry(wxn_shape, {
+            depth: wxn_depth,
+            bevelEnabled: true,
+            bevelThickness: 0.06,
+            bevelSize: 0.06,
+            bevelSegments: 2,
+            curveSegments: 64
+          });
+
+          var wxn_material = new THREE.MeshStandardMaterial({
+            color: wxn_item.color,
+            roughness: 0.36,
+            metalness: 0.14
+          });
+
+          var wxn_mesh = new THREE.Mesh(wxn_geometry, wxn_material);
+          wxn_mesh.rotation.x = -Math.PI / 2;
+
+          /* 沿角平分线轻微炸开 */
+          var wxn_explodeX = Math.cos(wxn_midAngle) * 0.34;
+          var wxn_explodeZ = -Math.sin(wxn_midAngle) * 0.34;
+          wxn_mesh.position.set(wxn_explodeX, 0.36, wxn_explodeZ);
+          wxn_group.add(wxn_mesh);
+
+          wxn_sectors.push({
+            mesh: wxn_mesh,
+            baseY: 0.36,
+            phase: wxn_index * 0.9
+          });
+
+          var wxn_label = wxn_textSprite(wxn_item.name + ' ' + wxn_item.value + '%', {
+            color: '#3a424f',
+            worldSize: 0.55
+          });
+          wxn_label.position.set(
+            Math.cos(wxn_midAngle) * (wxn_outer + 0.95),
+            1.5,
+            -Math.sin(wxn_midAngle) * (wxn_outer + 0.95)
+          );
+          wxn_group.add(wxn_label);
+
+          wxn_startAngle = wxn_endAngle;
+        });
+
+        /* 扇区轻微上下浮动 */
+        wxn_chart.update = function (wxn_time) {
+          for (var wxn_i = 0; wxn_i < wxn_sectors.length; wxn_i++) {
+            var wxn_sector = wxn_sectors[wxn_i];
+            wxn_sector.mesh.position.y = wxn_sector.baseY + Math.sin(wxn_time * 1.3 + wxn_sector.phase) * 0.06;
+          }
+        };
+
+        return wxn_chart;
+      }
+
+      /* ============ 图三：3D 折线图 ============ */
+      function wxn_buildLineChart() {
+        var wxn_chart = wxn_createChart('wxn_chartLine', {
+          radius: 14.2,
+          targetY: 2.95,
+          phi: 1.02,
+          theta: 0.35,
+          minRadius: 10,
+          maxRadius: 30
+        });
+        var wxn_group = wxn_chart.group;
+
+        var wxn_grid = new THREE.GridHelper(14, 14, 0xd3dbea, 0xe9eef7);
+        wxn_grid.material.transparent = true;
+        wxn_grid.material.opacity = 0.95;
+        wxn_group.add(wxn_grid);
+
+        var wxn_days = ['第 1 天', '第 2 天', '第 3 天', '第 4 天', '第 5 天', '第 6 天', '第 7 天'];
+        var wxn_series = [
+          { name: '本周', color: 0x4a7dfa, values: [3.2, 4.6, 4.1, 6.2, 5.4, 7.3, 6.6], z: 0 },
+          { name: '上周', color: 0x7b5cf0, values: [2.6, 3.4, 3.8, 4.4, 4.9, 5.6, 5.2], z: -1.5 }
+        ];
+
+        var wxn_startX = -4.5;
+        var wxn_stepX = 1.5;
+        var wxn_maxValue = 8;
+        var wxn_maxHeight = 5.2;
+
+        wxn_series.forEach(function (wxn_item, wxn_sIndex) {
+          var wxn_points = [];
+
+          wxn_item.values.forEach(function (wxn_value, wxn_index) {
+            wxn_points.push(new THREE.Vector3(
+              wxn_startX + wxn_index * wxn_stepX,
+              wxn_value / wxn_maxValue * wxn_maxHeight + 0.2,
+              wxn_item.z
+            ));
+          });
+
+          /* 平滑曲线 + 管道 */
+          var wxn_curve = new THREE.CatmullRomCurve3(wxn_points, false, 'catmullrom', 0.4);
+          var wxn_tubeGeometry = new THREE.TubeGeometry(wxn_curve, 220, 0.075, 14, false);
+          var wxn_tubeMaterial = new THREE.MeshStandardMaterial({
+            color: wxn_item.color,
+            roughness: 0.28,
+            metalness: 0.22,
+            emissive: wxn_item.color,
+            emissiveIntensity: 0.12
+          });
+          wxn_group.add(new THREE.Mesh(wxn_tubeGeometry, wxn_tubeMaterial));
+
+          /* 数据点小球 */
+          var wxn_sphereGeometry = new THREE.SphereGeometry(0.15, 18, 18);
+          var wxn_pointMaterial = new THREE.MeshStandardMaterial({
+            color: wxn_item.color,
+            roughness: 0.2,
+            metalness: 0.3
+          });
+
+          wxn_points.forEach(function (wxn_point, wxn_index) {
+            var wxn_sphere = new THREE.Mesh(wxn_sphereGeometry, wxn_pointMaterial);
+            wxn_sphere.position.copy(wxn_point);
+            wxn_group.add(wxn_sphere);
+
+            /* 从数据点垂到地面的辅助线 */
+            var wxn_dropLine = new THREE.Line(
+              new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(wxn_point.x, 0, wxn_point.z),
+                new THREE.Vector3(wxn_point.x, wxn_point.y, wxn_point.z)
+              ]),
+              new THREE.LineBasicMaterial({
+                color: wxn_item.color,
+                transparent: true,
+                opacity: 0.32
+              })
+            );
+            wxn_group.add(wxn_dropLine);
+
+            /* 仅给本周数据加数值标签，避免画面拥挤 */
+            if (wxn_sIndex === 0) {
+              var wxn_valueLabel = wxn_textSprite(String(wxn_item.values[wxn_index]), {
+                color: '#3a424f',
+                worldSize: 0.5
+              });
+              wxn_valueLabel.position.set(wxn_point.x, wxn_point.y + 0.5, wxn_point.z);
+              wxn_group.add(wxn_valueLabel);
+            }
+          });
+
+        });
+
+        /* 日期刻度 */
+        wxn_days.forEach(function (wxn_day, wxn_index) {
+          var wxn_dayLabel = wxn_textSprite(wxn_day, {
+            color: '#6b7484',
+            worldSize: 0.55
+          });
+          wxn_dayLabel.position.set(wxn_startX + wxn_index * wxn_stepX, 0.22, 1.25);
+          wxn_group.add(wxn_dayLabel);
+        });
+
+        var wxn_yAxis = new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(wxn_startX - 0.9, 0, 0),
+            new THREE.Vector3(wxn_startX - 0.9, wxn_maxHeight + 0.8, 0)
+          ]),
+          new THREE.LineBasicMaterial({ color: 0xcfd7e6 })
+        );
+        wxn_group.add(wxn_yAxis);
+
+        return wxn_chart;
+      }
+
+      /* ============ 图四：3D 散点图 ============ */
+      function wxn_buildScatterChart() {
+        var wxn_chart = wxn_createChart('wxn_chartScatter', {
+          radius: 15.0,
+          targetY: 3.05,
+          phi: 1.02,
+          theta: 0.85,
+          minRadius: 10,
+          maxRadius: 30
+        });
+        var wxn_group = wxn_chart.group;
+
+        var wxn_grid = new THREE.GridHelper(10, 10, 0xd3dbea, 0xe9eef7);
+        wxn_grid.material.transparent = true;
+        wxn_grid.material.opacity = 0.95;
+        wxn_group.add(wxn_grid);
+
+        var wxn_boxWidth = 9;
+        var wxn_boxHeight = 6.4;
+        var wxn_boxDepth = 6;
+
+        /* 坐标范围线框 */
+        var wxn_frameGeometry = new THREE.EdgesGeometry(
+          new THREE.BoxGeometry(wxn_boxWidth, wxn_boxHeight, wxn_boxDepth)
+        );
+        var wxn_frame = new THREE.LineSegments(
+          wxn_frameGeometry,
+          new THREE.LineBasicMaterial({ color: 0xc6d2e6 })
+        );
+        wxn_frame.position.y = wxn_boxHeight / 2;
+        wxn_group.add(wxn_frame);
+
+        /* 伪随机数：保证每次打开页面点云分布一致 */
+        var wxn_seed = 20261105;
+        function wxn_random() {
+          wxn_seed = (wxn_seed * 9301 + 49297) % 233280;
+          return wxn_seed / 233280;
+        }
+
+        var wxn_clusters = [
+          { name: 'A 系列', color: 0x2f6bf0, cx: -2.2, cy: 1.7, cz: 1.3, spread: 1.5, count: 24 },
+          { name: 'B 系列', color: 0x6b46e8, cx: 1.5, cy: 3.5, cz: -1.6, spread: 1.7, count: 22 },
+          { name: 'C 系列', color: 0x0bb5a6, cx: 2.9, cy: 4.9, cz: 1.8, spread: 1.2, count: 18 }
+        ];
+
+        var wxn_sphereGeometry = new THREE.SphereGeometry(0.17, 18, 18);
+
+        wxn_clusters.forEach(function (wxn_cluster, wxn_cIndex) {
+          var wxn_material = new THREE.MeshStandardMaterial({
+            color: wxn_cluster.color,
+            roughness: 0.52,
+            metalness: 0.1,
+            emissive: wxn_cluster.color,
+            emissiveIntensity: 0.08
+          });
+
+          for (var wxn_i = 0; wxn_i < wxn_cluster.count; wxn_i++) {
+            var wxn_point = new THREE.Mesh(wxn_sphereGeometry, wxn_material);
+            var wxn_px = wxn_cluster.cx + (wxn_random() - 0.5) * wxn_cluster.spread * 2;
+            var wxn_py = wxn_cluster.cy + (wxn_random() - 0.5) * wxn_cluster.spread * 1.4;
+            var wxn_pz = wxn_cluster.cz + (wxn_random() - 0.5) * wxn_cluster.spread * 1.8;
+
+            wxn_px = Math.max(-wxn_boxWidth / 2 + 0.3, Math.min(wxn_boxWidth / 2 - 0.3, wxn_px));
+            wxn_py = Math.max(0.25, Math.min(wxn_boxHeight - 0.3, wxn_py));
+            wxn_pz = Math.max(-wxn_boxDepth / 2 + 0.3, Math.min(wxn_boxDepth / 2 - 0.3, wxn_pz));
+
+            wxn_point.position.set(wxn_px, wxn_py, wxn_pz);
+            wxn_group.add(wxn_point);
+          }
+        });
+
+        /* 三个坐标轴说明 */
+        var wxn_xLabel = wxn_textSprite('广告投入 →', {
+          color: '#8791a1',
+          worldSize: 0.55
+        });
+        wxn_xLabel.position.set(3.2, 1.55, 2.1);
+        wxn_group.add(wxn_xLabel);
+
+        var wxn_yLabel = wxn_textSprite('销量', {
+          color: '#8791a1',
+          worldSize: 0.55
+        });
+        wxn_yLabel.position.set(0, wxn_boxHeight + 0.65, 0);
+        wxn_group.add(wxn_yLabel);
+
+        var wxn_zLabel = wxn_textSprite('客单价 →', {
+          color: '#8791a1',
+          worldSize: 0.55
+        });
+        wxn_zLabel.position.set(0.2, 1.55, 2.7);
+        wxn_group.add(wxn_zLabel);
+
+        return wxn_chart;
+      }
+
+      /* ============ 统一渲染循环 ============ */
+      function wxn_startRenderLoop() {
+        var wxn_clock = new THREE.Clock();
+
+        function wxn_frame() {
+          window.requestAnimationFrame(wxn_frame);
+          var wxn_time = wxn_clock.getElapsedTime();
+
+          for (var wxn_i = 0; wxn_i < wxn_charts.length; wxn_i++) {
+            var wxn_chart = wxn_charts[wxn_i];
+            if (wxn_chart.view.auto) {
+              wxn_chart.view.renderTheta = wxn_chart.view.theta +
+                Math.sin(wxn_time * 0.32) * wxn_chart.view.autoAmp;
+            } else {
+              wxn_chart.view.renderTheta = wxn_chart.view.theta;
+            }
+            wxn_updateCamera(wxn_chart);
+            if (wxn_chart.update) {
+              wxn_chart.update(wxn_time);
+            }
+            wxn_chart.renderer.render(wxn_chart.scene, wxn_chart.camera);
+          }
+        }
+
+        wxn_frame();
+      }
+
+      /* ============ 初始化 ============ */
+      if (typeof THREE === 'undefined') {
+        var wxn_box = document.querySelectorAll('.wxn_chart-box');
+        for (var wxn_i = 0; wxn_i < wxn_box.length; wxn_i++) {
+          wxn_box[wxn_i].innerHTML =
+            '<p style="padding:80px 20px;text-align:center;color:#e17055;font-size:14px;">' +
+            'three.js 加载失败，请确认 ./cdn/three.min.js 是否存在。</p>';
+        }
+        return;
+      }
+
+      wxn_buildBarChart();
+      wxn_buildPieChart();
+      wxn_buildLineChart();
+      wxn_buildScatterChart();
+      wxn_startRenderLoop();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-11-05，功能名称：基于 Mermaid 的智能客服系统流程图与 ER 图 -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>19-6 Mermaid 智能客服系统图示</title>
+  <link rel="stylesheet" href="./font/iconfont.css" />
+  <script src="./cdn/mermaid.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: #f5f6fa;
+      color: #2d3436;
+      min-height: 100vh;
+    }
+
+    .wxn_container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    /* 顶部标题栏 */
+    .wxn_header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #4a7dfa, #7b5cf0);
+      color: #fff;
+      border-radius: 12px;
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(74, 125, 250, 0.25);
+    }
+
+    .wxn_header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .wxn_header-left .iconfont {
+      font-size: 28px;
+    }
+
+    .wxn_header h1 {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .wxn_header-tip {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    /* 卡片 */
+    .wxn_card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(45, 52, 54, 0.08);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .wxn_card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #4a7dfa;
+    }
+
+    .wxn_card-title .iconfont {
+      font-size: 18px;
+    }
+
+    .wxn_card-desc {
+      font-size: 13px;
+      color: #636e72;
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    /* 标签切换 */
+    .wxn_tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .wxn_tab-btn {
+      flex: 1;
+      padding: 12px 0;
+      border: 1px solid #dfe6e9;
+      background: #fff;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.25s;
+      color: #636e72;
+      font-family: inherit;
+    }
+
+    .wxn_tab-btn:hover {
+      border-color: #4a7dfa;
+      color: #4a7dfa;
+    }
+
+    .wxn_tab-btn.wxn_active {
+      background: linear-gradient(135deg, #4a7dfa, #7b5cf0);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(74, 125, 250, 0.3);
+    }
+
+    .wxn_panel {
+      display: none;
+    }
+
+    .wxn_panel.wxn_active {
+      display: block;
+    }
+
+    /* 图表容器 */
+    .wxn_diagram-wrap {
+      overflow-x: auto;
+      padding: 12px 4px;
+      text-align: center;
+    }
+
+    .wxn_diagram-wrap .mermaid {
+      display: inline-block;
+      min-width: 60%;
+    }
+
+    /* 源码查看 */
+    .wxn_source {
+      display: none;
+      background: #2d3436;
+      color: #dfe6e9;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 12.5px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      margin-top: 14px;
+    }
+
+    .wxn_source.wxn_active {
+      display: block;
+    }
+
+    .wxn_toggle-source {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 6px 14px;
+      border: 1px solid #dfe6e9;
+      border-radius: 8px;
+      background: #f8f9fa;
+      font-size: 13px;
+      color: #636e72;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .wxn_toggle-source:hover {
+      border-color: #7b5cf0;
+      color: #7b5cf0;
+    }
+
+    .wxn_back {
+      display: inline-block;
+      margin-top: 8px;
+      color: #4a7dfa;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .wxn_back:hover {
+      text-decoration: underline;
+    }
+
+    /* mermaid 错误提示 */
+    .wxn_mermaid-error {
+      color: #d63031;
+      font-size: 13px;
+      padding: 10px;
+      background: #ffeaa733;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wxn_container">
+    <header class="wxn_header">
+      <div class="wxn_header-left">
+        <i class="iconfont icon-shezhi"></i>
+        <h1>19-6 基于 Mermaid 的智能客服系统图示</h1>
+      </div>
+      <span class="wxn_header-tip">流程图 Flowchart + 实体关系图 ER · 本地 Mermaid 渲染</span>
+    </header>
+
+    <div class="wxn_tabs">
+      <button class="wxn_tab-btn wxn_active" data-wxn-target="wxn_panelFlow">业务流程图（Flowchart）</button>
+      <button class="wxn_tab-btn" data-wxn-target="wxn_panelER">数据模型 ER 图</button>
+    </div>
+
+    <!-- 流程图面板 -->
+    <section class="wxn_panel wxn_active" id="wxn_panelFlow">
+      <div class="wxn_card">
+        <div class="wxn_card-title"><i class="iconfont icon-fenlei"></i> 智能客服系统 —— 咨询处理业务流程</div>
+        <p class="wxn_card-desc">
+          展示用户一次咨询的完整链路：提问 → 预处理 → 意图识别 → 知识库检索 / 大模型生成 → 答案回复 →
+          满意度反馈，未解决时转人工并生成工单。
+        </p>
+        <div class="wxn_diagram-wrap">
+          <pre class="mermaid">
+flowchart TD
+    A([用户发起咨询]) --> B[输入预处理<br/>敏感词过滤 / 分词]
+    B --> C{意图识别<br/>NLU}
+    C -->|常见问题| D[知识库检索<br/>向量匹配 Top-K]
+    C -->|业务办理| E[调用业务 API<br/>查询订单 / 物流]
+    C -->|闲聊| F[大模型生成回复]
+    D --> G{置信度 ≥ 阈值?}
+    G -->|是| H[组装标准答案]
+    G -->|否| F
+    E --> H2[模板化答案组装]
+    F --> H
+    H --> I[多渠道回复用户]
+    H2 --> I
+    I --> J{满意度评价}
+    J -->|满意| K([会话结束 · 记录日志])
+    J -->|不满意| L[转接人工客服]
+    L --> M[创建工单跟进]
+    M --> K
+    K -.-> N[(会话数据库<br/>沉淀语料 / 优化知识库)]
+    N -.-> D
+          </pre>
+        </div>
+        <button class="wxn_toggle-source" data-wxn-source="wxn_sourceFlow">查看 Mermaid 源码</button>
+        <pre class="wxn_source" id="wxn_sourceFlow">flowchart TD
+    A([用户发起咨询]) --> B[输入预处理<br/>敏感词过滤 / 分词]
+    B --> C{意图识别<br/>NLU}
+    C -->|常见问题| D[知识库检索<br/>向量匹配 Top-K]
+    C -->|业务办理| E[调用业务 API<br/>查询订单 / 物流]
+    C -->|闲聊| F[大模型生成回复]
+    D --> G{置信度 ≥ 阈值?}
+    G -->|是| H[组装标准答案]
+    G -->|否| F
+    E --> H2[模板化答案组装]
+    F --> H
+    H --> I[多渠道回复用户]
+    H2 --> I
+    I --> J{满意度评价}
+    J -->|满意| K([会话结束 · 记录日志])
+    J -->|不满意| L[转接人工客服]
+    L --> M[创建工单跟进]
+    M --> K
+    K -.-> N[(会话数据库<br/>沉淀语料 / 优化知识库)]
+    N -.-> D</pre>
+      </div>
+    </section>
+
+    <!-- ER 图面板 -->
+    <section class="wxn_panel" id="wxn_panelER">
+      <div class="wxn_card">
+        <div class="wxn_card-title"><i class="iconfont icon-jilu"></i> 智能客服系统 —— 核心数据模型 ER 图</div>
+        <p class="wxn_card-desc">
+          描述系统核心实体及其关系：一个用户可发起多个会话，一个会话包含多条消息；
+          知识条目归属于知识分类；未解决的问题生成工单，由客服人员处理。
+        </p>
+        <div class="wxn_diagram-wrap">
+          <pre class="mermaid">
+erDiagram
+    USER ||--o{ SESSION : "发起"
+    USER ||--o{ TICKET : "提交"
+    SESSION ||--|{ MESSAGE : "包含"
+    SESSION ||--o{ TICKET : "升级为"
+    MESSAGE }o--|| INTENT : "识别为"
+    MESSAGE ||--o| ANSWER : "命中"
+    ANSWER }o--|| KNOWLEDGE_ITEM : "来源"
+    KNOWLEDGE_ITEM }o--|| KNOWLEDGE_CATEGORY : "归属"
+    TICKET }o--|| AGENT : "受理"
+    AGENT }o--o{ KNOWLEDGE_ITEM : "维护"
+
+    USER {
+        bigint user_id PK "用户ID"
+        string nickname "昵称"
+        string phone "手机号"
+        datetime created_at "注册时间"
+    }
+    SESSION {
+        bigint session_id PK "会话ID"
+        bigint user_id FK "用户ID"
+        string channel "渠道"
+        datetime start_time "开始时间"
+        datetime end_time "结束时间"
+        tinyint satisfaction "满意度1-5"
+    }
+    MESSAGE {
+        bigint message_id PK "消息ID"
+        bigint session_id FK "会话ID"
+        int role "角色 0用户 1系统"
+        text content "消息内容"
+        datetime send_time "发送时间"
+    }
+    INTENT {
+        bigint intent_id PK "意图ID"
+        string intent_name "意图名称"
+        float threshold "命中阈值"
+    }
+    ANSWER {
+        bigint answer_id PK "答案ID"
+        bigint message_id FK "消息ID"
+        float score "匹配分数"
+        text content "答案内容"
+    }
+    KNOWLEDGE_ITEM {
+        bigint kb_id PK "知识条目ID"
+        bigint category_id FK "分类ID"
+        string question "标准问题"
+        text answer "标准答案"
+        vector embedding "向量表示"
+        int hit_count "命中次数"
+    }
+    KNOWLEDGE_CATEGORY {
+        bigint category_id PK "分类ID"
+        string category_name "分类名称"
+    }
+    TICKET {
+        bigint ticket_id PK "工单ID"
+        bigint session_id FK "会话ID"
+        bigint user_id FK "用户ID"
+        bigint agent_id FK "客服ID"
+        string status "状态"
+        datetime created_at "创建时间"
+    }
+    AGENT {
+        bigint agent_id PK "客服ID"
+        string agent_name "客服姓名"
+        string group_name "技能组"
+        tinyint online "是否在线"
+    }
+          </pre>
+        </div>
+        <button class="wxn_toggle-source" data-wxn-source="wxn_sourceER">查看 Mermaid 源码</button>
+        <pre class="wxn_source" id="wxn_sourceER">erDiagram
+    USER ||--o{ SESSION : "发起"
+    USER ||--o{ TICKET : "提交"
+    SESSION ||--|{ MESSAGE : "包含"
+    SESSION ||--o{ TICKET : "升级为"
+    MESSAGE }o--|| INTENT : "识别为"
+    MESSAGE ||--o| ANSWER : "命中"
+    ANSWER }o--|| KNOWLEDGE_ITEM : "来源"
+    KNOWLEDGE_ITEM }o--|| KNOWLEDGE_CATEGORY : "归属"
+    TICKET }o--|| AGENT : "受理"
+    AGENT }o--o{ KNOWLEDGE_ITEM : "维护"
+
+    USER { bigint user_id PK "用户ID" }
+    SESSION { bigint session_id PK "会话ID" }
+    MESSAGE { bigint message_id PK "消息ID" }
+    INTENT { bigint intent_id PK "意图ID" }
+    ANSWER { bigint answer_id PK "答案ID" }
+    KNOWLEDGE_ITEM { bigint kb_id PK "知识条目ID" }
+    KNOWLEDGE_CATEGORY { bigint category_id PK "分类ID" }
+    TICKET { bigint ticket_id PK "工单ID" }
+    AGENT { bigint agent_id PK "客服ID" }</pre>
+      </div>
+    </section>
+
+    <a class="wxn_back" href="./index.html">&larr; 返回首页</a>
+  </div>
+
+  <script>
+    // 初始化 Mermaid（本地 cdn/mermaid.min.js）
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "base",
+      securityLevel: "loose",
+      themeVariables: {
+        fontFamily: "Microsoft YaHei, PingFang SC, sans-serif",
+        fontSize: "14px",
+        primaryColor: "#e8f0ff",
+        primaryBorderColor: "#4a7dfa",
+        primaryTextColor: "#2d3436",
+        lineColor: "#7b5cf0"
+      },
+      flowchart: { curve: "basis", useMaxWidth: true },
+      er: { useMaxWidth: true, fontSize: 13 }
+    });
+
+    window.wxn_mermaidReady = true;
+
+    // 渲染失败兜底提示
+    mermaid.parseError = function (wxn_err) {
+      var wxn_wraps = document.querySelectorAll(".wxn_diagram-wrap");
+      wxn_wraps.forEach(function (wxn_wrap) {
+        if (!wxn_wrap.querySelector("svg")) {
+          var wxn_tip = document.createElement("div");
+          wxn_tip.className = "wxn_mermaid-error";
+          wxn_tip.textContent = "Mermaid 渲染失败：" + wxn_err;
+          wxn_wrap.appendChild(wxn_tip);
+        }
+      });
+    };
+
+    // 标签页切换
+    var wxn_tabBtns = document.querySelectorAll(".wxn_tab-btn");
+    wxn_tabBtns.forEach(function (wxn_btn) {
+      wxn_btn.addEventListener("click", function () {
+        wxn_tabBtns.forEach(function (wxn_b) { wxn_b.classList.remove("wxn_active"); });
+        document.querySelectorAll(".wxn_panel").forEach(function (wxn_p) { wxn_p.classList.remove("wxn_active"); });
+        wxn_btn.classList.add("wxn_active");
+        document.getElementById(wxn_btn.dataset.wxnTarget).classList.add("wxn_active");
+      });
+    });
+
+    // 源码显示 / 隐藏
+    document.querySelectorAll(".wxn_toggle-source").forEach(function (wxn_btn) {
+      wxn_btn.addEventListener("click", function () {
+        var wxn_src = document.getElementById(wxn_btn.dataset.wxnSource);
+        wxn_src.classList.toggle("wxn_active");
+        wxn_btn.textContent = wxn_src.classList.contains("wxn_active") ? "隐藏 Mermaid 源码" : "查看 Mermaid 源码";
+      });
+    });
+  </script>
+</body>
+</html>

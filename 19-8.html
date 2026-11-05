@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-11-05，功能名称：基于 ECharts 的三列数据可视化大屏（中间列上方为中国地图） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>19-8 数据大屏 - 全国销售监控中心</title>
+  <link rel="stylesheet" href="./font/iconfont.css">
+  <script src="./cdn/echarts.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #040b1c;
+      color: #cfe3ff;
+      font-family: "Microsoft YaHei", sans-serif;
+      overflow: hidden;
+    }
+    /* 顶部标题栏 */
+    .wxn_header {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      background: linear-gradient(180deg, rgba(9, 32, 84, .9), rgba(4, 11, 28, .4));
+      border-bottom: 1px solid #123a7a;
+    }
+    .wxn_header h1 {
+      font-size: 26px;
+      letter-spacing: 6px;
+      color: #e8f4ff;
+      text-shadow: 0 0 12px #2f7bff;
+    }
+    .wxn_header .wxn_time { font-size: 14px; color: #7fa8d9; }
+    /* 三列布局 */
+    .wxn_main {
+      display: flex;
+      height: calc(100vh - 70px);
+      padding: 12px;
+      gap: 12px;
+    }
+    .wxn_col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+    .wxn_panel {
+      flex: 1;
+      border: 1px solid #14407f;
+      background: linear-gradient(160deg, rgba(10, 30, 74, .75), rgba(5, 14, 36, .85));
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .wxn_panel::before, .wxn_panel::after {
+      content: '';
+      position: absolute;
+      width: 14px; height: 14px;
+      border-color: #3aa0ff; border-style: solid;
+    }
+    .wxn_panel::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+    .wxn_panel::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+    .wxn_panel h3 {
+      font-size: 15px;
+      color: #6fc3ff;
+      padding-left: 10px;
+      border-left: 3px solid #3aa0ff;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+    .wxn_panel .wxn_chart { flex: 1; min-height: 0; }
+    /* 中间列：地图占上方更大区域 */
+    .wxn_col-center .wxn_panel-map { flex: 1.8; }
+    .wxn_col-center .wxn_panel-bottom { flex: 1; }
+    /* 数字指标条 */
+    .wxn_kpi {
+      display: flex;
+      justify-content: space-around;
+      padding: 4px 0 8px;
+    }
+    .wxn_kpi div { text-align: center; }
+    .wxn_kpi b {
+      display: block;
+      font-size: 24px;
+      color: #ffd166;
+      font-family: Consolas, monospace;
+      text-shadow: 0 0 8px rgba(255, 209, 102, .5);
+    }
+    .wxn_kpi span { font-size: 12px; color: #7fa8d9; }
+  </style>
+</head>
+<body>
+
+  <header class="wxn_header">
+    <span class="wxn_time" id="wxn_clock"></span>
+    <h1>全国销售数据监控大屏</h1>
+    <span class="wxn_time">数据来源：模拟业务数据 · 实时更新</span>
+  </header>
+
+  <main class="wxn_main">
+    <!-- 左列 -->
+    <section class="wxn_col">
+      <div class="wxn_panel">
+        <h3>各月销售额趋势（万元）</h3>
+        <div class="wxn_chart" id="wxn_line"></div>
+      </div>
+      <div class="wxn_panel">
+        <h3>各渠道销售对比（万元）</h3>
+        <div class="wxn_chart" id="wxn_bar"></div>
+      </div>
+    </section>
+
+    <!-- 中列 -->
+    <section class="wxn_col wxn_col-center">
+      <div class="wxn_panel wxn_panel-map">
+        <h3>全国区域销售分布</h3>
+        <div class="wxn_kpi">
+          <div><b id="wxn_total">0</b><span>总销售额(万)</span></div>
+          <div><b>1286</b><span>今日订单数</span></div>
+          <div><b>96.8%</b><span>订单完成率</span></div>
+        </div>
+        <div class="wxn_chart" id="wxn_map"></div>
+      </div>
+      <div class="wxn_panel wxn_panel-bottom">
+        <h3>销售目标完成度</h3>
+        <div class="wxn_chart" id="wxn_gauge"></div>
+      </div>
+    </section>
+
+    <!-- 右列 -->
+    <section class="wxn_col">
+      <div class="wxn_panel">
+        <h3>品类销售占比</h3>
+        <div class="wxn_chart" id="wxn_pie"></div>
+      </div>
+      <div class="wxn_panel">
+        <h3>区域综合能力评估</h3>
+        <div class="wxn_chart" id="wxn_radar"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // 顶部时钟
+    function wxn_updateClock() {
+      var wxn_now = new Date();
+      var wxn_pad = function (n) { return n < 10 ? '0' + n : n; };
+      document.getElementById('wxn_clock').textContent =
+        wxn_now.getFullYear() + '-' + wxn_pad(wxn_now.getMonth() + 1) + '-' + wxn_pad(wxn_now.getDate()) +
+        '  ' + wxn_pad(wxn_now.getHours()) + ':' + wxn_pad(wxn_now.getMinutes()) + ':' + wxn_pad(wxn_now.getSeconds());
+    }
+    wxn_updateClock();
+    setInterval(wxn_updateClock, 1000);
+
+    // ECharts 通用配置
+    var wxn_axisStyle = {
+      axisLine: { lineStyle: { color: '#2a5ca8' } },
+      axisLabel: { color: '#8fb6e8', fontSize: 11 },
+      splitLine: { lineStyle: { color: 'rgba(42, 92, 168, .3)' } }
+    };
+
+    // ===== 1. 折线图：月度销售趋势 =====
+    var wxn_lineChart = echarts.init(document.getElementById('wxn_line'));
+    wxn_lineChart.setOption({
+      tooltip: { trigger: 'axis' },
+      legend: { data: ['今年', '去年'], textStyle: { color: '#8fb6e8' }, top: 0 },
+      grid: { left: 40, right: 15, top: 30, bottom: 25 },
+      xAxis: Object.assign({ type: 'category', data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'] }, wxn_axisStyle),
+      yAxis: Object.assign({ type: 'value' }, wxn_axisStyle),
+      series: [
+        {
+          name: '今年', type: 'line', smooth: true,
+          data: [820, 932, 901, 1034, 1290, 1330, 1420, 1500, 1380, 1560, 1620, 1780],
+          lineStyle: { color: '#3aa0ff', width: 3 },
+          itemStyle: { color: '#3aa0ff' },
+          areaStyle: { color: 'rgba(58, 160, 255, .25)' }
+        },
+        {
+          name: '去年', type: 'line', smooth: true,
+          data: [620, 702, 801, 834, 990, 1030, 1120, 1200, 1180, 1260, 1320, 1480],
+          lineStyle: { color: '#ffd166', width: 2, type: 'dashed' },
+          itemStyle: { color: '#ffd166' }
+        }
+      ]
+    });
+
+    // ===== 2. 柱状图：渠道对比 =====
+    var wxn_barChart = echarts.init(document.getElementById('wxn_bar'));
+    wxn_barChart.setOption({
+      tooltip: { trigger: 'axis' },
+      grid: { left: 40, right: 15, top: 20, bottom: 25 },
+      xAxis: Object.assign({ type: 'category', data: ['直营店', '电商平台', '经销商', '直播带货', '企业采购'] }, wxn_axisStyle),
+      yAxis: Object.assign({ type: 'value' }, wxn_axisStyle),
+      series: [{
+        type: 'bar',
+        data: [
+          { value: 1360, itemStyle: { color: '#3aa0ff' } },
+          { value: 1980, itemStyle: { color: '#36e2a5' } },
+          { value: 1520, itemStyle: { color: '#ffd166' } },
+          { value: 1140, itemStyle: { color: '#ff7a9e' } },
+          { value: 860,  itemStyle: { color: '#b285ff' } }
+        ],
+        barWidth: '45%',
+        label: { show: true, position: 'top', color: '#8fb6e8', fontSize: 11 }
+      }]
+    });
+
+    // ===== 3. 中国地图：区域销售分布（地理信息图）=====
+    var wxn_provinceData = [
+      { name: '广东省', value: 2860 }, { name: '江苏省', value: 2340 },
+      { name: '浙江省', value: 2180 }, { name: '山东省', value: 1920 },
+      { name: '四川省', value: 1650 }, { name: '河南省', value: 1480 },
+      { name: '湖北省', value: 1320 }, { name: '福建省', value: 1210 },
+      { name: '湖南省', value: 1150 }, { name: '上海市', value: 1080 },
+      { name: '北京市', value: 1040 }, { name: '安徽省', value: 960 },
+      { name: '河北省', value: 890 },  { name: '陕西省', value: 820 },
+      { name: '重庆市', value: 760 },  { name: '江西省', value: 690 },
+      { name: '辽宁省', value: 650 },  { name: '云南省', value: 610 },
+      { name: '广西壮族自治区', value: 570 }, { name: '山西省', value: 520 },
+      { name: '贵州省', value: 480 },  { name: '天津市', value: 450 },
+      { name: '黑龙江省', value: 410 }, { name: '吉林省', value: 390 },
+      { name: '内蒙古自治区', value: 370 }, { name: '新疆维吾尔自治区', value: 330 },
+      { name: '甘肃省', value: 290 },  { name: '海南省', value: 260 },
+      { name: '宁夏回族自治区', value: 210 }, { name: '青海省', value: 180 },
+      { name: '西藏自治区', value: 120 }, { name: '香港特别行政区', value: 150 },
+      { name: '澳门特别行政区', value: 60 }, { name: '台湾省', value: 170 }
+    ];
+    var wxn_geoCoord = {};
+    wxn_provinceData.forEach(function (wxn_item) { wxn_geoCoord[wxn_item.name] = null; });
+
+    fetch('./cdn/china.json')
+      .then(function (wxn_res) { return wxn_res.json(); })
+      .then(function (wxn_chinaJson) {
+        echarts.registerMap('wxn_china', wxn_chinaJson);
+        // 从 geoJSON 中提取各省份中心坐标，用于涟漪散点
+        wxn_chinaJson.features.forEach(function (wxn_f) {
+          if (wxn_f.properties.center) {
+            wxn_geoCoord[wxn_f.properties.name] = wxn_f.properties.center;
+          }
+        });
+        var wxn_scatterData = wxn_provinceData
+          .filter(function (wxn_d) { return wxn_geoCoord[wxn_d.name]; })
+          .map(function (wxn_d) {
+            return { name: wxn_d.name, value: wxn_geoCoord[wxn_d.name].concat(wxn_d.value) };
+          });
+
+        var wxn_mapChart = echarts.init(document.getElementById('wxn_map'));
+        wxn_mapChart.setOption({
+          tooltip: {
+            trigger: 'item',
+            formatter: function (wxn_p) {
+              return wxn_p.name + '：' + (wxn_p.value && !isNaN(wxn_p.value) ? wxn_p.value + ' 万元' : '暂无数据');
+            }
+          },
+          visualMap: {
+            min: 0, max: 3000,
+            left: 10, bottom: 10,
+            text: ['高', '低'],
+            calculable: true,
+            textStyle: { color: '#8fb6e8', fontSize: 11 },
+            inRange: { color: ['#0d2b5e', '#1e5bb8', '#3aa0ff', '#7fd8ff', '#f2e28a'] }
+          },
+          geo: {
+            map: 'wxn_china',
+            roam: true,
+            zoom: 1.15,
+            top: 40, bottom: 15,
+            label: { show: false },
+            itemStyle: {
+              areaColor: '#0d2b5e',
+              borderColor: '#3aa0ff',
+              borderWidth: 1,
+              shadowColor: 'rgba(58, 160, 255, .5)',
+              shadowBlur: 12
+            },
+            emphasis: {
+              label: { show: true, color: '#fff' },
+              itemStyle: { areaColor: '#36e2a5' }
+            }
+          },
+          series: [{
+            name: '销售额',
+            type: 'effectScatter',
+            coordinateSystem: 'geo',
+            data: wxn_scatterData,
+            symbolSize: function (wxn_val) { return Math.max(5, wxn_val[2] / 90); },
+            rippleEffect: { brushType: 'stroke', scale: 2.5 },
+            itemStyle: { color: '#ffd166' },
+            label: { show: false }
+          }]
+        });
+        window.addEventListener('resize', function () { wxn_mapChart.resize(); });
+        // 汇总总销售额 KPI
+        var wxn_total = wxn_provinceData.reduce(function (wxn_s, wxn_d) { return wxn_s + wxn_d.value; }, 0);
+        var wxn_el = document.getElementById('wxn_total');
+        var wxn_cur = 0;
+        var wxn_timer = setInterval(function () {
+          wxn_cur += Math.ceil(wxn_total / 60);
+          if (wxn_cur >= wxn_total) { wxn_cur = wxn_total; clearInterval(wxn_timer); }
+          wxn_el.textContent = wxn_cur.toLocaleString();
+        }, 30);
+      })
+      .catch(function (wxn_err) { console.error('地图数据加载失败：', wxn_err); });
+
+    // ===== 4. 仪表盘：目标完成度 =====
+    var wxn_gaugeChart = echarts.init(document.getElementById('wxn_gauge'));
+    wxn_gaugeChart.setOption({
+      series: [{
+        type: 'gauge',
+        startAngle: 210, endAngle: -30,
+        min: 0, max: 100,
+        progress: { show: true, width: 14, itemStyle: { color: '#36e2a5' } },
+        axisLine: { lineStyle: { width: 14, color: [[1, '#14407f']] } },
+        axisTick: { show: false },
+        splitLine: { length: 8, lineStyle: { color: '#2a5ca8' } },
+        axisLabel: { color: '#8fb6e8', fontSize: 10, distance: 18 },
+        pointer: { itemStyle: { color: '#ffd166' } },
+        anchor: { show: true, size: 12, itemStyle: { color: '#ffd166' } },
+        title: { color: '#8fb6e8', fontSize: 13, offsetCenter: [0, '62%'] },
+        detail: {
+          valueAnimation: true,
+          fontSize: 26,
+          color: '#ffd166',
+          formatter: '{value}%',
+          offsetCenter: [0, '38%']
+        },
+        data: [{ value: 87.5, name: '年度目标完成率' }]
+      }]
+    });
+
+    // ===== 5. 饼图：品类占比 =====
+    var wxn_pieChart = echarts.init(document.getElementById('wxn_pie'));
+    wxn_pieChart.setOption({
+      tooltip: { trigger: 'item', formatter: '{b}：{c} 万 ({d}%)' },
+      legend: {
+        orient: 'vertical', right: 5, top: 'center',
+        textStyle: { color: '#8fb6e8', fontSize: 11 }
+      },
+      color: ['#3aa0ff', '#36e2a5', '#ffd166', '#ff7a9e', '#b285ff'],
+      series: [{
+        type: 'pie',
+        radius: ['42%', '68%'],
+        center: ['38%', '52%'],
+        itemStyle: { borderColor: '#040b1c', borderWidth: 2 },
+        label: { show: false },
+        data: [
+          { value: 2860, name: '电子产品' },
+          { value: 2140, name: '家居日用' },
+          { value: 1780, name: '服装鞋帽' },
+          { value: 1120, name: '食品生鲜' },
+          { value: 860,  name: '其它品类' }
+        ]
+      }]
+    });
+
+    // ===== 6. 雷达图：区域能力评估 =====
+    var wxn_radarChart = echarts.init(document.getElementById('wxn_radar'));
+    wxn_radarChart.setOption({
+      tooltip: {},
+      legend: {
+        data: ['华东区', '华南区'],
+        textStyle: { color: '#8fb6e8', fontSize: 11 }, top: 0
+      },
+      radar: {
+        indicator: [
+          { name: '销售额', max: 100 }, { name: '增长率', max: 100 },
+          { name: '客单价', max: 100 }, { name: '复购率', max: 100 },
+          { name: '覆盖城市', max: 100 }, { name: '服务满意度', max: 100 }
+        ],
+        radius: '62%',
+        center: ['50%', '56%'],
+        axisName: { color: '#8fb6e8', fontSize: 11 },
+        splitLine: { lineStyle: { color: 'rgba(42, 92, 168, .5)' } },
+        splitArea: { areaStyle: { color: ['rgba(10, 30, 74, .3)', 'rgba(20, 64, 127, .2)'] } },
+        axisLine: { lineStyle: { color: 'rgba(42, 92, 168, .5)' } }
+      },
+      series: [{
+        type: 'radar',
+        data: [
+          {
+            value: [92, 78, 85, 70, 88, 90],
+            name: '华东区',
+            lineStyle: { color: '#3aa0ff', width: 2 },
+            areaStyle: { color: 'rgba(58, 160, 255, .3)' },
+            itemStyle: { color: '#3aa0ff' }
+          },
+          {
+            value: [84, 90, 76, 82, 72, 86],
+            name: '华南区',
+            lineStyle: { color: '#36e2a5', width: 2 },
+            areaStyle: { color: 'rgba(54, 226, 165, .3)' },
+            itemStyle: { color: '#36e2a5' }
+          }
+        ]
+      }]
+    });
+
+    // 窗口尺寸变化时自适应
+    window.addEventListener('resize', function () {
+      wxn_lineChart.resize();
+      wxn_barChart.resize();
+      wxn_gaugeChart.resize();
+      wxn_pieChart.resize();
+      wxn_radarChart.resize();
+    });
+  </script>
+</body>
+</html>
