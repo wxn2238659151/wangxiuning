@@ -1,0 +1,9 @@
+# Agent 工作数据（不上传）
+.workbuddy/
+
+# 临时报告数据（103MB，不上传）
+report_tmp/
+
+# 系统缩略图缓存
+Thumbs.db
+.DS_Store

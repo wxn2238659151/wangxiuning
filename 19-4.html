@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-11-05，功能名称：ECharts 数据可视化（折线图与 3D 地球） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>19-4 ECharts 数据可视化</title>
+  <link rel="stylesheet" href="./font/iconfont.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: #f5f6fa;
+      color: #2d3436;
+      min-height: 100vh;
+    }
+
+    .wxn_container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    /* 顶部标题栏 */
+    .wxn_header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #4a7dfa, #7b5cf0);
+      color: #fff;
+      border-radius: 12px;
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(74, 125, 250, 0.25);
+    }
+
+    .wxn_header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .wxn_header-left .iconfont {
+      font-size: 28px;
+    }
+
+    .wxn_header h1 {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .wxn_header-tip {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    /* 图表卡片 */
+    .wxn_card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(45, 52, 54, 0.08);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .wxn_card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #4a7dfa;
+    }
+
+    .wxn_card-title .iconfont {
+      font-size: 18px;
+    }
+
+    .wxn_chart {
+      width: 100%;
+      height: 420px;
+    }
+
+    .wxn_desc {
+      font-size: 13px;
+      color: #636e72;
+      line-height: 1.8;
+      margin-top: 12px;
+      border-top: 1px dashed #dfe6e9;
+      padding-top: 10px;
+    }
+
+    /* 返回首页 */
+    .wxn_back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #4a7dfa;
+      text-decoration: none;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .wxn_back:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="wxn_container">
+    <div class="wxn_header">
+      <div class="wxn_header-left">
+        <i class="iconfont icon-faxian"></i>
+        <h1>ECharts 数据可视化实验</h1>
+      </div>
+      <span class="wxn_header-tip">折线图 &amp; 3D 地球（本地 cdn 文件加载）</span>
+    </div>
+
+    <!-- 图一：折线图 -->
+    <div class="wxn_card">
+      <div class="wxn_card-title">
+        <i class="iconfont icon-diandu"></i>
+        一周编程学习时长统计（小时）
+      </div>
+      <div id="wxn_lineChart" class="wxn_chart"></div>
+      <p class="wxn_desc">
+        使用 echarts 折线图展示一周内每天的学习时长变化，平滑曲线 + 渐变面积填充，
+        支持鼠标悬停查看数值、点击图例切换显示。
+      </p>
+    </div>
+
+    <!-- 图二：3D 地球 -->
+    <div class="wxn_card">
+      <div class="wxn_card-title">
+        <i class="iconfont icon-faxian"></i>
+        全球航线模拟（echarts-gl 3D 地球）
+      </div>
+      <div id="wxn_globeChart" class="wxn_chart"></div>
+      <p class="wxn_desc">
+        使用 echarts-gl 的 globe 组件渲染 3D 地球（本地贴图纹理），地球自动旋转，
+        并叠加 lines3D 飞线效果模拟从北京出发的全球航线。按住鼠标左键可拖拽旋转，滚轮缩放。
+      </p>
+    </div>
+
+    <a class="wxn_back" href="./index.html"><i class="iconfont icon-gengduo"></i>返回首页</a>
+  </div>
+
+  <script src="./cdn/echarts.min.js"></script>
+  <script src="./cdn/echarts-gl.min.js"></script>
+  <script>
+    var wxn_lineDom = document.getElementById('wxn_lineChart');
+    var wxn_lineChart = echarts.init(wxn_lineDom);
+
+    // 折线图：一周学习时长
+    var wxn_lineOption = {
+      title: {
+        text: '周一 ~ 周日学习时长（小时）',
+        left: 'center',
+        textStyle: { fontSize: 15, color: '#2d3436' }
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'cross' }
+      },
+      legend: {
+        data: ['学习时长', '上个月同期'],
+        top: 32
+      },
+      grid: {
+        left: 50,
+        right: 30,
+        top: 80,
+        bottom: 40
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+      },
+      yAxis: {
+        type: 'value',
+        name: '小时',
+        min: 0,
+        max: 10
+      },
+      series: [
+        {
+          name: '学习时长',
+          type: 'line',
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 8,
+          data: [3.5, 4.2, 2.8, 5.6, 6.1, 8.0, 7.2],
+          lineStyle: { width: 3, color: '#4a7dfa' },
+          itemStyle: { color: '#4a7dfa' },
+          label: { show: true, position: 'top' },
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: 'rgba(74, 125, 250, 0.35)' },
+              { offset: 1, color: 'rgba(74, 125, 250, 0.02)' }
+            ])
+          }
+        },
+        {
+          name: '上个月同期',
+          type: 'line',
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 6,
+          data: [2.5, 3.0, 3.4, 4.0, 4.5, 5.0, 5.6],
+          lineStyle: { width: 2, type: 'dashed', color: '#7b5cf0' },
+          itemStyle: { color: '#7b5cf0' }
+        }
+      ]
+    };
+    wxn_lineChart.setOption(wxn_lineOption);
+
+    // 3D 地球：全球航线
+    var wxn_globeDom = document.getElementById('wxn_globeChart');
+    var wxn_globeChart = echarts.init(wxn_globeDom);
+
+    // 从北京出发的航线数据
+    var wxn_flightRoutes = [
+      { coords: [[116.46, 39.92], [139.69, 35.68]] },      // 北京 - 东京
+      { coords: [[116.46, 39.92], [103.85, 1.29]] },       // 北京 - 新加坡
+      { coords: [[116.46, 39.92], [151.20, -33.87]] },     // 北京 - 悉尼
+      { coords: [[116.46, 39.92], [-0.13, 51.50]] },       // 北京 - 伦敦
+      { coords: [[116.46, 39.92], [-74.00, 40.71]] },      // 北京 - 纽约
+      { coords: [[116.46, 39.92], [-118.24, 34.05]] },     // 北京 - 洛杉矶
+      { coords: [[116.46, 39.92], [2.35, 48.85]] },        // 北京 - 巴黎
+      { coords: [[116.46, 39.92], [37.61, 55.75]] },       // 北京 - 莫斯科
+      { coords: [[116.46, 39.92], [-43.17, -22.90]] },     // 北京 - 里约热内卢
+      { coords: [[116.46, 39.92], [31.23, 30.04]] }        // 北京 - 开罗
+    ];
+
+    var wxn_globeOption = {
+      globe: {
+        baseTexture: './cdn/wxn_earth.jpg',
+        shading: 'lambert',
+        light: {
+          main: {
+            intensity: 1.6,
+            shadow: true
+          },
+          ambient: {
+            intensity: 0.3
+          }
+        },
+        viewControl: {
+          autoRotate: true,
+          autoRotateSpeed: 0.6,
+          targetCoord: { longitude: 116.46, latitude: 39.92 }
+        }
+      },
+      series: [
+        {
+          name: '全球航线',
+          type: 'lines3D',
+          coordinateSystem: 'globe',
+          effect: {
+            show: true,
+            period: 5,
+            trailWidth: 2,
+            trailLength: 0.4,
+            trailOpacity: 1,
+            trailColor: 'rgba(255, 200, 80, 1)'
+          },
+          lineStyle: {
+            width: 1,
+            color: 'rgba(255, 120, 60, 0.7)',
+            opacity: 0.5
+          },
+          blendMode: 'lighter',
+          data: wxn_flightRoutes
+        }
+      ]
+    };
+    wxn_globeChart.setOption(wxn_globeOption);
+
+    // 窗口尺寸变化时自适应
+    window.addEventListener('resize', function () {
+      wxn_lineChart.resize();
+      wxn_globeChart.resize();
+    });
+  </script>
+</body>
+</html>
