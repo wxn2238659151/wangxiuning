@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-11-05，功能名称：基于 Canvas 的电商系统全站系统架构图 -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>19-2 Canvas 电商系统架构图</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: #f1f5f9;
+      min-height: 100vh;
+      color: #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+    }
+    .wxn_page-title {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #0f172a;
+    }
+    .wxn_page-desc {
+      font-size: 14px;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+    .wxn_canvas-box {
+      position: relative;
+      width: 980px;
+      max-width: 96vw;
+      height: 640px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(15, 23, 42, .15);
+      background: #fff;
+      border: 1px solid #e2e8f0;
+    }
+    canvas { display: block; width: 100%; height: 100%; }
+    .wxn_ctrl {
+      margin-top: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 14px;
+      color: #475569;
+    }
+    .wxn_ctrl label { display: flex; align-items: center; gap: 6px; }
+    .wxn_ctrl input[type="range"] { accent-color: #2563eb; }
+    .wxn_btn {
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      background: #2563eb;
+      color: #fff;
+      transition: background .2s;
+    }
+    .wxn_btn:hover { background: #1d4ed8; }
+    .wxn_btn--ghost { background: #64748b; }
+    .wxn_btn--ghost:hover { background: #475569; }
+    .wxn_back {
+      margin-top: 24px;
+      color: #2563eb;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .wxn_back:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1 class="wxn_page-title">电商系统全站架构图（Canvas 绘制）</h1>
+  <p class="wxn_page-desc">纯 Canvas 绘制的典型电商系统分层架构：请求自上而下流动，高亮粒子展示调用链路</p>
+
+  <div class="wxn_canvas-box">
+    <canvas id="wxn_canvas"></canvas>
+  </div>
+
+  <div class="wxn_ctrl">
+    <label>缩放 <input id="wxn_zoom" type="range" min="60" max="140" value="100"></label>
+    <label><input id="wxn_flow" type="checkbox" checked> 显示流动粒子</label>
+    <button class="wxn_btn wxn_btn--ghost" id="wxn_btnExport">导出 PNG 图片</button>
+  </div>
+
+  <a class="wxn_back" href="./index.html">← 返回首页</a>
+
+  <script>
+    (function () {
+      var wxn_canvas = document.getElementById('wxn_canvas');
+      var wxn_ctx = wxn_canvas.getContext('2d');
+
+      function wxn_resize() {
+        var wxn_rect = wxn_canvas.parentElement.getBoundingClientRect();
+        wxn_canvas.width = wxn_rect.width;
+        wxn_canvas.height = wxn_rect.height;
+      }
+      wxn_resize();
+      window.addEventListener('resize', wxn_resize);
+
+      /* ---------------- 架构数据定义 ---------------- */
+      // 每层一个面板，层内多个节点
+      var wxn_layers = [
+        {
+          name: '用户层', sub: '多端接入', color: '#0ea5e9', bg: '#e0f2fe',
+          nodes: ['PC Web 商城', '移动 App', '微信小程序', 'H5 商城']
+        },
+        {
+          name: '接入层', sub: '流量入口', color: '#7c3aed', bg: '#ede9fe',
+          nodes: ['CDN 静态加速', 'DNS 智能解析', '负载均衡 Nginx', 'API 网关（鉴权/限流）']
+        },
+        {
+          name: '业务服务层', sub: '微服务集群', color: '#16a34a', bg: '#dcfce7',
+          nodes: ['用户服务', '商品服务', '订单服务', '支付服务', '库存服务', '营销/优惠券服务']
+        },
+        {
+          name: '中间件层', sub: '公共能力', color: '#ea580c', bg: '#ffedd5',
+          nodes: ['缓存 Redis', '消息队列 MQ', '搜索 Elasticsearch', '注册中心 Nacos', '定时任务调度']
+        },
+        {
+          name: '数据存储层', sub: '持久化', color: '#be123c', bg: '#ffe4e6',
+          nodes: ['MySQL 主从集群', 'Redis 持久化', 'OSS 对象存储', '数据仓库 / BI']
+        },
+        {
+          name: '基础设施与运维', sub: '支撑保障', color: '#475569', bg: '#e2e8f0',
+          nodes: ['Docker / K8s 容器编排', '监控告警 Prometheus', '日志中心 ELK', 'CI/CD 持续集成']
+        }
+      ];
+
+      // 主调用链路（层索引, 层内节点索引），粒子沿它流动
+      var wxn_flowPath = [
+        [0, 1], [1, 3], [2, 2], [3, 1], [4, 0]
+      ];
+
+      var wxn_zoom = 1;
+      var wxn_showFlow = true;
+      var wxn_particles = [];
+      var wxn_frame = 0;
+
+      // 预计算布局：把每层、每个节点换算为归一化坐标（0~1），绘制时再乘实际尺寸
+      var wxn_layout = [];
+      (function wxn_buildLayout() {
+        var wxn_marginX = 0.06, wxn_top = 0.03;
+        var wxn_layerH = 0.135, wxn_gap = 0.026;
+        wxn_layers.forEach(function (layer, li) {
+          var wxn_y = wxn_top + li * (wxn_layerH + wxn_gap);
+          var wxn_lx = wxn_marginX, wxn_lw = 1 - wxn_marginX * 2;
+          // 层内节点均分
+          var wxn_n = layer.nodes.length;
+          var wxn_innerPad = 0.012;
+          var wxn_nodeW = (wxn_lw - wxn_innerPad * (wxn_n + 1)) / wxn_n;
+          var wxn_nodes = layer.nodes.map(function (name, ni) {
+            return {
+              name: name,
+              x: wxn_lx + wxn_innerPad + ni * (wxn_nodeW + wxn_innerPad),
+              y: wxn_y + 0.042,
+              w: wxn_nodeW,
+              h: wxn_layerH - 0.052
+            };
+          });
+          wxn_layout.push({ y: wxn_y, h: wxn_layerH, x: wxn_lx, w: wxn_lw, nodes: wxn_nodes });
+        });
+      })();
+
+      /* ---------------- 绘制辅助函数 ---------------- */
+      function wxn_roundRect(c, x, y, w, h, r) {
+        c.beginPath();
+        c.moveTo(x + r, y);
+        c.arcTo(x + w, y, x + w, y + h, r);
+        c.arcTo(x + w, y + h, x, y + h, r);
+        c.arcTo(x, y + h, x, y, r);
+        c.arcTo(x, y, x + w, y, r);
+        c.closePath();
+      }
+
+      function wxn_draw() {
+        var wxn_W = wxn_canvas.width, wxn_H = wxn_canvas.height;
+        wxn_ctx.clearRect(0, 0, wxn_W, wxn_H);
+        wxn_ctx.save();
+        wxn_ctx.translate(wxn_W / 2, 0);
+        wxn_ctx.scale(wxn_zoom, wxn_zoom);
+        wxn_ctx.translate(-wxn_W / 2, 0);
+
+        // 标题
+        wxn_ctx.textAlign = 'center';
+        wxn_ctx.textBaseline = 'middle';
+        wxn_ctx.fillStyle = '#0f172a';
+        wxn_ctx.font = 'bold 20px "Microsoft YaHei", sans-serif';
+        wxn_ctx.fillText('电商系统全站架构图', wxn_W / 2, 26);
+
+        wxn_layers.forEach(function (layer, li) {
+          var wxn_L = wxn_layout[li];
+          var wxn_x = wxn_L.x * wxn_W, wxn_y = wxn_L.y * wxn_H + 34;
+          var wxn_w = wxn_L.w * wxn_W, wxn_h = wxn_L.h * wxn_H;
+
+          // 层背景面板
+          wxn_ctx.fillStyle = layer.bg;
+          wxn_roundRect(wxn_ctx, wxn_x, wxn_y, wxn_w, wxn_h, 10);
+          wxn_ctx.fill();
+          wxn_ctx.strokeStyle = layer.color;
+          wxn_ctx.lineWidth = 1.5;
+          wxn_ctx.stroke();
+
+          // 层名称（左侧竖排标签带）
+          wxn_ctx.save();
+          wxn_ctx.fillStyle = layer.color;
+          wxn_roundRect(wxn_ctx, wxn_x, wxn_y, 30, wxn_h, 10);
+          wxn_ctx.fill();
+          wxn_ctx.fillStyle = '#fff';
+          wxn_ctx.font = 'bold 13px "Microsoft YaHei", sans-serif';
+          wxn_ctx.fillText(layer.name.slice(0, 2), wxn_x + 15, wxn_y + wxn_h / 2);
+          wxn_ctx.fillText(layer.name.slice(2), wxn_x + 15, wxn_y + wxn_h / 2);
+          wxn_ctx.restore();
+
+          // 层名称横排 + 子标题
+          wxn_ctx.textAlign = 'left';
+          wxn_ctx.fillStyle = layer.color;
+          wxn_ctx.font = 'bold 13px "Microsoft YaHei", sans-serif';
+          wxn_ctx.fillText(layer.name + '（' + layer.sub + '）', wxn_x + 40, wxn_y + 12);
+
+          // 层内节点
+          wxn_L.nodes.forEach(function (node, ni) {
+            var wxn_nx = node.x * wxn_W, wxn_ny = node.y * wxn_H + 34;
+            var wxn_nw = node.w * wxn_W, wxn_nh = node.h * wxn_H;
+            wxn_ctx.fillStyle = '#fff';
+            wxn_roundRect(wxn_ctx, wxn_nx, wxn_ny, wxn_nw, wxn_nh, 6);
+            wxn_ctx.fill();
+            wxn_ctx.strokeStyle = layer.color;
+            wxn_ctx.lineWidth = 1;
+            wxn_ctx.stroke();
+            wxn_ctx.fillStyle = '#1e293b';
+            wxn_ctx.font = '12px "Microsoft YaHei", sans-serif';
+            wxn_ctx.textAlign = 'center';
+            // 节点名过长时分两行
+            var wxn_label = node.name;
+            if (wxn_label.length > 8) {
+              wxn_ctx.fillText(wxn_label.slice(0, Math.ceil(wxn_label.length / 2)), wxn_nx + wxn_nw / 2, wxn_ny + wxn_nh / 2 - 7);
+              wxn_ctx.fillText(wxn_label.slice(Math.ceil(wxn_label.length / 2)), wxn_nx + wxn_nw / 2, wxn_ny + wxn_nh / 2 + 9);
+            } else {
+              wxn_ctx.fillText(wxn_label, wxn_nx + wxn_nw / 2, wxn_ny + wxn_nh / 2);
+            }
+          });
+
+          // 层与层之间的向下箭头（示意调用方向）
+          if (li < wxn_layers.length - 1) {
+            var wxn_ay = wxn_y + wxn_h, wxn_by = (wxn_layout[li + 1].y) * wxn_H + 34;
+            wxn_ctx.strokeStyle = '#94a3b8';
+            wxn_ctx.fillStyle = '#94a3b8';
+            wxn_ctx.lineWidth = 2;
+            [0.3, 0.5, 0.7].forEach(function (fx) {
+              var wxn_ax = (wxn_x + wxn_w * fx);
+              wxn_ctx.beginPath();
+              wxn_ctx.moveTo(wxn_ax, wxn_ay + 2);
+              wxn_ctx.lineTo(wxn_ax, wxn_by - 6);
+              wxn_ctx.stroke();
+              // 箭头三角
+              wxn_ctx.beginPath();
+              wxn_ctx.moveTo(wxn_ax, wxn_by - 2);
+              wxn_ctx.lineTo(wxn_ax - 4, wxn_by - 8);
+              wxn_ctx.lineTo(wxn_ax + 4, wxn_by - 8);
+              wxn_ctx.closePath();
+              wxn_ctx.fill();
+            });
+          }
+          wxn_ctx.textAlign = 'center';
+        });
+
+        // 核心调用链路（虚线 + 流动粒子）：用户层→接入层→订单服务→MQ→MySQL
+        if (wxn_showFlow) {
+          var wxn_pts = wxn_flowPath.map(function (p) {
+            var wxn_L = wxn_layout[p[0]];
+            var wxn_nd = wxn_L.nodes[p[1]];
+            return {
+              x: (wxn_nd.x + wxn_nd.w / 2) * wxn_W,
+              y: wxn_nd.y * wxn_H + 34 + wxn_nd.h * wxn_H / 2
+            };
+          });
+          // 虚线折线
+          wxn_ctx.setLineDash([6, 5]);
+          wxn_ctx.strokeStyle = 'rgba(37, 99, 235, 0.55)';
+          wxn_ctx.lineWidth = 2;
+          wxn_ctx.beginPath();
+          wxn_ctx.moveTo(wxn_pts[0].x, wxn_pts[0].y);
+          wxn_pts.slice(1).forEach(function (p) { wxn_ctx.lineTo(p.x, p.y); });
+          wxn_ctx.stroke();
+          wxn_ctx.setLineDash([]);
+
+          // 粒子沿链路流动
+          wxn_frame += 1;
+          if (wxn_frame % 26 === 0) wxn_particles.push({ t: 0 });
+          wxn_particles.forEach(function (p) { p.t += 0.006; });
+          wxn_particles = wxn_particles.filter(function (p) { return p.t <= 1; });
+          wxn_particles.forEach(function (p) {
+            // 折线总长按段插值
+            var wxn_total = wxn_pts.length - 1;
+            var wxn_f = p.t * wxn_total;
+            var wxn_seg = Math.min(Math.floor(wxn_f), wxn_total - 1);
+            var wxn_k = wxn_f - wxn_seg;
+            var wxn_a = wxn_pts[wxn_seg], wxn_b = wxn_pts[wxn_seg + 1];
+            var wxn_px = wxn_a.x + (wxn_b.x - wxn_a.x) * wxn_k;
+            var wxn_py = wxn_a.y + (wxn_b.y - wxn_a.y) * wxn_k;
+            wxn_ctx.beginPath();
+            wxn_ctx.arc(wxn_px, wxn_py, 4, 0, Math.PI * 2);
+            wxn_ctx.fillStyle = '#2563eb';
+            wxn_ctx.shadowColor = '#2563eb';
+            wxn_ctx.shadowBlur = 8;
+            wxn_ctx.fill();
+            wxn_ctx.shadowBlur = 0;
+          });
+        }
+
+        wxn_ctx.restore();
+        requestAnimationFrame(wxn_draw);
+      }
+      requestAnimationFrame(wxn_draw);
+
+      /* ---------------- 交互控制 ---------------- */
+      var wxn_zoomInput = document.getElementById('wxn_zoom');
+      wxn_zoomInput.addEventListener('input', function () {
+        wxn_zoom = Number(wxn_zoomInput.value) / 100;
+      });
+      var wxn_flowCheck = document.getElementById('wxn_flow');
+      wxn_flowCheck.addEventListener('change', function () {
+        wxn_showFlow = wxn_flowCheck.checked;
+      });
+      document.getElementById('wxn_btnExport').addEventListener('click', function () {
+        var wxn_a = document.createElement('a');
+        wxn_a.download = '电商系统架构图.png';
+        wxn_a.href = wxn_canvas.toDataURL('image/png');
+        wxn_a.click();
+      });
+    })();
+  </script>
+</body>
+</html>

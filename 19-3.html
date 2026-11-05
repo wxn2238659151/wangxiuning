@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<!-- 姓名：王秀宁，日期：2026-11-05，功能名称：基于知识库的智能客服系统架构图（SVG，科研方向） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>19-3 基于知识库的智能客服系统架构图（科研方向）</title>
+  <link rel="stylesheet" href="./font/iconfont.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: #f5f6fa;
+      color: #2d3436;
+      min-height: 100vh;
+    }
+
+    .wxn_container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    /* 顶部标题栏 */
+    .wxn_header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #4a69bd, #6a89cc);
+      color: #fff;
+      border-radius: 12px;
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(74, 105, 189, 0.25);
+    }
+
+    .wxn_header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .wxn_header-left .iconfont {
+      font-size: 28px;
+    }
+
+    .wxn_header h1 {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .wxn_header-tip {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    /* 章节卡片 */
+    .wxn_section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 10px rgba(45, 52, 54, 0.06);
+    }
+
+    .wxn_section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #4a69bd;
+    }
+
+    .wxn_section-title .iconfont {
+      font-size: 20px;
+    }
+
+    .wxn_intro p {
+      font-size: 15px;
+      line-height: 1.9;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .wxn_intro strong {
+      color: #4a69bd;
+    }
+
+    /* SVG 架构图容器 */
+    .wxn_svg-wrap {
+      overflow-x: auto;
+      border: 1px dashed #dcdde1;
+      border-radius: 10px;
+      padding: 12px;
+      background: #fafbfc;
+    }
+
+    .wxn_svg-wrap svg {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* 架构图点击提示 */
+    .wxn_svg-tip {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #888;
+      text-align: center;
+    }
+
+    /* 点击图层后显示的说明框 */
+    .wxn_layer-detail {
+      margin-top: 16px;
+      border-left: 4px solid #4a69bd;
+      background: #f1f4fb;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #444;
+      min-height: 60px;
+    }
+
+    .wxn_layer-detail h4 {
+      color: #4a69bd;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    /* 科研方向列表 */
+    .wxn_research-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .wxn_research-item {
+      border: 1px solid #e6e9f2;
+      border-radius: 10px;
+      padding: 18px;
+      transition: transform 0.25s, box-shadow 0.25s;
+      background: #fcfdff;
+    }
+
+    .wxn_research-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(74, 105, 189, 0.15);
+      border-color: #4a69bd;
+    }
+
+    .wxn_research-item h3 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      color: #4a69bd;
+      margin-bottom: 10px;
+    }
+
+    .wxn_research-item h3 .wxn_num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #4a69bd;
+      color: #fff;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .wxn_research-item p {
+      font-size: 13.5px;
+      line-height: 1.8;
+      color: #666;
+    }
+
+    /* 返回首页 */
+    .wxn_back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      color: #4a69bd;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .wxn_back:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      .wxn_header {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wxn_container">
+    <!-- 顶部标题 -->
+    <header class="wxn_header">
+      <div class="wxn_header-left">
+        <i class="iconfont icon-diannao"></i>
+        <h1>19-3 基于知识库的智能客服系统</h1>
+      </div>
+      <span class="wxn_header-tip">科研方向 · 系统架构图（SVG 手绘矢量版）</span>
+    </header>
+
+    <!-- 一、项目概述 -->
+    <section class="wxn_section wxn_intro">
+      <h2 class="wxn_section-title"><i class="iconfont icon-xie"></i>一、项目概述</h2>
+      <p>
+        本页面展示<strong>基于知识库的智能客服系统</strong>的整体架构设计，属于<strong>科研方向</strong>课题。
+        系统以<strong>知识库（FAQ + 文档 + 知识图谱 + 向量库）</strong>为核心，结合自然语言理解（NLU）、
+        多轮对话管理（DM）与检索增强生成（RAG）技术，实现用户问题的自动理解、知识检索与精准回答。
+      </p>
+      <p>
+        架构自上而下分为<strong>用户接入层、服务接入层、智能对话核心层、知识库层、数据与支撑层</strong>五层，
+        并通过<strong>"用户评价 → 数据回流 → 模型/知识更新"</strong>形成闭环，这也是本课题的重点研究内容。
+      </p>
+    </section>
+
+    <!-- 二、系统架构图（SVG） -->
+    <section class="wxn_section">
+      <h2 class="wxn_section-title"><i class="iconfont icon-jiegou"></i>二、系统架构图（SVG）</h2>
+      <div class="wxn_svg-wrap">
+        <svg id="wxn_archSvg" width="960" height="700" viewBox="0 0 960 700"
+             xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="基于知识库的智能客服系统架构图">
+          <defs>
+            <marker id="wxn_arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+              <path d="M0,0 L10,4 L0,8 Z" fill="#4a69bd"></path>
+            </marker>
+            <marker id="wxn_arrowGreen" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+              <path d="M0,0 L10,4 L0,8 Z" fill="#38a169"></path>
+            </marker>
+            <marker id="wxn_arrowPurple" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+              <path d="M0,0 L10,4 L0,8 Z" fill="#6b46c1"></path>
+            </marker>
+            <filter id="wxn_shadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#2d3436" flood-opacity="0.15"></feDropShadow>
+            </filter>
+          </defs>
+
+          <rect x="0" y="0" width="960" height="700" fill="#fafbfc" rx="10"></rect>
+
+          <!-- ========== 1 用户接入层 ========== -->
+          <g class="wxn_layer" data-layer="user" style="cursor:pointer;">
+            <rect x="60" y="24" width="800" height="86" rx="10" fill="#e8f0fe"
+                  stroke="#4a69bd" stroke-width="1.5" filter="url(#wxn_shadow)"></rect>
+            <text x="88" y="54" font-size="15" font-weight="bold" fill="#4a69bd">1 用户接入层</text>
+            <text x="88" y="74" font-size="10.5" fill="#7a86a8">Channel Layer</text>
+            <g font-size="13" fill="#2d3436" text-anchor="middle">
+              <rect x="220" y="44" width="105" height="44" rx="8" fill="#ffffff" stroke="#4a69bd"></rect>
+              <text x="272" y="71">Web 网页</text>
+              <rect x="360" y="44" width="105" height="44" rx="8" fill="#ffffff" stroke="#4a69bd"></rect>
+              <text x="412" y="71">App 客户端</text>
+              <rect x="500" y="44" width="105" height="44" rx="8" fill="#ffffff" stroke="#4a69bd"></rect>
+              <text x="552" y="71">微信小程序</text>
+              <rect x="640" y="44" width="105" height="44" rx="8" fill="#ffffff" stroke="#4a69bd"></rect>
+              <text x="692" y="71">人工坐席</text>
+            </g>
+          </g>
+
+          <line x1="460" y1="110" x2="460" y2="146" stroke="#4a69bd" stroke-width="2"
+                marker-end="url(#wxn_arrow)"></line>
+          <text x="476" y="134" font-size="11" fill="#7a86a8">用户提问 / 追问</text>
+
+          <!-- ========== 2 服务接入层 ========== -->
+          <g class="wxn_layer" data-layer="gateway" style="cursor:pointer;">
+            <rect x="60" y="148" width="800" height="80" rx="10" fill="#eaf7ef"
+                  stroke="#38a169" stroke-width="1.5" filter="url(#wxn_shadow)"></rect>
+            <text x="88" y="178" font-size="15" font-weight="bold" fill="#2f855a">2 服务接入层</text>
+            <text x="88" y="197" font-size="10.5" fill="#6e9b7f">Gateway Layer</text>
+            <g font-size="13" fill="#2d3436" text-anchor="middle">
+              <rect x="230" y="164" width="110" height="44" rx="8" fill="#ffffff" stroke="#38a169"></rect>
+              <text x="285" y="191">API 网关</text>
+              <rect x="370" y="164" width="110" height="44" rx="8" fill="#ffffff" stroke="#38a169"></rect>
+              <text x="425" y="191">负载均衡</text>
+              <rect x="510" y="164" width="110" height="44" rx="8" fill="#ffffff" stroke="#38a169"></rect>
+              <text x="565" y="191">会话管理</text>
+              <rect x="650" y="164" width="110" height="44" rx="8" fill="#ffffff" stroke="#38a169"></rect>
+              <text x="705" y="191">鉴权 / 限流</text>
+            </g>
+          </g>
+
+          <line x1="460" y1="228" x2="460" y2="264" stroke="#4a69bd" stroke-width="2"
+                marker-end="url(#wxn_arrow)"></line>
+          <text x="476" y="252" font-size="11" fill="#7a86a8">标准化请求</text>
+
+          <!-- ========== 3 智能对话核心层 ========== -->
+          <g class="wxn_layer" data-layer="nlu" style="cursor:pointer;">
+            <rect x="60" y="266" width="800" height="140" rx="10" fill="#fdf1e7"
+                  stroke="#dd6b20" stroke-width="1.5" filter="url(#wxn_shadow)"></rect>
+            <text x="88" y="296" font-size="15" font-weight="bold" fill="#c05621">3 智能对话核心层</text>
+            <text x="88" y="316" font-size="10.5" fill="#b08968">Intelligent Dialogue Core（科研重点）</text>
+            <g font-size="13" fill="#2d3436" text-anchor="middle">
+              <rect x="100" y="330" width="155" height="52" rx="8" fill="#ffffff" stroke="#dd6b20"></rect>
+              <text x="177" y="352">意图识别 NLU</text>
+              <text x="177" y="371" font-size="11" fill="#999">BERT 文本分类</text>
+              <rect x="285" y="330" width="155" height="52" rx="8" fill="#ffffff" stroke="#dd6b20"></rect>
+              <text x="362" y="352">实体抽取 NER</text>
+              <text x="362" y="371" font-size="11" fill="#999">槽位 / 指代消解</text>
+              <rect x="470" y="330" width="155" height="52" rx="8" fill="#ffffff" stroke="#dd6b20"></rect>
+              <text x="547" y="352">对话管理 DM</text>
+              <text x="547" y="371" font-size="11" fill="#999">多轮状态跟踪</text>
+              <rect x="655" y="330" width="185" height="52" rx="8" fill="#ffffff" stroke="#dd6b20"></rect>
+              <text x="747" y="352">答案生成（RAG）</text>
+              <text x="747" y="371" font-size="11" fill="#999">检索增强 + 大模型生成</text>
+            </g>
+            <g stroke="#dd6b20" stroke-width="1.8" fill="none" marker-end="url(#wxn_arrow)">
+              <line x1="255" y1="356" x2="283" y2="356"></line>
+              <line x1="440" y1="356" x2="468" y2="356"></line>
+              <line x1="625" y1="356" x2="653" y2="356"></line>
+            </g>
+          </g>
+
+          <!-- 核心层与知识库层之间的双向检索 -->
+          <line x1="460" y1="406" x2="460" y2="442" stroke="#4a69bd" stroke-width="2"
+                marker-end="url(#wxn_arrow)"></line>
+          <text x="476" y="430" font-size="11" fill="#7a86a8">知识检索请求</text>
+
+          <!-- ========== 4 知识库层 ========== -->
+          <g class="wxn_layer" data-layer="kb" style="cursor:pointer;">
+            <rect x="60" y="444" width="800" height="96" rx="10" fill="#f3eafd"
+                  stroke="#6b46c1" stroke-width="1.5" filter="url(#wxn_shadow)"></rect>
+            <text x="88" y="474" font-size="15" font-weight="bold" fill="#553c9a">4 知识库层</text>
+            <text x="88" y="493" font-size="10.5" fill="#9f7aea">Knowledge Base Layer（系统核心）</text>
+            <g font-size="13" fill="#2d3436" text-anchor="middle">
+              <rect x="150" y="486" width="140" height="40" rx="8" fill="#ffffff" stroke="#6b46c1"></rect>
+              <text x="220" y="511">FAQ 问答对库</text>
+              <rect x="320" y="486" width="140" height="40" rx="8" fill="#ffffff" stroke="#6b46c1"></rect>
+              <text x="390" y="511">文档知识库</text>
+              <rect x="490" y="486" width="140" height="40" rx="8" fill="#ffffff" stroke="#6b46c1"></rect>
+              <text x="560" y="511">向量数据库</text>
+              <rect x="660" y="486" width="140" height="40" rx="8" fill="#ffffff" stroke="#6b46c1"></rect>
+              <text x="730" y="511">知识图谱 KG</text>
+            </g>
+          </g>
+
+          <!-- 知识构建流水线（左侧虚线支路） -->
+          <g class="wxn_layer" data-layer="pipeline" style="cursor:pointer;">
+            <path d="M 150 506 L 92 506" stroke="#6b46c1" stroke-width="1.6"
+                  stroke-dasharray="6 4" fill="none"></path>
+            <text x="30" y="545" font-size="11" fill="#9f7aea" transform="rotate(-90 30 545)">知识构建流水线：文档解析 - 知识抽取 - 向量化入库</text>
+            <path d="M 88 506 L 40 506 L 40 336 L 88 336" stroke="#6b46c1" stroke-width="1.6"
+                  stroke-dasharray="6 4" fill="none" marker-end="url(#wxn_arrowPurple)"></path>
+          </g>
+
+          <line x1="460" y1="540" x2="460" y2="576" stroke="#4a69bd" stroke-width="2"
+                marker-end="url(#wxn_arrow)"></line>
+          <text x="476" y="564" font-size="11" fill="#7a86a8">数据落盘</text>
+
+          <!-- ========== 5 数据与支撑层 ========== -->
+          <g class="wxn_layer" data-layer="data" style="cursor:pointer;">
+            <rect x="60" y="578" width="800" height="64" rx="10" fill="#eef2f6"
+                  stroke="#718096" stroke-width="1.5" filter="url(#wxn_shadow)"></rect>
+            <text x="88" y="603" font-size="15" font-weight="bold" fill="#4a5568">5 数据与支撑层</text>
+            <text x="88" y="621" font-size="10.5" fill="#a0aec0">Data &amp; Infrastructure Layer</text>
+            <g font-size="12.5" fill="#2d3436" text-anchor="middle">
+              <text x="300" y="615">会话日志库 · 业务数据库 · Embedding / LLM 模型服务 · 监控告警 · 容器化部署</text>
+            </g>
+          </g>
+
+          <!-- ===== 反馈闭环（绿色虚线，科研亮点） ===== -->
+          <g class="wxn_layer" data-layer="loop" style="cursor:pointer;">
+            <path d="M 860 336 C 920 380 920 560 862 596" stroke="#38a169" stroke-width="2"
+                  stroke-dasharray="8 5" fill="none" marker-end="url(#wxn_arrowGreen)"></path>
+            <rect x="872" y="424" width="70" height="58" rx="8" fill="#e6fffa" stroke="#38a169"
+                  stroke-width="1.4"></rect>
+            <text x="907" y="449" font-size="11" fill="#2f855a" text-anchor="middle">评价反馈</text>
+            <text x="907" y="467" font-size="11" fill="#2f855a" text-anchor="middle">闭环优化</text>
+          </g>
+
+          <!-- 底部图例 -->
+          <g font-size="12" fill="#666">
+            <rect x="60" y="666" width="14" height="14" rx="3" fill="#e8f0fe" stroke="#4a69bd"></rect>
+            <text x="80" y="678">普通数据流</text>
+            <rect x="170" y="666" width="14" height="14" rx="3" fill="none" stroke="#38a169"
+                  stroke-dasharray="5 3"></rect>
+            <text x="190" y="678">反馈闭环（科研重点）</text>
+            <rect x="330" y="666" width="14" height="14" rx="3" fill="none" stroke="#6b46c1"
+                  stroke-dasharray="5 3"></rect>
+            <text x="350" y="678">知识构建流水线</text>
+            <text x="480" y="678" fill="#999">※ 点击任意图层可查看功能说明</text>
+          </g>
+        </svg>
+      </div>
+      <p class="wxn_svg-tip">图 1　基于知识库的智能客服系统五层架构（SVG 矢量图，可点击交互）</p>
+
+      <div class="wxn_layer-detail" id="wxn_layerDetail">
+        <h4>💡 使用说明</h4>
+        <p>点击上方架构图中的任意一个彩色图层区域，这里会显示该层的功能说明与关键技术介绍。</p>
+      </div>
+    </section>
+
+    <!-- 三、科研方向 -->
+    <section class="wxn_section">
+      <h2 class="wxn_section-title"><i class="iconfont icon-hongdian"></i>三、科研方向</h2>
+      <div class="wxn_research-list">
+        <div class="wxn_research-item">
+          <h3><span class="wxn_num">1</span>检索增强生成（RAG）</h3>
+          <p>研究如何将向量检索与大语言模型结合：先从知识库召回相关片段，再交由 LLM 生成答案，
+            有效缓解大模型"幻觉"问题，提升回答的准确性与可溯源性。</p>
+        </div>
+        <div class="wxn_research-item">
+          <h3><span class="wxn_num">2</span>知识图谱问答（KBQA）</h3>
+          <p>将非结构化文档抽取为"实体—关系—实体"三元组构建知识图谱，研究基于图的语义推理与多跳问答，
+            解决 FAQ 无法覆盖的复杂关联问题。</p>
+        </div>
+        <div class="wxn_research-item">
+          <h3><span class="wxn_num">3</span>多轮对话管理</h3>
+          <p>研究对话状态跟踪（DST）与上下文指代消解，支持用户省略主语、追问、修改条件等真实场景，
+            提高多轮场景下的任务完成率。</p>
+        </div>
+        <div class="wxn_research-item">
+          <h3><span class="wxn_num">4</span>知识自动构建与更新</h3>
+          <p>研究文档解析、知识抽取、去重融合的自动化流水线，使知识库可以随企业业务变化持续更新，
+            降低人工维护成本。</p>
+        </div>
+        <div class="wxn_research-item">
+          <h3><span class="wxn_num">5</span>反馈闭环与持续学习</h3>
+          <p>采集用户"满意/不满意"评价与人工坐席接管记录，回流为训练数据，研究在线学习与知识库自动纠错机制，
+            形成越用越准的闭环系统。</p>
+        </div>
+        <div class="wxn_research-item">
+          <h3><span class="wxn_num">6</span>效果评测体系</h3>
+          <p>构建问答准确率、召回率、首响时间、解决率等多维指标，研究自动化评测基准的搭建方法，
+            为模型与知识库的迭代提供量化依据。</p>
+        </div>
+      </div>
+    </section>
+
+    <a class="wxn_back" href="./index.html"><i class="iconfont icon-fanhui"></i>返回作品首页</a>
+  </div>
+
+  <script>
+    // ===== 架构图图层点击交互 =====
+    const wxn_layerInfo = {
+      user: {
+        title: "① 用户接入层（Channel Layer）",
+        desc: "面向最终用户的多渠道统一入口，包括 Web 网页、App 客户端、微信小程序以及人工坐席工作台。" +
+              "该层负责收集用户输入（文本 / 语音转写），并将系统回答以统一的会话界面呈现。" +
+              "多渠道统一接入是保证客服体验一致性的基础。"
+      },
+      gateway: {
+        title: "② 服务接入层（Gateway Layer）",
+        desc: "系统所有请求的统一门户，包含 API 网关（请求路由与协议转换）、负载均衡（多实例水平扩展）、" +
+              "会话管理（为每个用户维护 conversation_id 与上下文存储）以及鉴权与限流（Token 校验、QPS 保护）。" +
+              "该层保证系统的高可用与安全隔离。"
+      },
+      nlu: {
+        title: "③ 智能对话核心层（Intelligent Dialogue Core）—— 科研重点",
+        desc: "系统的大脑，包含四个模块：意图识别 NLU（基于 BERT 微调的文本分类，判断用户想干什么）、" +
+              "实体抽取 NER（槽位填充与指代消解，提取订单号、时间等关键信息）、" +
+              "对话管理 DM（维护多轮对话状态机，决定澄清、追问还是直接作答）、" +
+              "答案生成（采用 RAG 方式：先检索知识库片段，再交给大模型组织自然语言答案）。"
+      },
+      kb: {
+        title: "④ 知识库层（Knowledge Base Layer）—— 系统核心",
+        desc: "知识存储与检索中心，包含四类知识源：FAQ 问答对库（高频标准问题，命中率最高）、" +
+              "文档知识库（产品手册、政策文件等非结构化文档）、向量数据库（文档切片 Embedding 后存储，" +
+              "支持语义相似度检索）、知识图谱 KG（实体关系三元组，支持多跳推理）。" +
+              "检索时多路召回（向量 + 关键词 + 图谱）后融合排序，是回答质量的关键。"
+      },
+      pipeline: {
+        title: "知识构建流水线（Knowledge Pipeline）",
+        desc: "知识库的'进货渠道'：将企业的产品手册、FAQ 表格、工单记录等原始文档进行解析，" +
+              "抽取其中的问答对与知识三元组，再通过 Embedding 模型向量化后写入向量库。" +
+              "流水线的自动化程度直接决定知识库的维护成本，是本课题的研究方向之一。"
+      },
+      loop: {
+        title: "反馈闭环（Feedback Loop）—— 科研亮点",
+        desc: "用户对回答的评价（点赞 / 点踩 / 转人工）以及人工坐席的接管记录，会被回流到数据层，" +
+              "一方面用于大模型与 NLU 模型的持续微调，另一方面自动发现知识库的缺失知识点并提示补录，" +
+              "形成'越用越准'的正向闭环，这也是智能客服系统区别于普通问答工具的核心竞争力。"
+      },
+      data: {
+        title: "⑤ 数据与支撑层（Data & Infrastructure）",
+        desc: "为上层提供存储与算力支撑，包括会话日志库（全量对话记录）、业务数据库（用户 / 订单数据）、" +
+              "模型服务（Embedding 模型与 LLM 推理服务）以及监控告警与容器化部署环境。"
+      }
+    };
+
+    const wxn_detailBox = document.getElementById("wxn_layerDetail");
+    const wxn_layers = document.querySelectorAll("#wxn_archSvg .wxn_layer");
+
+    wxn_layers.forEach(function (wxn_g) {
+      wxn_g.addEventListener("click", function () {
+        const wxn_key = wxn_g.getAttribute("data-layer");
+        const wxn_info = wxn_layerInfo[wxn_key];
+        if (!wxn_info) { return; }
+        wxn_detailBox.innerHTML =
+          "<h4>" + wxn_info.title + "</h4><p>" + wxn_info.desc + "</p>";
+      });
+    });
+  </script>
+</body>
+</html>
