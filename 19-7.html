@@ -251,7 +251,7 @@
 
     <div class="wxn_usage">
       <i class="iconfont icon-diandu"></i>
-      <span>四个图表均由 three.js 实时渲染：按住鼠标左键拖拽可旋转视角，滚轮可缩放，松手后自动恢复缓慢旋转。</span>
+      <span>四个图表均由 three.js 实时渲染：按住鼠标左键拖拽可自由旋转视角，滚轮可缩放，静止时画面会小幅自动摆动。</span>
     </div>
 
     <div class="wxn_grid">
@@ -646,7 +646,7 @@
       /* ============ 图二：3D 环形饼图 ============ */
       function wxn_buildPieChart() {
         var wxn_chart = wxn_createChart('wxn_chartPie', {
-          radius: 12.2,
+          radius: 12.8,
           targetY: 1.05,
           phi: 0.74,
           theta: 0.25,
@@ -731,11 +731,11 @@
 
           var wxn_label = wxn_textSprite(wxn_item.name + ' ' + wxn_item.value + '%', {
             color: '#3a424f',
-            worldSize: 0.55
+            worldSize: 0.5
           });
           wxn_label.position.set(
             Math.cos(wxn_midAngle) * (wxn_outer + 0.95),
-            1.5,
+            1.72,
             -Math.sin(wxn_midAngle) * (wxn_outer + 0.95)
           );
           wxn_group.add(wxn_label);
@@ -872,7 +872,7 @@
         var wxn_chart = wxn_createChart('wxn_chartScatter', {
           radius: 15.0,
           targetY: 3.05,
-          phi: 1.02,
+          phi: 1.12,
           theta: 0.85,
           minRadius: 10,
           maxRadius: 30
