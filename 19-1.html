@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- 姓名：王秀宁，日期：2026-11-05，功能名称：Canvas 文字衰落动画（文字下落并逐渐消散） -->
+<!-- 姓名：王秀宁，日期：2026-11-05，功能名称：Canvas 文字衰落动画（文字"王秀宁"下落并逐渐消散） -->
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>19-1 Canvas 文字衰落动画</title>
+  <title>Canvas 文字动画</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -79,16 +79,16 @@
   </style>
 </head>
 <body>
-  <h1 class="wxn_page-title">Canvas 文字衰落动画</h1>
-  <p class="wxn_page-desc">文字从上方缓缓飘落，边下落边旋转、放大并逐渐衰弱消散 —— 输入文字后点击按钮发射</p>
+  <h1 class="wxn_page-title">Canvas 文字动画</h1>
+  <p class="wxn_page-desc">Canvas 文字衰落动画演示 —— 文字"王秀宁"从上方缓缓飘落，边下落边旋转、放大并逐渐衰弱消散；也可输入其他文字发射</p>
 
   <div class="wxn_canvas-box">
     <canvas id="wxn_canvas"></canvas>
   </div>
 
   <div class="wxn_ctrl">
-    <input id="wxn_input" type="text" maxlength="12" placeholder="输入要飘落的文字，如：电商狂欢节">
-    <button class="wxn_btn" id="wxn_btnStart">发射文字</button>
+    <input id="wxn_input" type="text" maxlength="12" placeholder="输入要飘落的文字（默认：王秀宁）">
+    <button class="wxn_btn" id="wxn_btnStart">发射文字（王秀宁）</button>
     <button class="wxn_btn wxn_btn--ghost" id="wxn_btnClear">清空画布</button>
   </div>
 
@@ -114,7 +114,7 @@
       var wxn_colorPool = ['#7dd3fc', '#f0abfc', '#fde68a', '#86efac', '#fca5a5', '#c4b5fd'];
 
       function wxn_spawn(text) {
-        var wxn_word = (text && text.trim()) ? text.trim() : '文字衰落';
+        var wxn_word = (text && text.trim()) ? text.trim() : '王秀宁';
         var wxn_chars = wxn_word.split('');
         var wxn_baseX = wxn_canvas.width * (0.25 + Math.random() * 0.5);
         // 整句拆成单字，带一点水平偏移依次发射
@@ -212,8 +212,12 @@
         wxn_texts.length = 0;
       });
 
-      // 页面加载后自动演示一次
-      wxn_spawn('文字衰落');
+      // 页面加载后自动演示：显示"王秀宁"
+      wxn_spawn('王秀宁');
+      // 当画面上没有衰落文字时，周期性再次发射"王秀宁"，保证名字常驻展示
+      setInterval(function () {
+        if (wxn_texts.length === 0) wxn_spawn('王秀宁');
+      }, 1200);
     })();
   </script>
 </body>
