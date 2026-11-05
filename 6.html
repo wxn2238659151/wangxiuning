@@ -1,10 +1,11 @@
 ﻿<!DOCTYPE html>
-<!-- 姓名：王秀宁，日期：2026-10-26，功能名称：大连旅游景点介绍（山海大连） -->
+<!-- 姓名：王秀宁，日期：2026-11-05，功能名称：大连旅游景点介绍（山海大连） -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>山海大连 · 旅游景点介绍</title>
+<link rel="stylesheet" href="./font/iconfont.css">
 <!--
   高级网页设计I · 网页元素设计 实验
   选题：旅游景点介绍（大连）
@@ -68,10 +69,13 @@ ul{ list-style:none; }
 }
 .wxn_nav-links{ display:flex; flex-wrap:wrap; gap:4px 6px; }
 .wxn_nav-links a{
+  display:inline-flex; align-items:center; gap:6px;
   color:#dff1f5; font-size:15px; padding:6px 14px; border-radius:999px;
   transition:background .2s,color .2s;
 }
 .wxn_nav-links a:hover{ background:rgba(255,255,255,.16); color:#fff; }
+.wxn_nav-links a .iconfont{ font-size:16px; line-height:1; }
+.wxn_nav-links a .wxn_icon{ width:16px; height:16px; flex:none; }
 
 /* ===================== Hero 标题带（辅助，非考核元素） ===================== */
 .wxn_hero{
@@ -144,9 +148,10 @@ ul{ list-style:none; }
       <span>山海大连 · 旅游景点介绍</span>
     </div>
     <ul class="wxn_nav-links">
-      <li><a href="#wxn_jingqu">景区精选</a></li>
-      <li><a href="#wxn_tuijian">深度推荐</a></li>
-      <li><a href="#wxn_guan_yu">关于本站</a></li>
+      <!-- 精选：奖章图标（内联 SVG，按用户提供的图标图片绘制）；推荐 &#xe620; / 关于 &#xe62d; -->
+      <li><a href="#wxn_jingqu"><svg class="wxn_icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><circle cx="12" cy="9" r="2.6"/><path d="M8.7 13.9 7.2 21l4.8-2.6L16.8 21l-1.5-7.1"/></svg>景区精选</a></li>
+      <li><a href="#wxn_tuijian"><i class="iconfont">&#xe620;</i>深度推荐</a></li>
+      <li><a href="#wxn_guan_yu"><i class="iconfont">&#xe62d;</i>关于本站</a></li>
     </ul>
   </nav>
 </header>
